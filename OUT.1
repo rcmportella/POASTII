@@ -1,0 +1,1090 @@
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *                             BOAST II:                             *
+                             *                 BLACK OIL APPLIED SIMULATION TOOL                 *
+                             *                          (RELEASE 1.1)                            *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+
+
+                       **********************************************************************************
+                       *                                                                                *
+                       *            LINEAR BUCKLEY-LEVERETT WATERFLOOD DISPLACEMENT                     *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+                                    REDIMENSIONING INFORMATION:
+                               MAX X-DIRECTION GRID BLOCKS                                    13
+                               MAX Y-DIRECTION GRID BLOCKS                                    10
+                               MAX Z-DIRECTION GRID BLOCKS                                     4
+                               MAX ROCK REGIONS                                                3
+                               MAX ROCK REGION TABLE ENTRIES                                  25
+                               MAX PVT REGIONS                                                 3
+                               MAX PVT REGION TABLE ENTRIES                                   25
+                               MAX WELLS                                                      50
+                               MAX TIME STEPS                                               1000
+                               MAX RESTART RECORDS                                             5
+                               TOTAL BLOCKS USING 1D DIRECT SOLN METHODS                      13
+                               TOTAL BLOCKS USING 2D OR 3D DIRECT SOLN METHODS                 1
+                               TOTAL BLOCKS USING ITERATIVE SOLN METHOD                      520
+                               MAX NO OF BLOCKS IN 1D FOR LSOR                                13
+                               MAX NO OF BLOCKS IN 2D FOR L2SOR                                1
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *            LINEAR BUCKLEY-LEVERETT WATERFLOOD DISPLACEMENT                     *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                                   ***** RESTART OPTION *****
+
+                                            RESTART OPTION HAS NOT BEEN ACTIVATED.
+
+
+
+
+                                            ***** INITIALIZATION DATA *****
+
+
+
+
+
+              GRID BLOCK LENGTH (DX) IS INITIALLY SET AT   86.7000 FOR ALL NODES
+
+
+
+
+
+
+
+
+              GRID BLOCK WIDTH  (DY) IS INITIALLY SET AT 1320.0000 FOR ALL NODES
+
+
+
+
+
+
+
+
+              GRID BLOCK GROSS THICKNESS (DZ) IS INITIALLY SET AT   20.0000 FOR ALL NODES
+
+
+
+
+
+
+
+
+              GRID BLOCK NET THICKNESS (DZNET) IS INITIALLY SET AT   20.0000 FOR ALL NODES
+
+
+
+
+
+
+
+              ********** DEPTHS TO GRID BLOCK TOPS **********
+
+
+ K = 1
+
+    8325.   8325.   8325.   8325.   8325.   8325.   8325.   8325.   8325.   8325.
+
+
+
+              POROSITY (PHI) IS INITIALLY SET AT   .2500 FOR ALL NODES
+
+
+
+
+
+
+
+
+              PERMEABILITY (KX) IS INITIALLY SET AT  200.0000 FOR ALL NODES
+
+
+
+
+
+
+
+
+              PERMEABILITY (KY) IS INITIALLY SET AT  200.0000 FOR ALL NODES
+
+
+
+
+
+
+
+
+              PERMEABILITY (KZ) IS INITIALLY SET AT   20.0000 FOR ALL NODES
+
+
+
+
+
+
+
+              **********POROSITY NODE MODIFICATIONS**********
+
+                 I1  I2  J1  J2  K1  K2  NEW PHI VALUE
+                  1   1   1   1   1   1   .1250E+00
+                 10  10   1   1   1   1   .1250E+00
+
+
+              **********POROSITY DISTRIBUTION FOLLOWS**********
+
+
+ K = 1
+
+    .1250   .2500   .2500   .2500   .2500   .2500   .2500   .2500   .2500   .1250
+1
+              ***** EMPIRICAL DATA TABLES *****
+
+
+              *** NUMBER OF REGIONS ***
+                   ROCK          1
+                   PVT           1
+
+
+1
+              ROCK REGION #     1
+
+  SATURATION    KROT      KRW       KRG        KROG     PCOW      PCGO
+                                                        (PSI)     (PSI)
+
+     -.1000     .0000     .0000     .0000     .0000     .0000     .0000
+      .1000     .0000     .0000     .0000     .0000     .0000     .0000
+      .2000     .0015     .0000     .0750     .0000     .0000     .0000
+      .3000     .0023     .0122     .1900     .0000     .0000     .0000
+      .4000     .0370     .0244     .4100     .0000     .0000     .0000
+      .5000     .0571     .0336     .7200     .0000     .0000     .0000
+      .6000     .1340     .0672     .8700     .0000     .0000     .0000
+      .7000     .2070     .1344     .9400     .0000     .0000     .0000
+      .8000     .6040     .2688     .9667     .0000     .0000     .0000
+      .9000    1.0000     .4704     .9933     .0000     .0000     .0000
+     1.1000    1.0000     .5000    1.0000     .0000     .0000     .0000
+
+
+          THE THREE-PHASE REL. PERM. CALC. IS NOT USED.
+          IRREDUCIBLE WATER SATURATION IS  .2000
+1
+              PVT REGION #     1
+
+
+
+         BUBBLE POINT PARAMETERS:
+    BUBBLE POINT PRESSURE (PSI)     4014.700
+    BUBBLE POINT DEPTH (FT)         8300.000
+    BUBBLE POINT GRADIENT (PSI/FT)      .000
+
+
+   VSLOPE     BSLOPE       RSLOPE     PMAX  REPRS
+  (CP/PSI) (RB/STB/PSI)    (1/PSI)   (PSI)
+
+   .000E+00   .000E+00        .00   9014.70     0
+
+
+     **** SATURATED OIL PVT PROPERTIES ****
+     PRESSURE  VISCOSITY    FVF    SOLN. GAS
+      (PSI)       (CP)    (RB/STB)  (SCF/STB)
+
+         14.7   2.0000    1.5000      1.00
+       4014.7   2.0000    1.5000      1.00
+       9014.7   2.0000    1.5000      1.00
+
+
+         **** WATER PVT PROPERTIES ***
+     PRESSURE  VISCOSITY    FVF    SOLN. GAS
+      (PSI)       (CP)    (RB/STB)  (SCF/STB)
+
+         14.7   1.0000    1.0000       .00
+       4014.7   1.0000    1.0000       .00
+       9014.7   1.0000    1.0000       .00
+
+
+       ****  GAS  PVT AND ROCK COMP. ****
+     PRESSURE  VISCOSITY    FVF     PSEUDO-PRS  ROCK COMP.
+      (PSI)       (CP)   (RCF/SCF) (PSIA**2/CP)  (1/PSI)
+
+         14.7    .0080   .9358E+00   .0000E+00    .300E-05
+       2014.7    .0189   .9063E-02   .0000E+00    .300E-05
+       3014.7    .0228   .4554E-02   .0000E+00    .300E-05
+       4014.7    .0268   .4554E-02   .0000E+00    .300E-05
+       5014.7    .0309   .3644E-02   .0000E+00    .300E-05
+       9014.7    .0470   .2167E-02   .0000E+00    .300E-05
+
+
+       *** DENSITIES AT STD. CONDITIONS ***
+              OIL      WATER      GAS
+           (LBM/SCF) (LBM/SCF) (LBM/SCF)
+
+            46.2440   62.2380     .0647
+
+
+              ***** SLOPES FOR COMPRESSIBILITY CALCULATIONS ****
+
+
+           PRESSURE     BO       DBO/DP       RSO     DRSO/DP
+            (PSI)    (RB/STB) (RB/STB/PSI)  (CF/CF)   (1/PSI)
+
+            4014.7    1.5000    .0000E+00       .2    .0000E+00
+            9014.7    1.5000    .0000E+00       .2    .0000E+00
+
+
+           PRESSURE     BW       DBW/DP       RSW     DRSW/DP
+            (PSI)    (RB/STB) (RB/STB/PSI)  (CF/CF)   (1/PSI)
+
+            4014.7    1.0000    .0000E+00       .0    .0000E+00
+            9014.7    1.0000    .0000E+00       .0    .0000E+00
+
+
+            PRESSURE         BG            DBG/DP
+             (PSI)        (RCF/SCF)    (RCF/SCF/PSI)
+
+             2014.7       .9063E-02     -.4634E-03
+             3014.7       .4554E-02     -.4509E-05
+             4014.7       .4554E-02      .0000E+00
+             5014.7       .3644E-02     -.9100E-06
+             9014.7       .2167E-02     -.3693E-06
+1
+              RUN CONTROL PARAMETERS:
+                   MAXIMUM NUMBER OF TIME-STEPS =  500
+                   FACTOR FOR INCREASING DELT =     1.200   WHEN DSMAX AND DPMAX NOT EXCEEDED.
+                   FACTOR FOR DECREASING DELT =      .500   WHEN DSMAX OR DPMAX IS EXCEEDED.
+                   MAXIMUM SIMULATION TIME =    360.000
+                   MAXIMUM RESERVOIR WOR/TIME-STEP =     20. STB/STB
+                   MAXIMUM RESERVOIR GOR/TIME-STEP = 500000. SCF/STB
+                   MINIMUM AVERAGE RESERVOIR PRESSURE/TIME-STEP =    150.
+                   MAXIMUM AVERAGE RESERVOIR PRESSURE/TIME-STEP =  10000.
+
+
+              SOLUTION METHOD IS BAND.
+
+              AUTOMATIC TIME STEP CRITERIA:
+                   MAXIMUM ALLOWED SATURATION CHANGE (DSMAX) =      .0500
+                   MAXIMUM ALLOWED PRESSURE CHANGE   (DPMAX) =   100.0000
+
+
+
+              IMPES FORMULATION SELECTED;  SINGLE-POINT UPSTREAM WEIGHTING.
+1
+                                                      *********************
+                                                      *   WELL   UPDATE   *
+                                                      *********************
+
+                   RESERVOIR CONTAINS THE FOLLOWING RATE NODES:
+
+   WELL  NO.     NODE        OIL(STBD)   WATER(RBD)   GAS(MCFD)   TOTAL(RBD)   BHFP(PSIA)      PID      ALIT      BLIT
+  PROD     1  10  1  1        600.00          .00          .00          .00      2500.00   10.0000  .000E+00  .000E+00
+  INJ      2   1  1  1           .00      -900.00          .00          .00      7500.00   10.0000  .000E+00  .000E+00
+
+
+              BLOCK  10  1  1 CONTAINS THE OIL RATE SPECIFIED PRODUCING WELL NUMBER     1
+              BLOCK   1  1  1 CONTAINS THE RATE SPECIFIED WATER INJECTION WELL NUMBER     2
+1
+              ******* INITIAL FLUID VOLUMES *******
+
+
+              LAYER  1 INITIAL FLUID VOLUMES:
+                   OIL IN PLACE (MILLION STB)                        .4892
+                   WATER IN PLACE (MILLION STB)                      .1834
+                   SOLUTION GAS IN PLACE (BILLION SCF)               .0005
+                   FREE GAS IN PLACE (BILLION SCF)                   .0000
+
+
+              TOTAL INITIAL FLUID VOLUMES IN RESERVOIR:
+                   OIL IN PLACE (MILLION STB)                        .4892
+                   WATER IN PLACE (MILLION STB)                      .1834
+                   SOLUTION GAS IN PLACE (BILLION SCF)               .0005
+                   FREE GAS IN PLACE (BILLION SCF)                   .0000
+
+1
+
+              ******* INITIAL ARRAYS *******
+
+
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1    4787.   4787.   4787.   4787.   4787.   4787.   4787.   4787.   4787.   4787.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1     .800    .800    .800    .800    .800    .800    .800    .800    .800    .800
+
+
+
+              ******** WATER SATURATION *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1     .200    .200    .200    .200    .200    .200    .200    .200    .200    .200
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF INITIALIZATION  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *            LINEAR BUCKLEY-LEVERETT WATERFLOOD DISPLACEMENT                     *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER   1   ELAPSED TIME =    6.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  PROD   10  1  1   4489.   2500. 10.000    600.0       0.       .0    1.0   .000     3.6      3.      .0
+        2  INJ     1  1  1   5234.   7500. 10.000       .0       0.   -900.0     .0   .000      .0      0.    -5.4
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   600.0       .6   -900.0                   3.6      .0    -5.4
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *            LINEAR BUCKLEY-LEVERETT WATERFLOOD DISPLACEMENT                     *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =     6.00   TIME STEP NUMBER             =    1      TIME STEP SIZE (DAYS)         =     6.00
+
+ CURRENT AVG RES PRESSURE    =   4787.2   PREVIOUS AVG RES PRESSURE    =   4787.3  PRESSURE DPMAX( 10,  1,  1)   =   -192.3
+ OIL DSMAX(  1,  1,  1)      =  -.10580   GAS DSMAX(  1,  1,  1)       =   .00000  WATER DSMAX(  1,  1,  1)      =   .10580
+ OIL MATERIAL BALANCE (%)    = -.000064   GAS MATERIAL BALANCE (%)     =  .005901  WATER MATERIAL BALANCE (%)    =  .000000
+ CUM. OIL MATERIAL BALANCE(%)= -.000062   CUM. GAS MATERIAL BALANCE(%) =  .010019  CUM. WATER MATERIAL BALANCE(%)= -.000006
+
+ OIL PRODUCTION RATE (STB/D) =    600.0   CUM. OIL PRODUCTION (STB)    = .3600E+04
+ GAS PRODUCTION RATE (MSCF/D)=       .6   CUM. GAS PRODUCTION (MSCF)   = .3600E+01
+ WATER PRODUCTION RATE(STB/D)=       .0
+                                         CUM. WATER PRODUCTION (STB)  = .0000E+00
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=   -900.0   CUM. WATER INJECTION (STB)   =-.5400E+04
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =      1.0   CUM. GOR (SCF/STB)           =      1.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1    4979.   4936.   4893.   4851.   4808.   4766.   4724.   4681.   4638.   4595.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1     .694    .800    .800    .800    .800    .800    .800    .800    .800    .800
+
+
+
+              ******** WATER SATURATION *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1     .306    .200    .200    .200    .200    .200    .200    .200    .200    .200
+
+
+     SW ARRAY PLOT:
+          MINIMUM ARRAY VALUE =                       .1999
+          MAXIMUM ARRAY VALUE =                       .3058
+          DIFFERENCE (MAX-MIN)=                       .1059
+
+
+          LAYER K =    1
+
+       I  1  2  3  4  5  6  7  8  9 10
+     J
+
+     1    T  -  -  -  -  -  -  -  -  - 
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+   1    6.    600.0       .6       .0    1.0    .0        .0   -900.  4787.   .000   .006   .000  1  1  1   .106  10  1  1 192.27 1   0
+   2   12.    600.0       .6       .0    1.0    .0        .0   -900.  4787.   .000   .039   .000  1  1  1   .094   1  1  1  70.03 1   0
+   3   18.    600.0       .6       .0    1.0    .0        .0   -900.  4787.   .000   .011   .000  1  1  1   .078   1  1  1  28.58 1   0
+   4   24.    600.0       .6       .0    1.0    .0        .0   -900.  4787.   .000   .026   .000  1  1  1   .057   1  1  1  48.08 1   0
+   5   30.    600.0       .6       .0    1.0    .0        .0   -900.  4787.   .000   .014   .000  1  1  1   .038   2  1  1   8.57 1   0
+   6   36.    600.0       .6       .0    1.0    .0        .0   -900.  4787.   .000   .064   .000  2  1  1   .036   2  1  1  20.25 1   0
+   7   42.    600.0       .6       .0    1.0    .0        .0   -900.  4787.   .000   .022   .000  2  1  1   .035   2  1  1  29.52 1   0
+   8   48.    600.0       .6       .0    1.0    .0        .0   -900.  4787.   .000   .043   .000  2  1  1   .036   2  1  1  10.51 1   0
+   9   54.    600.0       .6       .0    1.0    .0        .0   -900.  4787.   .000   .000   .000  2  1  1   .035   2  1  1  12.13 1   0
+  10   60.    600.0       .6       .0    1.0    .0        .0   -900.  4786.   .000   .008   .000  2  1  1   .032   2  1  1  15.89 1   0
+  11   66.    600.0       .6       .0    1.0    .0        .0   -900.  4786.   .000   .004   .000  2  1  1   .029   2  1  1  20.91 1   0
+  12   72.    600.0       .6       .0    1.0    .0        .0   -900.  4786.   .000   .017   .000  2  1  1   .025   2  1  1  26.51 1   0
+  13   78.    600.0       .6       .0    1.0    .0        .0   -900.  4786.   .000   .052   .000  3  1  1   .025   2  1  1  28.54 1   0
+  14   84.    600.0       .6       .0    1.0    .0        .0   -900.  4786.   .000  -.021   .000  3  1  1   .026   3  1  1  18.97 1   0
+  15   90.    600.0       .6       .0    1.0    .0        .0   -900.  4786.   .000   .012   .000  3  1  1   .027   3  1  1   8.32 1   0
+  16   96.    600.0       .6       .0    1.0    .0        .0   -900.  4786.   .000   .021   .000  3  1  1   .027   3  1  1   9.03 1   0
+  17  102.    600.0       .6       .0    1.0    .0        .0   -900.  4786.   .000   .047   .000  3  1  1   .026   3  1  1  10.28 1   0
+  18  108.    600.0       .6       .0    1.0    .0        .0   -900.  4786.   .000   .058   .000  3  1  1   .024   3  1  1  13.05 1   0
+  19  114.    600.0       .6       .0    1.0    .0        .0   -900.  4786.   .000  -.015   .000  3  1  1   .022   3  1  1  16.07 1   0
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *            LINEAR BUCKLEY-LEVERETT WATERFLOOD DISPLACEMENT                     *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  20   ELAPSED TIME =  120.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  PROD   10  1  1   4226.   2500. 10.000    600.0       0.       .0    1.0   .000    72.0      7.      .0
+        2  INJ     1  1  1   5909.   7500. 10.000       .0       0.   -900.0     .0   .000      .0      0.  -108.0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   600.0       .6   -899.9                  72.0      .0  -108.0
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *            LINEAR BUCKLEY-LEVERETT WATERFLOOD DISPLACEMENT                     *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =   120.00   TIME STEP NUMBER             =   20      TIME STEP SIZE (DAYS)         =     6.00
+
+ CURRENT AVG RES PRESSURE    =   4785.5   PREVIOUS AVG RES PRESSURE    =   4785.6  PRESSURE DPMAX(  3,  1,  1)   =     20.8
+ OIL DSMAX(  3,  1,  1)      =  -.02080   GAS DSMAX(  9,  1,  1)       =   .00000  WATER DSMAX(  3,  1,  1)      =   .02080
+ OIL MATERIAL BALANCE (%)    =  .000007   GAS MATERIAL BALANCE (%)     = -.022935  WATER MATERIAL BALANCE (%)    =  .000009
+ CUM. OIL MATERIAL BALANCE(%)= -.000200   CUM. GAS MATERIAL BALANCE(%) =  .430447  CUM. WATER MATERIAL BALANCE(%)=  .000016
+
+ OIL PRODUCTION RATE (STB/D) =    600.0   CUM. OIL PRODUCTION (STB)    = .7200E+05
+ GAS PRODUCTION RATE (MSCF/D)=       .6   CUM. GAS PRODUCTION (MSCF)   = .7200E+02
+ WATER PRODUCTION RATE(STB/D)=       .0	
+    #!üûC?????;?????<ÄÇ~~~~~~~~~~~~~~~~~|‡ Ç| ¿&|<$ÄÃ ‡êÄÜ~ Ê~~~& ¬>3ÉáÉÜ|¿"|êÑÑ¿‡êÄÜ|$¬~Ä ‡∆ Œ~~~~~~~~>~~|‡ Ç|¿"|êÑÑ¿‡êÄÜ~Ä ‡∆~~~~~>>><¬>?ÉÜ| ¿&|êÑÑ¿‡êÄÜ|$¬~ Ê Œ~~~>>>~~|‡ Ç| ¿&|êÑÑ¿‡êÄÜ~ Ê~~~2><¬>ÉáÉÜ|<$ÄÃ ‡êÑ¬| Ä&~ Ê  Ê~~~~~~~~~~>>>~~|‡ Ç| Ä&~ Ê  Ê~~~~~~~~~~~~~~~~>>?ÉÜ|<$ÄÃ ‡êÑ¬|¿Ä&~ ‡∆  Ê~~~~~~~~~~~2>~~|‡ Ç|¿Ä&~ ‡∆  Ê~~~~~~~~~~~~~~~~~2?ÉáÉáÉÜ|0 êƒ¿&|ÄÄÃ¿ˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇ$DO66
+C................................................................SOLTWO
+      SUBROUTINE SOLTWO(II,JJ,KK,DIV1,D288,
+     &KSM,KSM1,N,NN,KCOFF)
+C      MACHINE DEPENDENT INCLUDE STATEMENT
+$INCLUDE:'PARAMS.FOR'
+C      FLOW EQ COEF WITH TWO POINT UPSTREAM REL PERMS
+      REAL KROT,KROGT,KRWT,KRGT,MUOT,MUWT,MUGT,KX,KY,KZ
+      REAL MUO4,MUW4,MUG4,MUO5,MUW5,MUG5,MUO6,MUW6,MUG6
+     &,KRO1,KRW1,KRG1,KRO2,KRW2,KRG2,KRO3,KRW3,KRG3
+     &,MUO1,MUW1,MUG1,MUO2,MUW2,MUG2,MUO3,MUW3,MUG3
+     &,KRO4,KRW4,KRG4,KRO5,KRW5,KRG5,KRO6,KRW6,KRG6
+     &,MO1,MW1,MG1,MO2,MW2,MG2,MO3,MW3,MG3
+     &,MO4,MW4,MG4,MO5,MW5,MG5,MO6,MW6,MG6
+     &,MUO,MUW,MUG
+      COMMON /BUBBLE/ PBO,VSLOPE(LP8),BSLOPE(LP8),RSLOPE(LP8),PMAXT,
+     & IREPRS,MPGT(LP8),
+     & RHOSCO(LP8),RHOSCW(LP8),RHOSCG(LP8),MSAT(LP7),MPOT(LP8),
+     & MPWT(LP8),PBOT(LP1,LP2,LP3),PBOTN(LP1,LP2,LP3)
+      COMMON /COEF/ AW(LP1,LP2,LP3),AE(LP1,LP2,LP3),AN(LP1,LP2,LP3),
+     & AS(LP1,LP2,LP3),AB(LP1,LP2,LP3),AT(LP1,LP2,LP3),E(LP1,LP2,LP3),
+     & B(LP1,LP2,LP3)
+      COMMON /SARRAY/ PN(LP1,LP2,LP3),IOCODE,IDMAX,
+     & SON(LP1,LP2,LP3),SWN(LP1,LP2,LP3),SGN(LP1,LP2,LP3),
+     & A1(LP1,LP2,LP3),A2(LP1,LP2,LP3),A3(LP1,LP2,LP3),
+     & SUM(LP1,LP2,LP3),GAM(LP1,LP2,LP3),QS(LP1,LP2,LP3)
+      COMMON /SPARM/ KX(LP1,LP2,LP3),KY(LP1,LP2,LP3),KZ(LP1,LP2,LP3),
+     & EL(LP1,LP2,LP3),TX(LP4,LP2,LP3),TY(LP1,LP5,LP3),TZ(LP1,LP2,LP6),
+     & PDAT(LP1,LP2,LP3),PDATUM,GRAD
+      COMMON /SPRTPS/ P(LP1,LP2,LP3),SO(LP1,LP2,LP3),SW(LP1,LP2,LP3),
+     & SG(LP1,LP2,LP3)
+      COMMON /SPVT/ SAT(LP7,LP9),KROT(LP7,LP9),KRWT(LP7,LP9),
+     & BGT(LP7,LP9),
+     & KRGT(LP7,LP9),ITHREE(LP7),RSOT(LP7,LP9),BWPT(LP7,LP9),
+     & PCOWT(LP7,LP9),PCGOT(LP7,LP9),KROGT(LP7,LP9),SWR(LP7),
+     & POT(LP7,LP9),MUOT(LP7,LP9),BOT(LP7,LP9),BOPT(LP7,LP9),
+     & RSOPT(LP7,LP9),PWT(LP7,LP9),MUWT(LP7,LP9),BWT(LP7,LP9),
+     & RSWT(LP7,LP9),RSWPT(LP7,LP9),PGT(LP7,LP9),MUGT(LP7,LP9),
+     & BGPT(LP7,LP9),CRT(LP7,LP9),IPVT(LP1,LP2,LP3),IROCK(LP1,LP2,LP3),
+     & NROCK,NPVT,PSIT(LP7,LP9),PRT(LP7,LP9),WOROCK(LP7),GOROCK(LP7)
+      COMMON /SSOLN/ BO(LP1,LP2,LP3),BW(LP1,LP2,LP3),BG(LP1,LP2,LP3),
+     & QO(LP1,LP2,LP3),QW(LP1,LP2,LP3),QG(LP1,LP2,LP3),
+     & GOWT(LP1,LP2,LP3),GWWT(LP1,LP2,LP3),GGWT(LP1,LP2,LP3),
+     & OW(LP4,LP2,LP3),OE(LP4,LP2,LP3),WW(LP4,LP2,LP3),WE(LP4,LP2,LP3),
+     & OS(LP1,LP5,LP3),ON(LP1,LP5,LP3),WS(LP1,LP5,LP3),WN(LP1,LP5,LP3),
+     & OT(LP1,LP2,LP6),OB(LP1,LP2,LP6),WT(LP1,LP2,LP6),WB(LP1,LP2,LP6),
+     & QOWG(LP1,LP2,LP3),VP(LP1,LP2,LP3),CT(LP1,LP2,LP3)
+      COMMON /VECTOR/ DX(LP1,LP2,LP3),DY(LP1,LP2,LP3),DZ(LP1,LP2,LP3),
+     & DZNET(LP1,LP2,LP3),IQN1(LP11),IQN2(LP11),IQN3(LP11),IHEDIN(80)
+      DIMENSION RPW(LP1,LP2,LP3),RPG(LP1,LP2,LP3),RPOW(LP1,LP2,LP3),
+     & RPO3(LP1,LP2,LP3),CAPOW(LP1,LP2,LP3),CAPGO(LP1,LP2,LP3)
+      EQUIVALENCE (RPW,DX), (RPG,DY), (RPOW,DZ), (RPO3,KX),
+     & (CAPOW,KY), (CAPGO,KZ)
+      DATA RSO1,RSO2,RSO3,RSO4,RSO5,RSO6/6*0.0/
+      DATA RSW1,RSW2,RSW3,RSW4,RSW5,RSW6/6*0.0/
+      DO 2000 K=1,KK
+      DO 2000 J=1,JJ
+      DO 2000 I=1,II
+      RPW(I,J,K)=0.
+      RPG(I,J,K)=0.
+      RPOW(I,J,K)=0.
+      RPO3(I,J,K)=0.
+      CAPOW(I,J,K)=0.
+      CAPGO(I,J,K)=0.
+      IF(VP(I,J,K).LE.0.0) GO TO 2000
+      SSO=SO(I,J,K)
+      SSW=SW(I,J,K)
+      SSG=SG(I,J,K)
+      IROCKB=IROCK(I,J,K)
+      CALL INTERP(IROCKB,SAT,KROT,MSAT(IROCKB),SSO,KRO1)
+      RPOW(I,J,K)=KRO1
+      CALL INTERP(IROCKB,SAT,KRWT,MSAT(IROCKB),SSW,KRW1)
+      RPW(I,J,K)=KRW1
+      CALL INTERP(IROCKB,SAT,KRGT,MSAT(IROCKB),SSG,KRG1)
+      RPG(I,J,K)=KRG1
+      CALL TRIKRO(IROCKB,SSO,SSW,KRO3)
+      RPO3(I,J,K)=KRO3
+      CALL INTERP(IROCKB,SAT,PCOWT,MSAT(IROCKB),SSW,PCOW)
+      CAPOW(I,J,K)=PCOW
+      CALL INTERP(IROCKB,SAT,PCGOT,MSAT(IROCKB),SSG,PCGO)
+      CAPGO(I,J,K)=PCGO
+ 2000 CONTINUE
+      DO 200 K=1,KK
+      DO 200 J=1,JJ
+      DO 200 I=1,II
+      IF(VP(I,J,K).LE.0.0) GO TO 200
+C      I,J,K BLOCK
+      PP=P(I,J,K)
+      BPT=PBOT(I,J,K)
+      IPVTR=IPVT(I,J,K)
+      CALL INTPVT(IPVTR,BPT,RSLOPE(IPVTR),POT,RSOT,MPOT(IPVTR),PP,RSO)
+      CALL INTPVT(IPVTR,BPT,VSLOPE(IPVTR),POT,MUOT,MPOT(IPVTR),PP,MUO)
+      CALL INTERP(IPVTR,PWT,RSWT,MPWT(IPVTR),PP,RSW)
+      CALL INTERP(IPVTR,PWT,MUWT,MPWT(IPVTR),PP,MUW)
+      CALL INTERP(IPVTR,PGT,MUGT,MPGT(IPVTR),PP,MUG)
+      SSO=SO(I,J,K)
+      SSW=SW(I,J,K)
+      SSG=SG(I,J,K)
+      IROCKB=IROCK(I,J,K)
+      PCOW=CAPOW(I,J,K)
+      PCGO=CAPGO(I,J,K)
+      RO=(RHOSCO(IPVTR) + RSO*RHOSCG(IPVTR))/BO(I,J,K)
+      RW=(RHOSCW(IPVTR) + RSW*RHOSCG(IPVTR))/BW(I,J,K)
+      RG=RHOSCG(IPVTR)/BG(I,J,K)
+      IF(I.EQ.1)GO TO 115
+      IF(VP(I-1,J,K).LE.0.0) GO TO 115
+C      I-1,J,K BLOCK
+      P1=P(I-1,J,K)
+      BPT=PBOT(I-1,J,K)
+      IPVTR=IPVT(I-1,J,K)
+      CALL INTPVT(IPVTR,BPT,RSLOPE(IPVTR),POT,RSOT,MPOT(IPVTR),P1,RSO1)
+      CALL INTPVT(IPVTR,BPT,VSLOPE(IPVTR),POT,MUOT,MPOT(IPVTR),P1,MUO1)
+      CALL INTERP(IPVTR,PWT,RSWT,MPWT(IPVTR),P1,RSW1)
+      CALL INTERP(IPVTR,PWT,MUWT,MPWT(IPVTR),P1,MUW1)
+      CALL INTERP(IPVTR,PGT,MUGT,MPGT(IPVTR),P1,MUG1)
+      SO1S=SO(I-1,J,K)
+      SW1S=SW(I-1,J,K)
+      SG1S=SG(I-1,J,K)
+      IROCKR=IROCK(I-1,J,K)
+      PCOW1=CAPOW(I-1,J,K)
+      PCGO1=CAPGO(I-1,J,K)
+      RO1=(RHOSCO(IPVTR) + RSO1*RHOSCG(IPVTR))/BO(I-1,J,K)
+      RW1=(RHOSCW(IPVTR) + RSW1*RHOSCG(IPVTR))/BW(I-1,J,K)
+      RG1=RHOSCG(IPVTR)/BG(I-1,J,K)
+      FACT=-D288*(EL(I-1,J,K)-EL(I,J,K))
+      GOW1=(RO1+RO)*FACT
+      GWW1=(RW1+RW)*FACT + PCOW-PCOW1
+      GGW1=(RG1+RG)*FACT + PCGO1-PCGO
+      P11=P1-PP
+      HO1=P11+GOW1
+      HW1=P11+GWW1
+      HG1=P11+GGW1
+      IMM=I-2
+      IF(IMM.LT.1) IMM=1
+      IP=I+1
+      IF(IP.GT.II) IP=II
+      IF(ITHREE(IROCKB).EQ.1) GO TO 10
+      KRO1=RPOW(I,J,K)+0.5*(RPOW(I,J,K)-RPOW(IP,J,K))
+      IF(KRO1.GT.RPOW(I,J,K)) KRO1=RPOW(I,J,K)
+      IF(HO1.GE.0.) KRO1=RPOW(I-1,J,K)+0.5*(RPOW(I-1,J,K)-RPOW(IMM,J,K))
+      IF(HO1.GE.0.AND.KRO1.GT.RPOW(I-1,J,K)) KRO1=RPOW(I-1,J,K)
+      GO TO 15
+   10 KRO1=RPO3(I,J,K)+0.5*(RPO3(I,J,K)-RPO3(IP,J,K))
+      IF(KRO1.GT.RPO3(I,J,K)) KRO1=RPO3(I,J,K)
+      IF(HO1.GE.0.) KRO1=RPO3(I-1,J,K)+0.5*(RPO3(I-1,J,K)-RPO3(IMM,J,K))
+      IF(HO1.GE.0.AND.KRO1.GT.RPO3(I-1,J,K)) KRO1=RPO3(I-1,J,K)
+   15 CONTINUE
+      KRW1=RPW(I,J,K)+0.5*(RPW(I,J,K)-RPW(IP,J,K))
+      IF(KRW1.GT.RPW(I,J,K)) KRW1=RPW(I,J,K)
+      IF(HW1.GE.0.) KRW1=RPW(I-1,J,K)+0.5*(RPW(I-1,J,K)-RPW(IMM,J,K))
+      IF(HW1.GE.0.AND.KRW1.GT.RPW(I-1,J,K)) KRW1=RPW(I-1,J,K)
+      KRG1=RPG(I,J,K)+0.5*(RPG(I,J,K)-RPG(IP,J,K))
+      IF(KRG1.GT.RPG(I,J,K)) KRG1=RPG(I,J,K)
+      IF(HG1.GE.0.) KRG1=RPG(I-1,J,K)+0.5*(RPG(I-1,J,K)-RPG(IMM,J,K))
+      IF(HG1.GE.0.AND.KRG1.GT.RPG(I-1,J,K)) KRG1=RPG(I-1,J,K)
+C      2-POINT REL PERM MUST BE POSITIVE
+      IF(KRO1.LT.0.) KRO1=0.
+      IF(KRW1.LT.0.) KRW1=0.
+      IF(KRG1.LT.0.) KRG1=0.
+      MO1=4.0*KRO1/((BO(I-1,J,K)+BO(I,J,K)) * (MUO1+MUO))
+      MW1=4.0*KRW1/((BW(I-1,J,K)+BW(I,J,K)) * (MUW1+MUW))
+      MG1=4.0*KRG1/((BG(I-1,J,K)+BG(I,J,K)) * (MUG1+MUG))
+115   AOW=TX(I,J,K)*MO1
+      AWW=TX(I,J,K)*MW1
+      AGW=TX(I,J,K)*MG1
+      IF(I.EQ.II)GO TO 125
+      IF(VP(I+1,J,K).LE.0.0) GO TO 125
+C      I+1,J,K BLOCK
+      P2=P(I+1,J,K)
+      BPT=PBOT(I+1,J,K)
+      IPVTR=IPVT(I+1,J,K)
+      CALL INTPVT(IPVTR,BPT,RSLOPE(IPVTR),POT,RSOT,MPOT(IPVTR),P2,RSO2)
+      CALL INTPVT(IPVTR,BPT,VSLOPE(IPVTR),POT,MUOT,MPOT(IPVTR),P2,MUO2)
+      CALL INTERP(IPVTR,PWT,RSWT,MPWT(IPVTR),P2,RSW2)
+      CALL INTERP(IPVTR,PWT,MUWT,MPWT(IPVTR),P2,MUW2)
+      CALL INTERP(IPVTR,PGT,MUGT,MPGT(IPVTR),P2,MUG2)
+      SO2=SO(I+1,J,K)
+      SW2=SW(I+1,J,K)
+      SG2=SG(I+1,J,K)
+      IROCKR=IROCK(I+1,J,K)
+      PCOW2=CAPOW(I+1,J,K)
+      PCGO2=CAPGO(I+1,J,K)
+      RO2=(RHOSCO(IPVTR) + RSO2*RHOSCG(IPVTR))/BO(I+1,J,K)
+      RW2=(RHOSCW(IPVTR) + RSW2*RHOSCG(IPVTR))/BW(I+1,J,K)
+      RG2=RHOSCG(IPVTR)/BG(I+1,J,K)
+      FACT=-D288*(EL(I+1,J,K)-EL(I,J,K))
+      GOW2=(RO2+RO)*FACT
+      GWW2=(RW2+RW)*FACT + PCOW-PCOW2
+      GGW2=(RG2+RG)*FACT + PCGO2-PCGO
+      P22=P2-PP
+      HO2=P22+GOW2
+      HW2=P22+GWW2
+      HG2=P22+GGW2
+      IPP=I+2
+      IF(IPP.GT.II) IPP=II
+      IM=I-1
+      IF(I=   .00000  WATER DSMAX(  6,  1,  1)      =   .02055
+ OIL MATERIAL BALANCE (%)    = -.000009   GAS MATERIAL BALANCE (%)     = -.004266  WATER MATERIAL BALANCE (%)    = -.000006
+ CUM. OIL MATERIAL BALANCE(%)= -.000314   CUM. GAS MATERIAL BALANCE(%) =  .757071  CUM. WATER MATERIAL BALANCE(%)=  .000000
+
+ OIL PRODUCTION RATE (STB/D) =    600.0   CUM. OIL PRODUCTION (STB)    = .1440E+06
+ GAS PRODUCTION RATE (MSCF/D)=       .6   CUM. GAS PRODUCTION (MSCF)   = .1440E+03
+ WATER PRODUCTION RATE(STB/D)=       .0
+                                         CUM. WATER PRODUCTION (STB)  = .1291E+02
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=   -900.0   CUM. WATER INJECTION (STB)   =-.2160E+06
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =      1.0   CUM. GOR (SCF/STB)           =      1.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1    5305.   5220.   5117.   4999.   4844.   4637.   4512.   4460.   4416.   4373.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1     .286    .314    .346    .398    .484    .635    .765    .798    .800    .800
+
+
+
+              ******** WATER SATURATION *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1     .714    .686    .654    .602    .516    .365    .235    .202    .200    .200
+
+
+     SW ARRAY PLOT:
+          MINIMUM ARRAY VALUE =                       .2002
+          MAXIMUM ARRAY VALUE =                       .7142
+          DIFFERENCE (MAX-MIN)=                       .5140
+
+
+          LAYER K =    1
+
+       I  1  2  3  4  5  6  7  8  9 10
+     J
+
+     1    T  9  9  8  6  3  1  -  -  - 
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  40  240.    600.0       .6       .0    1.0    .0        .0   -900.  4783.   .000  -.004   .000  6  1  1   .021   5  1  1   6.85 1   0
+  41  246.    600.0       .6       .0    1.0    .0        .0   -900.  4783.   .000  -.033   .000  6  1  1   .021   6  1  1   9.45 1   0
+  42  252.    600.0       .6       .0    1.0    .0        .0   -900.  4783.   .000  -.003   .000  6  1  1   .020   6  1  1  10.14 1   0
+  43  258.    600.0       .6       .0    1.0    .0        .0   -900.  4782.   .000  -.027   .000  6  1  1   .020   6  1  1  10.27 1   0
+  44  264.    600.0       .6       .0    1.0    .0        .0   -900.  4782.   .000  -.030   .000  6  1  1   .019   6  1  1  11.12 1   0
+  45  270.    600.0       .6       .0    1.0    .0        .0   -900.  4782.   .000  -.024   .000  6  1  1   .018  10  1  1  13.05 1   0
+  46  276.    600.0       .6       .1    1.0    .0        .0   -900.  4782.   .000  -.011   .000  7  1  1   .016  10  1  1  20.12 1   0
+  47  282.    600.0       .6       .1    1.0    .0        .0   -900.  4781.   .000   .014   .000  7  1  1   .018  10  1  1  10.52 1   0
+  48  288.    600.0       .6       .1    1.0    .0        .0   -900.  4781.   .000  -.007   .000  7  1  1   .019  10  1  1  10.18 1   0
+  49  294.    600.0       .6       .1    1.0    .0        .0   -900.  4781.   .000  -.003   .000  7  1  1   .020  10  1  1   6.39 1   0
+  50  300.    600.0       .6       .2    1.0    .0        .0   -900.  4780.   .000  -.002   .000  7  1  1   .020   7  1  1   9.13 1   0
+  51  306.    600.0       .6       .2    1.0    .0        .0   -900.  4780.   .000   .046   .000  7  1  1   .020   7  1  1   8.93 1   0
+  52  312.    600.0       .6       .3    1.0    .0        .0   -900.  4779.   .000  -.013   .000  7  1  1   .019   7  1  1   9.99 1   0
+  53  318.    600.0       .6       .3    1.0    .0        .0   -900.  4779.   .000   .004   .000  7  1  1   .018  10  1  1  10.94 1   0
+  54  324.    600.0       .6       .5    1.0    .0        .0   -900.  4778.   .000   .047   .000  7  1  1   .017  10  1  1  17.13 1   0
+  55  330.    600.0       .6       .6    1.0    .0        .0   -900.  4776.   .000   .039   .000  8  1  1   .016  10  1  1  20.65 1   0
+  56  336.    600.0       .6       .8    1.0    .0        .0   -900.  4774.   .000  -.012   .000  8  1  1   .018  10  1  1  11.42 1   0
+  57  342.    600.0       .6      1.2    1.0    .0        .0   -900.  4772.   .000   .000   .000  8  1  1   .019  10  1  1  13.41 1   0
+  58  348.    600.0       .6      1.6    1.0    .0        .0   -900.  4768.   .000  -.012   .000  8  1  1   .020  10  1  1   9.99 1   0
+  59  354.    600.0       .6      2.3    1.0    .0        .0   -900.  4763.   .000   .029   .000  8  1  1   .019   1  1  1   8.85 1   0
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *            LINEAR BUCKLEY-LEVERETT WATERFLOOD DISPLACEMENT                     *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  60   ELAPSED TIME =  360.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  PROD   10  1  1   3882.   2500. 10.000    600.0       0.      3.2    1.0   .005   216.0      0.      .0
+        2  INJ     1  1  1   5790.   7500. 10.000       .0       0.   -900.0     .0   .000      .0      0.  -324.0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   600.0       .6   -896.8                 216.0      .2  -323.9
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *            LINEAR BUCKLEY-LEVERETT WATERFLOOD DISPLACEMENT                     *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =   360.00   TIME STEP NUMBER             =   60      TIME STEP SIZE (DAYS)         =     6.00
+
+ CURRENT AVG RES PRESSURE    =   4756.5   PREVIOUS AVG RES PRESSURE    =   4763.5  PRESSURE DPMAX( 10,  1,  1)   =    -10.8
+ OIL DSMAX(  8,  1,  1)      =  -.01892   GAS DSMAX( 10,  1,  1)       =   .00000  WATER DSMAX(  8,  1,  1)      =   .01892
+ OIL MATERIAL BALANCE (%)    =  .000012   GAS MATERIAL BALANCE (%)     =  .006773  WATER MATERIAL BALANCE (%)    = -.000007
+ CUM. OIL MATERIAL BALANCE(%)= -.000454   CUM. GAS MATERIAL BALANCE(%) =  .945494  CUM. WATER MATERIAL BALANCE(%)= -.000004
+
+ OIL PRODUCTION RATE (STB/D) =    600.0   CUM. OIL PRODUCTION (STB)    = .2160E+06
+ GAS PRODUCTION RATE (MSCF/D)=       .6   CUM. GAS PRODUCTION (MSCF)   = .2160E+03
+ WATER PRODUCTION RATE(STB/D)=      3.2
+                                         CUM. WATER PRODUCTION (STB)  = .8532E+02
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=   -900.0   CUM. WATER INJECTION (STB)   =-.3240E+06
+
+ PRODUCING WOR (STB/STB)     =     .005   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =      1.0   CUM. GOR (SCF/STB)           =      1.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1    5256.   5179.   5082.   4979.   4869.   4743.   4588.   4394.   4251.   4186.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1     .272    .302    .314    .332    .358    .400    .467    .585    .734    .789
+
+
+
+              ******** WATER SATURATION *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9      10
+
+
+   1     .728    .698    .686    .668    .642    .600    .533    .415    .266    .211
+
+
+     SW ARRAY PLOT:
+          MINIMUM ARRAY VALUE =                       .2114
+          MAXIMUM ARRAY VALUE =                       .7279
+          DIFFERENCE (MAX-MIN)=                       .5165
+
+
+          LAYER K =    1
+
+       I  1  2  3  4  5  6  7  8  9 10
+     J
+
+     1    T  9  9  9  8  8  6  4  1  - 
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  60  360.    600.0       .6      3.2    1.0    .0        .0   -900.  4757.   .000   .007   .000  8  1  1   .019  10  1  1  10.80 1   0
+
+
+
+   **************************************** BOAST II (RELEASE 1.1) SIMULATION TERMINATED ****************************************
+
+

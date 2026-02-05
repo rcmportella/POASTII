@@ -1,0 +1,2212 @@
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *                             BOAST II:                             *
+                             *                 BLACK OIL APPLIED SIMULATION TOOL                 *
+                             *                          (RELEASE 1.1)                            *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+
+
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+                                    REDIMENSIONING INFORMATION:
+                               MAX X-DIRECTION GRID BLOCKS                                    13
+                               MAX Y-DIRECTION GRID BLOCKS                                    10
+                               MAX Z-DIRECTION GRID BLOCKS                                     4
+                               MAX ROCK REGIONS                                                3
+                               MAX ROCK REGION TABLE ENTRIES                                  25
+                               MAX PVT REGIONS                                                 3
+                               MAX PVT REGION TABLE ENTRIES                                   25
+                               MAX WELLS                                                      50
+                               MAX TIME STEPS                                               1000
+                               MAX RESTART RECORDS                                             5
+                               TOTAL BLOCKS USING 1D DIRECT SOLN METHODS                      13
+                               TOTAL BLOCKS USING 2D OR 3D DIRECT SOLN METHODS                 1
+                               TOTAL BLOCKS USING ITERATIVE SOLN METHOD                      520
+                               MAX NO OF BLOCKS IN 1D FOR LSOR                                13
+                               MAX NO OF BLOCKS IN 2D FOR L2SOR                                1
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                                   ***** RESTART OPTION *****
+
+                                            RESTART OPTION HAS NOT BEEN ACTIVATED.
+
+
+
+
+                                            ***** INITIALIZATION DATA *****
+
+
+              GRID SIZE (DX) IN COLUMN    1 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DX) IN COLUMN    2 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DX) IN COLUMN    3 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DX) IN COLUMN    4 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DX) IN COLUMN    5 IS INITIALLY SET AT   80.00 FOR ALL NODES
+
+              GRID SIZE (DX) IN COLUMN    6 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DX) IN COLUMN    7 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DX) IN COLUMN    8 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DX) IN COLUMN    9 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+
+
+
+              GRID SIZE (DY) IN ROW       1 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DY) IN ROW       2 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DY) IN ROW       3 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DY) IN ROW       4 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DY) IN ROW       5 IS INITIALLY SET AT   80.00 FOR ALL NODES
+
+              GRID SIZE (DY) IN ROW       6 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DY) IN ROW       7 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DY) IN ROW       8 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+              GRID SIZE (DY) IN ROW       9 IS INITIALLY SET AT  160.00 FOR ALL NODES
+
+
+
+
+
+
+
+              GRID BLOCK GROSS THICKNESS (DZ) IS INITIALLY SET AT   30.0000 FOR ALL NODES
+
+
+
+
+
+
+
+
+              GRID BLOCK NET THICKNESS (DZNET) IS INITIALLY SET AT   30.0000 FOR ALL NODES
+
+
+
+
+
+
+
+              ********** DEPTHS TO GRID BLOCK TOPS **********
+
+
+ K = 1
+
+    8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.
+    8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.
+    8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.
+    8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.
+    8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.
+    8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.
+    8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.
+    8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.
+    8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.   8345.
+
+
+              **********POROSITY DISTRIBUTION FOLLOWS**********
+
+
+ K = 1
+
+    .2800   .2800   .2800   .2800   .2800   .2800   .2800   .2800   .2800
+    .2800   .2800   .2800   .2800   .2800   .2800   .2800   .2800   .2800
+    .2800   .2800   .2800   .2800   .2800   .2800   .2800   .2800   .2800
+    .2800   .2800   .2800   .2800   .2800   .2800   .2800   .2800   .2800
+    .2800   .2800   .2800   .2800   .2800   .2800   .2800   .2800   .2800
+    .3000   .3000   .3000   .3000   .3000   .3000   .3000   .3000   .3000
+    .3000   .3000   .3000   .3000   .3000   .3000   .3000   .3000   .3000
+    .3000   .3000   .3000   .3000   .3000   .3000   .3000   .3000   .3000
+    .3000   .3000   .3000   .3000   .3000   .3000   .3000   .3000   .3000
+
+
+
+
+
+
+              PERMEABILITY (KX) IS INITIALLY SET AT  100.0000 FOR ALL NODES
+
+
+
+
+
+
+
+
+              PERMEABILITY (KY) IS INITIALLY SET AT  100.0000 FOR ALL NODES
+
+
+
+
+
+
+
+
+              PERMEABILITY (KZ) IS INITIALLY SET AT  100.0000 FOR ALL NODES
+
+
+
+
+
+1
+              ***** EMPIRICAL DATA TABLES *****
+
+
+              *** NUMBER OF REGIONS ***
+                   ROCK          1
+                   PVT           1
+
+
+1
+              ROCK REGION #     1
+
+  SATURATION    KROT      KRW       KRG        KROG     PCOW      PCGO
+                                                        (PSI)     (PSI)
+
+     -.1000     .0000     .0000     .0000     .0000     .0000     .0000
+      .0200     .0000     .0000     .0000     .0000     .0000     .0000
+      .1200     .0000     .0000     .0200     .0000     .0000     .0000
+      .2000     .0000     .0200     .0600     .0000     .0000     .0000
+      .3000     .0000     .0400     .2000     .0000     .0000     .0000
+      .4000     .0300     .0700     .4600     .0000     .0000     .0000
+      .5000     .0900     .1200     .7000     .0000     .0000     .0000
+      .6000     .1700     .1800     .8700     .0000     .0000     .0000
+      .7000     .3000     .2700     .9100     .0000     .0000     .0000
+      .8000     .5000     .5100     .9400     .0000     .0000     .0000
+      .8800     .7500     .7100     .9700     .0000     .0000     .0000
+     1.0000    1.0000    1.0000    1.0000     .0000     .0000     .0000
+     1.1000    1.0000    1.0000    1.0000     .0000     .0000     .0000
+
+
+          THE THREE-PHASE REL. PERM. CALC. IS NOT USED.
+          IRREDUCIBLE WATER SATURATION IS  .1200
+1
+              PVT REGION #     1
+
+
+
+         BUBBLE POINT PARAMETERS:
+    BUBBLE POINT PRESSURE (PSI)     4014.700
+    BUBBLE POINT DEPTH (FT)         8300.000
+    BUBBLE POINT GRADIENT (PSI/FT)      .000
+
+
+   VSLOPE     BSLOPE       RSLOPE     PMAX  REPRS
+  (CP/PSI) (RB/STB/PSI)    (1/PSI)   (PSI)
+
+   .460E-04  -.232E-04        .00   9014.70     0
+
+
+     **** SATURATED OIL PVT PROPERTIES ****
+     PRESSURE  VISCOSITY    FVF    SOLN. GAS
+      (PSI)       (CP)    (RB/STB)  (SCF/STB)
+
+         14.7   1.0400    1.0620      1.00
+        264.7    .9750    1.1500     90.50
+        514.7    .9100    1.2070    180.00
+       1014.7    .8300    1.2950    371.00
+       2014.7    .6950    1.4350    636.00
+       2514.7    .6410    1.5000    775.00
+       3014.7    .5940    1.5650    930.00
+       4014.7    .5100    1.6950   1270.00
+       5014.7    .4490    1.8270   1618.00
+       9014.7    .2030    2.3500   2984.00
+
+
+         **** WATER PVT PROPERTIES ***
+     PRESSURE  VISCOSITY    FVF    SOLN. GAS
+      (PSI)       (CP)    (RB/STB)  (SCF/STB)
+
+         14.7    .5000    1.0190       .00
+       1014.7    .5010    1.0160       .00
+       2014.7    .5020    1.0130       .00
+       4014.7    .5050    1.0070       .00
+       6014.7    .5100    1.0010       .00
+       9014.7    .5200     .9920       .00
+
+
+       ****  GAS  PVT AND ROCK COMP. ****
+     PRESSURE  VISCOSITY    FVF     PSEUDO-PRS  ROCK COMP.
+      (PSI)       (CP)   (RCF/SCF) (PSIA**2/CP)  (1/PSI)
+
+         14.7    .0080   .9358E+00   .0000E+00    .300E-05
+        264.7    .0096   .6790E-01   .0000E+00    .300E-05
+        514.7    .0112   .3523E-01   .0000E+00    .300E-05
+       1014.7    .0140   .1795E-01   .0000E+00    .300E-05
+       2014.7    .0189   .9063E-02   .0000E+00    .300E-05
+       2514.7    .0208   .7266E-02   .0000E+00    .300E-05
+       3014.7    .0228   .6064E-02   .0000E+00    .300E-05
+       4014.7    .0268   .4554E-02   .0000E+00    .300E-05
+       5014.7    .0309   .3644E-02   .0000E+00    .300E-05
+       9014.7    .0470   .2167E-02   .0000E+00    .300E-05
+
+
+       *** DENSITIES AT STD. CONDITIONS ***
+              OIL      WATER      GAS
+           (LBM/SCF) (LBM/SCF) (LBM/SCF)
+
+            46.2440   62.2380     .0647
+
+
+              ***** SLOPES FOR COMPRESSIBILITY CALCULATIONS ****
+
+
+           PRESSURE     BO       DBO/DP       RSO     DRSO/DP
+            (PSI)    (RB/STB) (RB/STB/PSI)  (CF/CF)   (1/PSI)
+
+             264.7    1.1500    .3520E-03     16.1    .6376E-01
+             514.7    1.2070    .2280E-03     32.1    .6376E-01
+            1014.7    1.2950    .1760E-03     66.1    .6803E-01
+            2014.7    1.4350    .1400E-03    113.3    .4719E-01
+            2514.7    1.5000    .1300E-03    138.0    .4951E-01
+            3014.7    1.5650    .1300E-03    165.6    .5521E-01
+            4014.7    1.6950    .1300E-03    226.2    .6055E-01
+            5014.7    1.8270    .1320E-03    288.1    .6198E-01
+            9014.7    2.3500    .1307E-03    531.4    .6082E-01
+
+
+           PRESSURE     BW       DBW/DP       RSW     DRSW/DP
+            (PSI)    (RB/STB) (RB/STB/PSI)  (CF/CF)   (1/PSI)
+
+            1014.7    1.0160   -.3000E-05       .0    .0000E+00
+            2014.7    1.0130   -.3000E-05       .0    .0000E+00
+            4014.7    1.0070   -.3000E-05       .0    .0000E+00
+            6014.7    1.0010   -.3000E-05       .0    .0000E+00
+            9014.7     .9920   -.3000E-05       .0    .0000E+00
+
+
+            PRESSURE         BG            DBG/DP
+             (PSI)        (RCF/SCF)    (RCF/SCF/PSI)
+
+              264.7       .6790E-01     -.3472E-02
+              514.7       .3523E-01     -.1307E-03
+             1014.7       .1795E-01     -.3455E-04
+             2014.7       .9063E-02     -.8888E-05
+             2514.7       .7266E-02     -.3594E-05
+             3014.7       .6064E-02     -.2404E-05
+             4014.7       .4554E-02     -.1510E-05
+             5014.7       .3644E-02     -.9100E-06
+             9014.7       .2167E-02     -.3693E-06
+1
+              RUN CONTROL PARAMETERS:
+                   MAXIMUM NUMBER OF TIME-STEPS = 2000
+                   FACTOR FOR INCREASING DELT =     1.250   WHEN DSMAX AND DPMAX NOT EXCEEDED.
+                   FACTOR FOR DECREASING DELT =      .500   WHEN DSMAX OR DPMAX IS EXCEEDED.
+                   MAXIMUM SIMULATION TIME =     90.000
+                   MAXIMUM RESERVOIR WOR/TIME-STEP =     20. STB/STB
+                   MAXIMUM RESERVOIR GOR/TIME-STEP = 500000. SCF/STB
+                   MINIMUM AVERAGE RESERVOIR PRESSURE/TIME-STEP =    150.
+                   MAXIMUM AVERAGE RESERVOIR PRESSURE/TIME-STEP =  20000.
+
+
+              SOLUTION METHOD IS LSORX:
+                   MAXIMUM NUMBER OF ITERATIONS      (MITER) =        100
+                   INITIAL ACCELERATION PARAMETER    (OMEGA) =     1.7000
+                   MAXIMUM PRESSURE RESIDUAL           (TOL) =      .1000
+                   PARAMETER FOR CHANGING OMEGA       (TOL1) =      .0000
+
+              AUTOMATIC TIME STEP CRITERIA:
+                   MAXIMUM ALLOWED SATURATION CHANGE (DSMAX) =      .0500
+                   MAXIMUM ALLOWED PRESSURE CHANGE   (DPMAX) =   100.0000
+
+
+
+              IMPES FORMULATION SELECTED;  SINGLE-POINT UPSTREAM WEIGHTING.
+1
+                                                      *********************
+                                                      *   WELL   UPDATE   *
+                                                      *********************
+
+                   RESERVOIR CONTAINS THE FOLLOWING RATE NODES:
+
+   WELL  NO.     NODE        OIL(STBD)   WATER(RBD)   GAS(MCFD)   TOTAL(RBD)   BHFP(PSIA)      PID      ALIT      BLIT
+  P-1      1   5  5  1        300.00          .00          .00          .00          .00     .3000  .000E+00  .000E+00
+
+
+              BLOCK   5  5  1 CONTAINS THE OIL RATE SPECIFIED PRODUCING WELL NUMBER     1
+1
+              ******* INITIAL FLUID VOLUMES *******
+
+
+              LAYER  1 INITIAL FLUID VOLUMES:
+                   OIL IN PLACE (MILLION STB)                       1.5132
+                   WATER IN PLACE (MILLION STB)                      .3422
+                   SOLUTION GAS IN PLACE (BILLION SCF)              1.9217
+                   FREE GAS IN PLACE (BILLION SCF)                   .0000
+
+
+              TOTAL INITIAL FLUID VOLUMES IN RESERVOIR:
+                   OIL IN PLACE (MILLION STB)                       1.5132
+                   WATER IN PLACE (MILLION STB)                      .3422
+                   SOLUTION GAS IN PLACE (BILLION SCF)              1.9217
+                   FREE GAS IN PLACE (BILLION SCF)                   .0000
+
+1
+
+              ******* INITIAL ARRAYS *******
+
+
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.
+   2    5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.
+   3    5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.
+   4    5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.
+   5    5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.
+   6    5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.
+   7    5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.
+   8    5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.
+   9    5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.   5383.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   2     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   3     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   4     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   5     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   6     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   7     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   8     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   9     .880    .880    .880    .880    .880    .880    .880    .880    .880
+
+
+
+              ******** WATER SATURATION *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .120    .120    .120    .120    .120    .120    .120    .120    .120
+   2     .120    .120    .120    .120    .120    .120    .120    .120    .120
+   3     .120    .120    .120    .120    .120    .120    .120    .120    .120
+   4     .120    .120    .120    .120    .120    .120    .120    .120    .120
+   5     .120    .120    .120    .120    .120    .120    .120    .120    .120
+   6     .120    .120    .120    .120    .120    .120    .120    .120    .120
+   7     .120    .120    .120    .120    .120    .120    .120    .120    .120
+   8     .120    .120    .120    .120    .120    .120    .120    .120    .120
+   9     .120    .120    .120    .120    .120    .120    .120    .120    .120
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   2     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   3     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   4     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   5     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   6     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   7     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   8     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   9     .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   2    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   3    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   4    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   5    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   6    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   7    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   8    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   9    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF INITIALIZATION  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+   1    1.    300.0    381.0       .0 1270.0    .0        .0      0.  5372.  -.000   .000   .000  5  5  1   .000   5  5  1  74.09 1  19
+   2    2.    300.0    381.0       .0 1270.0    .0        .0      0.  5361.   .000   .000   .000  5  4  1   .000   5  5  1  14.29 1  15
+   3    3.    300.0    381.0       .0 1270.0    .0        .0      0.  5350.   .000   .000   .000  5  4  1   .000   5  4  1  11.59 1  15
+   4    4.    300.0    381.0       .0 1270.0    .0        .0      0.  5339.   .000   .000   .000  3  4  1   .000   6  4  1  11.27 1  15
+   5    5.    300.0    381.0       .0 1270.0    .0        .0      0.  5328.   .000   .000   .000  5  4  1   .000   4  2  1  11.22 1  15
+   6    6.    300.0    381.0       .0 1270.0    .0        .0      0.  5316.   .000   .000   .000  4  4  1   .000   5  1  1  11.22 1  15
+   7    7.    300.0    381.0       .0 1270.0    .0        .0      0.  5305.   .000   .000   .000  3  2  1   .000   7  1  1  11.22 1  15
+   8    8.    300.0    381.0       .0 1270.0    .0        .0      0.  5294.   .000   .000   .000  2  4  1   .000   9  1  1  11.21 1  15
+   9    9.    300.0    381.0       .0 1270.0    .0        .0      0.  5283.   .000   .000   .000  9  2  1   .000   8  9  1  11.22 1  15
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  10   ELAPSED TIME =   10.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  P-1     5  5  1   3959.      0.   .300    300.0     381.       .0 1270.0   .000     3.0      4.      .0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   300.0    381.0       .0                   3.0     3.8      .0
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =    10.00   TIME STEP NUMBER             =   10      TIME STEP SIZE (DAYS)         =     1.00
+
+ CURRENT AVG RES PRESSURE    =   5271.5   PREVIOUS AVG RES PRESSURE    =   5282.7  PRESSURE DPMAX(  2,  1,  1)   =    -11.2
+ OIL DSMAX(  2,  1,  1)      =  -.00000   GAS DSMAX(  0,  0,  0)       =   .00000  WATER DSMAX(  2,  1,  1)      =   .00000
+ OIL MATERIAL BALANCE (%)    = -.000033   GAS MATERIAL BALANCE (%)     = -.000027  WATER MATERIAL BALANCE (%)    =  .000005
+ CUM. OIL MATERIAL BALANCE(%)= -.000428   CUM. GAS MATERIAL BALANCE(%) = -.000169  CUM. WATER MATERIAL BALANCE(%)= -.000018
+
+ OIL PRODUCTION RATE (STB/D) =    300.0   CUM. OIL PRODUCTION (STB)    = .3000E+04
+ GAS PRODUCTION RATE (MSCF/D)=    381.0   CUM. GAS PRODUCTION (MSCF)   = .3810E+04
+ WATER PRODUCTION RATE(STB/D)=       .0
+                                         CUM. WATER PRODUCTION (STB)  = .1422E+00
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=       .0   CUM. WATER INJECTION (STB)   = .0000E+00
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =   1270.0   CUM. GOR (SCF/STB)           =   1270.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    5277.   5276.   5275.   5274.   5274.   5274.   5275.   5276.   5277.
+   2    5276.   5275.   5273.   5272.   5271.   5272.   5273.   5275.   5276.
+   3    5275.   5273.   5270.   5266.   5265.   5266.   5270.   5273.   5275.
+   4    5274.   5272.   5267.   5258.   5250.   5258.   5267.   5272.   5274.
+   5    5274.   5272.   5265.   5251.   5205.   5251.   5265.   5272.   5274.
+   6    5275.   5272.   5267.   5259.   5251.   5259.   5267.   5272.   5275.
+   7    5276.   5274.   5271.   5267.   5265.   5267.   5271.   5274.   5276.
+   8    5277.   5276.   5274.   5272.   5272.   5272.   5274.   5276.   5277.
+   9    5278.   5277.   5276.   5275.   5275.   5275.   5276.   5277.   5278.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   2     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   3     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   4     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   5     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   6     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   7     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   8     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   9     .880    .880    .880    .880    .880    .880    .880    .880    .880
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   2     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   3     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   4     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   5     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   6     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   7     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   8     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   9     .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   2    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   3    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   4    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   5    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   6    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   7    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   8    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   9    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  10   10.    300.0    381.0       .0 1270.0    .0        .0      0.  5271.   .000   .000   .000  7  2  1   .000   2  1  1  11.22 1  15
+  11   11.    300.0    381.0       .0 1270.0    .0        .0      0.  5260.   .000   .000   .000  2  2  1   .000   9  1  1  11.23 1  15
+  12   12.    300.0    381.0       .0 1270.0    .0        .0      0.  5249.   .000   .000   .000  5  4  1   .000   1  9  1  11.23 1  15
+  13   13.    300.0    381.0       .0 1270.0    .0        .0      0.  5238.   .000   .000   .000  7  2  1   .000   9  9  1  11.24 1  15
+  14   14.    300.0    381.0       .0 1270.0    .0        .0      0.  5227.   .000   .000   .000  6  4  1   .000   2  9  1  11.24 1  15
+  15   15.    300.0    381.0       .0 1270.0    .0        .0      0.  5215.   .000   .000   .000  6  2  1   .000   1  9  1  11.24 1  15
+  16   16.    300.0    381.0       .0 1270.0    .0        .0      0.  5204.   .000   .000   .000  9  2  1   .000   1  8  1  11.24 1  15
+  17   17.    300.0    381.0       .0 1270.0    .0        .0      0.  5193.   .000   .000   .000  6  2  1   .000   1  9  1  11.25 1  15
+  18   18.    300.0    381.0       .0 1270.0    .0        .0      0.  5182.   .000   .000   .000  6  4  1   .000   8  9  1  11.25 1  15
+  19   19.    300.0    381.0       .0 1270.0    .0        .0      0.  5170.   .000   .000   .000  3  2  1   .000   8  9  1  11.25 1  15
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  20   ELAPSED TIME =   20.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  P-1     5  5  1   3857.      0.   .300    300.0     381.       .0 1270.0   .000     6.0      8.      .0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   300.0    381.0       .0                   6.0     7.6      .0
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =    20.00   TIME STEP NUMBER             =   20      TIME STEP SIZE (DAYS)         =     1.00
+
+ CURRENT AVG RES PRESSURE    =   5159.1   PREVIOUS AVG RES PRESSURE    =   5170.4  PRESSURE DPMAX(  1,  9,  1)   =    -11.3
+ OIL DSMAX(  1,  1,  1)      =  -.00000   GAS DSMAX(  0,  0,  0)       =   .00000  WATER DSMAX(  1,  9,  1)      =   .00000
+ OIL MATERIAL BALANCE (%)    = -.000041   GAS MATERIAL BALANCE (%)     =  .000019  WATER MATERIAL BALANCE (%)    =  .000010
+ CUM. OIL MATERIAL BALANCE(%)= -.000827   CUM. GAS MATERIAL BALANCE(%) = -.000546  CUM. WATER MATERIAL BALANCE(%)=  .000012
+
+ OIL PRODUCTION RATE (STB/D) =    300.0   CUM. OIL PRODUCTION (STB)    = .6000E+04
+ GAS PRODUCTION RATE (MSCF/D)=    381.0   CUM. GAS PRODUCTION (MSCF)   = .7620E+04
+ WATER PRODUCTION RATE(STB/D)=       .0
+                                         CUM. WATER PRODUCTION (STB)  = .4310E+00
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=       .0   CUM. WATER INJECTION (STB)   = .0000E+00
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =   1270.0   CUM. GOR (SCF/STB)           =   1270.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    5165.   5164.   5163.   5162.   5161.   5162.   5163.   5164.   5165.
+   2    5164.   5163.   5161.   5159.   5159.   5159.   5161.   5163.   5164.
+   3    5163.   5161.   5158.   5154.   5153.   5154.   5158.   5161.   5163.
+   4    5162.   5159.   5154.   5146.   5138.   5146.   5154.   5159.   5162.
+   5    5162.   5159.   5153.   5138.   5093.   5138.   5153.   5159.   5162.
+   6    5162.   5160.   5155.   5146.   5138.   5146.   5155.   5160.   5162.
+   7    5163.   5162.   5158.   5155.   5153.   5155.   5158.   5162.   5163.
+   8    5165.   5164.   5162.   5160.   5160.   5160.   5162.   5164.   5165.
+   9    5165.   5165.   5163.   5162.   5162.   5162.   5163.   5165.   5165.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   2     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   3     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   4     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   5     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   6     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   7     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   8     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   9     .880    .880    .880    .880    .880    .880    .880    .880    .880
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   2     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   3     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   4     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   5     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   6     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   7     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   8     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   9     .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   2    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   3    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   4    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   5    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   6    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   7    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   8    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   9    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  20   20.    300.0    381.0       .0 1270.0    .0        .0      0.  5159.   .000   .000   .000  4  2  1   .000   1  9  1  11.26 1  15
+  21   21.    300.0    381.0       .0 1270.0    .0        .0      0.  5148.   .000   .000   .000  3  2  1   .000   1  9  1  11.26 1  15
+  22   22.    300.0    381.0       .0 1270.0    .0        .0      0.  5137.   .000   .000   .000  5  2  1   .000   1  8  1  11.26 1  15
+  23   23.    300.0    381.0       .0 1270.0    .0        .0      0.  5125.   .000   .000   .000  9  2  1   .000   1  9  1  11.27 1  15
+  24   24.    300.0    381.0       .0 1270.0    .0        .0      0.  5114.   .000   .000   .000  7  2  1   .000   1  1  1  11.27 1  15
+  25   25.    300.0    381.0       .0 1270.0    .0        .0      0.  5103.   .000   .000   .000  2  2  1   .000   8  9  1  11.27 1  15
+  26   26.    300.0    381.0       .0 1270.0    .0        .0      0.  5092.   .000   .000   .000  5  4  1   .000   9  9  1  11.28 1  15
+  27   27.    300.0    381.0       .0 1270.0    .0        .0      0.  5080.   .000   .000   .000  1  2  1   .000   1  8  1  11.28 1  15
+  28   28.    300.0    381.0       .0 1270.0    .0        .0      0.  5069.   .000   .000   .000  5  2  1   .000   9  9  1  11.29 1  15
+  29   29.    300.0    381.0       .0 1270.0    .0        .0      0.  5058.   .000   .000   .000  8  4  1   .000   2  8  1  11.29 1  15
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  30   ELAPSED TIME =   30.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  P-1     5  5  1   3754.      0.   .300    300.0     381.       .0 1270.0   .000     9.0     11.      .0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   300.0    381.0       .0                   9.0    11.4      .0
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =    30.00   TIME STEP NUMBER             =   30      TIME STEP SIZE (DAYS)         =     1.00
+
+ CURRENT AVG RES PRESSURE    =   5046.4   PREVIOUS AVG RES PRESSURE    =   5057.7  PRESSURE DPMAX(  1,  1,  1)   =    -11.3
+ OIL DSMAX(  4,  1,  1)      =  -.00000   GAS DSMAX(  0,  0,  0)       =   .00000  WATER DSMAX(  3,  1,  1)      =   .00000
+ OIL MATERIAL BALANCE (%)    =  .000000   GAS MATERIAL BALANCE (%)     = -.000007  WATER MATERIAL BALANCE (%)    = -.000022
+ CUM. OIL MATERIAL BALANCE(%)= -.001169   CUM. GAS MATERIAL BALANCE(%) = -.000906  CUM. WATER MATERIAL BALANCE(%)= -.000064
+
+ OIL PRODUCTION RATE (STB/D) =    300.0   CUM. OIL PRODUCTION (STB)    = .9000E+04
+ GAS PRODUCTION RATE (MSCF/D)=    381.0   CUM. GAS PRODUCTION (MSCF)   = .1143E+05
+ WATER PRODUCTION RATE(STB/D)=       .0
+                                         CUM. WATER PRODUCTION (STB)  = .8570E+00
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=       .0   CUM. WATER INJECTION (STB)   = .0000E+00
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =   1270.0   CUM. GOR (SCF/STB)           =   1270.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    5052.   5051.   5050.   5049.   5049.   5049.   5050.   5051.   5052.
+   2    5051.   5050.   5048.   5047.   5046.   5047.   5048.   5050.   5051.
+   3    5050.   5048.   5045.   5041.   5040.   5041.   5045.   5048.   5050.
+   4    5049.   5047.   5042.   5033.   5026.   5033.   5042.   5047.   5049.
+   5    5049.   5046.   5040.   5026.   4981.   5026.   5040.   5046.   5049.
+   6    5049.   5047.   5042.   5034.   5026.   5034.   5042.   5047.   5049.
+   7    5051.   5049.   5046.   5042.   5040.   5042.   5046.   5049.   5051.
+   8    5052.   5051.   5049.   5047.   5047.   5047.   5049.   5051.   5052.
+   9    5053.   5052.   5051.   5050.   5050.   5050.   5051.   5052.   5053.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   2     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   3     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   4     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   5     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   6     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   7     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   8     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   9     .880    .880    .880    .880    .880    .880    .880    .880    .880
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   2     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   3     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   4     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   5     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   6     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   7     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   8     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   9     .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   2    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   3    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   4    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   5    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   6    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   7    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   8    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   9    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  30   30.    300.0    381.0       .0 1270.0    .0        .0      0.  5046.   .000   .000   .000  1  2  1   .000   1  1  1  11.29 1  15
+  31   31.    300.0    381.0       .0 1270.0    .0        .0      0.  5035.   .000   .000   .000  5  2  1   .000   9  9  1  11.30 1  15
+  32   32.    300.0    381.0       .0 1270.0    .0        .0      0.  5024.   .000   .000   .000  2  2  1   .000   1  9  1  11.30 1  15
+  33   33.    300.0    381.0       .0 1270.0    .0        .0      0.  5013.   .000   .000   .000  8  2  1   .000   8  9  1  11.30 1  15
+  34   34.    300.0    381.0       .0 1270.0    .0        .0      0.  5001.   .000   .000   .000  1  2  1   .000   2  1  1  11.30 1  15
+  35   35.    300.0    381.0       .0 1270.0    .0        .0      0.  4990.   .000   .000   .000  2  2  1   .000   1  1  1  11.31 1  15
+  36   36.    300.0    381.0       .0 1270.0    .0        .0      0.  4979.   .000   .000   .000  3  2  1   .000   1  9  1  11.31 1  15
+  37   37.    300.0    381.0       .0 1270.0    .0        .0      0.  4967.   .000   .000   .000  1  2  1   .000   9  9  1  11.31 1  15
+  38   38.    300.0    381.0       .0 1270.0    .0        .0      0.  4956.   .000   .000   .000  1  2  1   .000   2  9  1  11.32 1  15
+  39   39.    300.0    381.0       .0 1270.0    .0        .0      0.  4945.   .000   .000   .000  2  2  1   .000   4  9  1  11.32 1  15
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  40   ELAPSED TIME =   40.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  P-1     5  5  1   3650.      0.   .300    300.0     381.       .0 1270.0   .000    12.0     15.      .0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   300.0    381.0       .0                  12.0    15.2      .0
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =    40.00   TIME STEP NUMBER             =   40      TIME STEP SIZE (DAYS)         =     1.00
+
+ CURRENT AVG RES PRESSURE    =   4933.4   PREVIOUS AVG RES PRESSURE    =   4944.7  PRESSURE DPMAX(  1,  9,  1)   =    -11.3
+ OIL DSMAX(  5,  1,  1)      =  -.00000   GAS DSMAX(  0,  0,  0)       =   .00000  WATER DSMAX(  1,  1,  1)      =   .00000
+ OIL MATERIAL BALANCE (%)    = -.000008   GAS MATERIAL BALANCE (%)     = -.000059  WATER MATERIAL BALANCE (%)    =  .000009
+ CUM. OIL MATERIAL BALANCE(%)= -.001471   CUM. GAS MATERIAL BALANCE(%) = -.001214  CUM. WATER MATERIAL BALANCE(%)= -.000073
+
+ OIL PRODUCTION RATE (STB/D) =    300.0   CUM. OIL PRODUCTION (STB)    = .1200E+05
+ GAS PRODUCTION RATE (MSCF/D)=    381.0   CUM. GAS PRODUCTION (MSCF)   = .1524E+05
+ WATER PRODUCTION RATE(STB/D)=       .0
+                                         CUM. WATER PRODUCTION (STB)  = .1420E+01
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=       .0   CUM. WATER INJECTION (STB)   = .0000E+00
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =   1270.0   CUM. GOR (SCF/STB)           =   1270.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4939.   4938.   4937.   4936.   4936.   4936.   4937.   4938.   4939.
+   2    4938.   4937.   4935.   4934.   4933.   4934.   4935.   4937.   4938.
+   3    4937.   4935.   4932.   4928.   4927.   4928.   4932.   4935.   4937.
+   4    4936.   4934.   4929.   4920.   4913.   4920.   4929.   4934.   4936.
+   5    4936.   4933.   4927.   4913.   4869.   4913.   4927.   4933.   4936.
+   6    4936.   4934.   4929.   4921.   4913.   4921.   4929.   4934.   4936.
+   7    4938.   4936.   4933.   4929.   4927.   4929.   4933.   4936.   4938.
+   8    4939.   4938.   4936.   4934.   4934.   4934.   4936.   4938.   4939.
+   9    4940.   4939.   4938.   4937.   4936.   4937.   4938.   4939.   4940.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   2     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   3     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   4     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   5     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   6     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   7     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   8     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   9     .880    .880    .880    .880    .880    .880    .880    .880    .880
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   2     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   3     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   4     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   5     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   6     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   7     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   8     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   9     .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   2    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   3    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   4    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   5    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   6    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   7    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   8    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   9    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  40   40.    300.0    381.0       .0 1270.0    .0        .0      0.  4933.   .000   .000   .000  7  2  1   .000   1  9  1  11.33 1  15
+  41   41.    300.0    381.0       .0 1270.0    .0        .0      0.  4922.   .000   .000   .000  1  2  1   .000   1  8  1  11.33 1  15
+  42   42.    300.0    381.0       .0 1270.0    .0        .0      0.  4911.   .000   .000   .000  5  2  1   .000   9  9  1  11.33 1  15
+  43   43.    300.0    381.0       .0 1270.0    .0        .0      0.  4899.   .000   .000   .000  2  2  1   .000   1  9  1  11.34 1  15
+  44   44.    300.0    381.0       .0 1270.0    .0        .0      0.  4888.   .000   .000   .000  9  2  1   .000   9  1  1  11.34 1  15
+  45   45.    300.0    381.0       .0 1270.0    .0        .0      0.  4877.   .000   .000   .000  5  2  1   .000   9  9  1  11.34 1  15
+  46   46.    300.0    381.0       .0 1270.0    .0        .0      0.  4865.   .000   .000   .000  3  2  1   .000   9  8  1  11.35 1  15
+  47   47.    300.0    381.0       .0 1270.0    .0        .0      0.  4854.   .000   .000   .000  2  2  1   .000   1  9  1  11.35 1  15
+  48   48.    300.0    381.0       .0 1270.0    .0        .0      0.  4843.   .000   .000   .000  1  2  1   .000   9  7  1  11.35 1  15
+  49   49.    300.0    381.0       .0 1270.0    .0        .0      0.  4831.   .000   .000   .000  4  2  1   .000   1  9  1  11.36 1  15
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  50   ELAPSED TIME =   50.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  P-1     5  5  1   3547.      0.   .300    300.0     381.       .0 1270.0   .000    15.0     19.      .0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   300.0    381.0       .0                  15.0    19.0      .0
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =    50.00   TIME STEP NUMBER             =   50      TIME STEP SIZE (DAYS)         =     1.00
+
+ CURRENT AVG RES PRESSURE    =   4820.0   PREVIOUS AVG RES PRESSURE    =   4831.4  PRESSURE DPMAX(  9,  8,  1)   =    -11.4
+ OIL DSMAX(  6,  3,  1)      =  -.00000   GAS DSMAX(  0,  0,  0)       =   .00000  WATER DSMAX(  2,  3,  1)      =   .00000
+ OIL MATERIAL BALANCE (%)    = -.000017   GAS MATERIAL BALANCE (%)     = -.000020  WATER MATERIAL BALANCE (%)    = -.000015
+ CUM. OIL MATERIAL BALANCE(%)= -.001733   CUM. GAS MATERIAL BALANCE(%) = -.001472  CUM. WATER MATERIAL BALANCE(%)=  .000000
+
+ OIL PRODUCTION RATE (STB/D) =    300.0   CUM. OIL PRODUCTION (STB)    = .1500E+05
+ GAS PRODUCTION RATE (MSCF/D)=    381.0   CUM. GAS PRODUCTION (MSCF)   = .1905E+05
+ WATER PRODUCTION RATE(STB/D)=       .0
+                                         CUM. WATER PRODUCTION (STB)  = .2120E+01
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=       .0   CUM. WATER INJECTION (STB)   = .0000E+00
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =   1270.0   CUM. GOR (SCF/STB)           =   1270.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4825.   4825.   4823.   4822.   4822.   4822.   4823.   4825.   4825.
+   2    4825.   4824.   4822.   4820.   4820.   4820.   4822.   4824.   4825.
+   3    4824.   4822.   4819.   4815.   4814.   4815.   4819.   4822.   4824.
+   4    4823.   4820.   4815.   4807.   4800.   4807.   4815.   4820.   4823.
+   5    4823.   4820.   4814.   4800.   4756.   4800.   4814.   4820.   4823.
+   6    4823.   4821.   4816.   4807.   4800.   4807.   4816.   4821.   4823.
+   7    4824.   4822.   4819.   4816.   4814.   4816.   4819.   4822.   4824.
+   8    4825.   4824.   4823.   4821.   4820.   4821.   4823.   4824.   4825.
+   9    4826.   4825.   4824.   4823.   4823.   4823.   4824.   4825.   4826.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   2     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   3     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   4     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   5     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   6     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   7     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   8     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   9     .880    .880    .880    .880    .880    .880    .880    .880    .880
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   2     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   3     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   4     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   5     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   6     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   7     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   8     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   9     .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   2    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   3    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   4    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   5    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   6    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   7    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   8    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   9    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  50   50.    300.0    381.0       .0 1270.0    .0        .0      0.  4820.   .000   .000   .000  2  2  1   .000   9  8  1  11.36 1  15
+  51   51.    300.0    381.0       .0 1270.0    .0        .0      0.  4809.   .000   .000   .000  4  2  1   .000   9  9  1  11.36 1  15
+  52   52.    300.0    381.0       .0 1270.0    .0        .0      0.  4797.   .000   .000   .000  5  2  1   .000   1  1  1  11.36 1  15
+  53   53.    300.0    381.0       .0 1270.0    .0        .0      0.  4786.   .000   .000   .000  7  2  1   .000   9  9  1  11.37 1  15
+  54   54.    300.0    381.0       .0 1270.0    .0        .0      0.  4775.   .000   .000   .000  3  2  1   .000   2  1  1  11.37 1  15
+  55   55.    300.0    381.0       .0 1270.0    .0        .0      0.  4763.   .000   .000   .000  8  2  1   .000   9  8  1  11.38 1  15
+  56   56.    300.0    381.0       .0 1270.0    .0        .0      0.  4752.   .000   .000   .000  3  2  1   .000   2  9  1  11.38 1  15
+  57   57.    300.0    381.0       .0 1270.0    .0        .0      0.  4740.   .000   .000   .000  6  2  1   .000   1  1  1  11.38 1  15
+  58   58.    300.0    381.0       .0 1270.0    .0        .0      0.  4729.   .000   .000   .000  5  2  1   .000   9  9  1  11.39 1  15
+  59   59.    300.0    381.0       .0 1270.0    .0        .0      0.  4718.   .000   .000   .000  3  2  1   .000   1  9  1  11.39 1  15
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  60   ELAPSED TIME =   60.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  P-1     5  5  1   3443.      0.   .300    300.0     381.       .0 1270.0   .000    18.0     23.      .0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   300.0    381.0       .0                  18.0    22.9      .0
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =    60.00   TIME STEP NUMBER             =   60      TIME STEP SIZE (DAYS)         =     1.00
+
+ CURRENT AVG RES PRESSURE    =   4706.3   PREVIOUS AVG RES PRESSURE    =   4717.7  PRESSURE DPMAX(  9,  9,  1)   =    -11.4
+ OIL DSMAX(  7,  1,  1)      =  -.00000   GAS DSMAX(  0,  0,  0)       =   .00000  WATER DSMAX(  1,  1,  1)      =   .00000
+ OIL MATERIAL BALANCE (%)    =  .000017   GAS MATERIAL BALANCE (%)     = -.000027  WATER MATERIAL BALANCE (%)    = -.000010
+ CUM. OIL MATERIAL BALANCE(%)= -.001954   CUM. GAS MATERIAL BALANCE(%) = -.001717  CUM. WATER MATERIAL BALANCE(%)= -.000090
+
+ OIL PRODUCTION RATE (STB/D) =    300.0   CUM. OIL PRODUCTION (STB)    = .1800E+05
+ GAS PRODUCTION RATE (MSCF/D)=    381.0   CUM. GAS PRODUCTION (MSCF)   = .2286E+05
+ WATER PRODUCTION RATE(STB/D)=       .0
+                                         CUM. WATER PRODUCTION (STB)  = .2956E+01
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=       .0   CUM. WATER INJECTION (STB)   = .0000E+00
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =   1270.0   CUM. GOR (SCF/STB)           =   1270.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4712.   4711.   4710.   4709.   4709.   4709.   4710.   4711.   4712.
+   2    4711.   4710.   4708.   4706.   4706.   4706.   4708.   4710.   4711.
+   3    4710.   4708.   4705.   4701.   4700.   4701.   4705.   4708.   4710.
+   4    4709.   4707.   4702.   4694.   4686.   4694.   4702.   4707.   4709.
+   5    4709.   4706.   4700.   4686.   4643.   4686.   4700.   4706.   4709.
+   6    4709.   4707.   4702.   4694.   4686.   4694.   4702.   4707.   4709.
+   7    4710.   4709.   4706.   4702.   4700.   4702.   4706.   4709.   4710.
+   8    4712.   4711.   4709.   4707.   4707.   4707.   4709.   4711.   4712.
+   9    4712.   4712.   4711.   4710.   4709.   4710.   4711.   4712.   4712.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   2     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   3     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   4     .880    .880    .880    .880    .879    .880    .880    .880    .880
+   5     .880    .880    .880    .879    .879    .879    .880    .880    .880
+   6     .880    .880    .880    .880    .879    .880    .880    .880    .880
+   7     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   8     .880    .880    .880    .880    .880    .880    .880    .880    .880
+   9     .880    .880    .880    .880    .880    .880    .880    .880    .880
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   2     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   3     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   4     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   5     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   6     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   7     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   8     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   9     .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   2    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   3    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   4    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   5    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   6    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   7    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   8    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   9    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  60   60.    300.0    381.0       .0 1270.0    .0        .0      0.  4706.   .000   .000   .000  1  2  1   .000   9  9  1  11.39 1  15
+  61   61.    300.0    381.0       .0 1270.0    .0        .0      0.  4695.   .000   .000   .000  6  2  1   .000   1  3  1  11.40 1  15
+  62   62.    300.0    381.0       .0 1270.0    .0        .0      0.  4684.   .000   .000   .000  6  2  1   .000   1  9  1  11.40 1  15
+  63   63.    300.0    381.0       .0 1270.0    .0        .0      0.  4672.   .000   .000   .000  5  2  1   .000   9  2  1  11.40 1  15
+  64   64.    300.0    381.0       .0 1270.0    .0        .0      0.  4661.   .000   .000   .000  2  2  1   .000   1  1  1  11.41 1  15
+  65   65.    300.0    381.0       .0 1270.0    .0        .0      0.  4649.   .000   .000   .000  4  2  1   .000   7  9  1  11.41 1  15
+  66   66.    300.0    381.0       .0 1270.0    .0        .0      0.  4638.   .000   .000   .000  3  2  1   .000   1  9  1  11.41 1  15
+  67   67.    300.0    381.0       .0 1270.0    .0        .0      0.  4627.   .000   .000   .000  7  2  1   .000   1  9  1  11.42 1  15
+  68   68.    300.0    381.0       .1 1270.0    .0        .0      0.  4615.   .000   .000   .000  3  2  1   .000   9  1  1  11.42 1  15
+  69   69.    300.0    381.0       .1 1270.0    .0        .0      0.  4604.   .000   .000   .000  3  2  1   .000   1  9  1  11.43 1  15
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  70   ELAPSED TIME =   70.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  P-1     5  5  1   3339.      0.   .300    300.0     381.       .1 1270.0   .000    21.0     27.      .0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   300.0    381.0       .1                  21.0    26.7      .0
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =    70.00   TIME STEP NUMBER             =   70      TIME STEP SIZE (DAYS)         =     1.00
+
+ CURRENT AVG RES PRESSURE    =   4592.2   PREVIOUS AVG RES PRESSURE    =   4603.7  PRESSURE DPMAX(  1,  1,  1)   =    -11.4
+ OIL DSMAX(  1,  1,  1)      =  -.00000   GAS DSMAX(  0,  0,  0)       =   .00000  WATER DSMAX(  1,  1,  1)      =   .00000
+ OIL MATERIAL BALANCE (%)    = -.000008   GAS MATERIAL BALANCE (%)     = -.000040  WATER MATERIAL BALANCE (%)    =  .000011
+ CUM. OIL MATERIAL BALANCE(%)= -.002150   CUM. GAS MATERIAL BALANCE(%) = -.001890  CUM. WATER MATERIAL BALANCE(%)=  .000000
+
+ OIL PRODUCTION RATE (STB/D) =    300.0   CUM. OIL PRODUCTION (STB)    = .2100E+05
+ GAS PRODUCTION RATE (MSCF/D)=    381.0   CUM. GAS PRODUCTION (MSCF)   = .2667E+05
+ WATER PRODUCTION RATE(STB/D)=       .1
+                                         CUM. WATER PRODUCTION (STB)  = .3927E+01
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=       .0   CUM. WATER INJECTION (STB)   = .0000E+00
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =   1270.0   CUM. GOR (SCF/STB)           =   1270.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4598.   4597.   4596.   4595.   4594.   4595.   4596.   4597.   4598.
+   2    4597.   4596.   4594.   4592.   4592.   4592.   4594.   4596.   4597.
+   3    4596.   4594.   4591.   4587.   4586.   4587.   4591.   4594.   4596.
+   4    4595.   4593.   4588.   4580.   4572.   4580.   4588.   4593.   4595.
+   5    4595.   4592.   4586.   4572.   4529.   4572.   4586.   4592.   4595.
+   6    4595.   4593.   4588.   4580.   4572.   4580.   4588.   4593.   4595.
+   7    4596.   4595.   4592.   4588.   4586.   4588.   4592.   4595.   4596.
+   8    4598.   4597.   4595.   4593.   4593.   4593.   4595.   4597.   4598.
+   9    4598.   4598.   4596.   4595.   4595.   4595.   4596.   4598.   4598.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   2     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   3     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   4     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   5     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   6     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   7     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   8     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   9     .879    .879    .879    .879    .879    .879    .879    .879    .879
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   2     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   3     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   4     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   5     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   6     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   7     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   8     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   9     .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   2    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   3    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   4    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   5    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   6    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   7    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   8    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   9    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  70   70.    300.0    381.0       .1 1270.0    .0        .0      0.  4592.   .000   .000   .000  5  2  1   .000   1  1  1  11.43 1  15
+  71   71.    300.0    381.0       .1 1270.0    .0        .0      0.  4581.   .000   .000   .000  4  2  1   .000   9  7  1  11.43 1  15
+  72   72.    300.0    381.0       .1 1270.0    .0        .0      0.  4569.   .000   .000   .000  2  2  1   .000   9  9  1  11.43 1  15
+  73   73.    300.0    381.0       .1 1270.0    .0        .0      0.  4558.   .000   .000   .000  9  2  1   .000   1  9  1  11.44 1  15
+  74   74.    300.0    381.0       .1 1270.0    .0        .0      0.  4547.   .000   .000   .000  5  2  1   .000   1  9  1  11.44 1  15
+  75   75.    300.0    381.0       .1 1270.0    .0        .0      0.  4535.   .000   .000   .000  2  2  1   .000   9  8  1  11.44 1  15
+  76   76.    300.0    381.0       .1 1270.0    .0        .0      0.  4524.   .000   .000   .000  5  2  1   .000   1  1  1  11.45 1  15
+  77   77.    300.0    381.0       .1 1270.0    .0        .0      0.  4512.   .000   .000   .000  5  2  1   .000   9  9  1  11.45 1  15
+  78   78.    300.0    381.0       .1 1270.0    .0        .0      0.  4501.   .000   .000   .000  3  2  1   .000   1  9  1  11.45 1  15
+  79   79.    300.0    381.0       .1 1270.0    .0        .0      0.  4489.   .000   .000   .000  2  2  1   .000   2  1  1  11.46 1  15
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  80   ELAPSED TIME =   80.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  P-1     5  5  1   3235.      0.   .300    300.0     381.       .1 1270.0   .000    24.0     30.      .0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   300.0    381.0       .1                  24.0    30.5      .0
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =    80.00   TIME STEP NUMBER             =   80      TIME STEP SIZE (DAYS)         =     1.00
+
+ CURRENT AVG RES PRESSURE    =   4477.8   PREVIOUS AVG RES PRESSURE    =   4489.3  PRESSURE DPMAX(  9,  1,  1)   =    -11.5
+ OIL DSMAX(  2,  3,  1)      =  -.00000   GAS DSMAX(  0,  0,  0)       =   .00000  WATER DSMAX(  1,  7,  1)      =   .00000
+ OIL MATERIAL BALANCE (%)    = -.000008   GAS MATERIAL BALANCE (%)     = -.000020  WATER MATERIAL BALANCE (%)    =  .000016
+ CUM. OIL MATERIAL BALANCE(%)= -.002272   CUM. GAS MATERIAL BALANCE(%) = -.002012  CUM. WATER MATERIAL BALANCE(%)= -.000032
+
+ OIL PRODUCTION RATE (STB/D) =    300.0   CUM. OIL PRODUCTION (STB)    = .2400E+05
+ GAS PRODUCTION RATE (MSCF/D)=    381.0   CUM. GAS PRODUCTION (MSCF)   = .3048E+05
+ WATER PRODUCTION RATE(STB/D)=       .1
+                                         CUM. WATER PRODUCTION (STB)  = .5032E+01
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=       .0   CUM. WATER INJECTION (STB)   = .0000E+00
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =   1270.0   CUM. GOR (SCF/STB)           =   1270.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4483.   4482.   4481.   4480.   4480.   4480.   4481.   4482.   4483.
+   2    4482.   4481.   4480.   4478.   4478.   4478.   4480.   4481.   4482.
+   3    4481.   4480.   4477.   4473.   4472.   4473.   4477.   4480.   4481.
+   4    4480.   4478.   4473.   4465.   4458.   4465.   4473.   4478.   4480.
+   5    4480.   4478.   4472.   4458.   4415.   4458.   4472.   4478.   4480.
+   6    4481.   4478.   4473.   4466.   4458.   4466.   4473.   4478.   4481.
+   7    4482.   4480.   4477.   4474.   4472.   4474.   4477.   4480.   4482.
+   8    4483.   4482.   4480.   4479.   4478.   4479.   4480.   4482.   4483.
+   9    4484.   4483.   4482.   4481.   4481.   4481.   4482.   4483.   4484.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   2     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   3     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   4     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   5     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   6     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   7     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   8     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   9     .879    .879    .879    .879    .879    .879    .879    .879    .879
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   2     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   3     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   4     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   5     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   6     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   7     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   8     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   9     .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   2    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   3    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   4    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   5    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   6    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   7    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   8    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   9    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  80   80.    300.0    381.0       .1 1270.0    .0        .0      0.  4478.   .000   .000   .000  5  2  1   .000   9  1  1  11.46 1  15
+  81   81.    300.0    381.0       .1 1270.0    .0        .0      0.  4466.   .000   .000   .000  9  2  1   .000   1  9  1  11.47 1  15
+  82   82.    300.0    381.0       .1 1270.0    .0        .0      0.  4455.   .000   .000   .000  3  2  1   .000   1  9  1  11.47 1  15
+  83   83.    300.0    381.0       .1 1270.0    .0        .0      0.  4443.   .000   .000   .000  5  2  1   .000   9  9  1  11.47 1  15
+  84   84.    300.0    381.0       .1 1270.0    .0        .0      0.  4432.   .000   .000   .000  5  2  1   .000   7  9  1  11.48 1  15
+  85   85.    300.0    381.0       .1 1270.0    .0        .0      0.  4421.   .000   .000   .000  5  2  1   .000   1  9  1  11.48 1  15
+  86   86.    300.0    381.0       .1 1270.0    .0        .0      0.  4409.   .000   .000   .000  2  2  1   .000   2  9  1  11.48 1  15
+  87   87.    300.0    381.0       .1 1270.0    .0        .0      0.  4398.   .000   .000   .000  3  2  1   .000   9  9  1  11.49 1  15
+  88   88.    300.0    381.0       .1 1270.0    .0        .0      0.  4386.   .000   .000   .000  6  2  1   .000   9  1  1  11.49 1  15
+  89   89.    300.0    381.0       .1 1270.0    .0        .0      0.  4375.   .000   .000   .000  4  2  1   .000   1  8  1  11.49 1  15
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+                                            *****************************************
+                                            *                                       *
+                                            *  WELL REPORT: BOAST II (RELEASE 1.1)  *
+                                            *                                       *
+                                            *****************************************
+
+    ********** WELL REPORT FOR TIME STEP NUMBER  90   ELAPSED TIME =   90.000 DAYS FROM BEGINNING OF SIMULATION **********
+
+
+
+                                                       ------ RATE ------                      --- CUMULATIVE ---
+         WELL     LOCATION    CALC    SPEC    SPEC    OIL     GAS    WATER    GOR     WOR     OIL     GAS    WATER
+        #     ID   I  J  K    BHFP    BHFP     PI   STB/D    MCF/D   STB/D                    MSTB    MMCF    MSTB
+
+        1  P-1     5  5  1   3130.      0.   .300    300.0     381.       .1 1270.0   .000    27.0     34.      .0
+      ------------------------------------------------------------------------------------------------------------
+            TOTALS                                   300.0    381.0       .1                  27.0    34.3      .0
+
+
+
+
+    *************************************************  END OF WELL REPORT  *************************************************
+
+
+
+
+
+
+1
+                       **********************************************************************************
+                       *                                                                                *
+                       *         SINGLE WELL PRIMARY DEPLETION OF AN UNDERSATURATED RESERVOIR           *
+                       *                                                                                *
+                       **********************************************************************************
+
+
+
+
+                             *********************************************************************
+                             *                                                                   *
+                             *                                                                   *
+                             *              SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                             *                                                                   *
+                             *                                                                   *
+                             *********************************************************************
+
+
+
+
+ ELAPSED TIME (DAYS)         =    90.00   TIME STEP NUMBER             =   90      TIME STEP SIZE (DAYS)         =     1.00
+
+ CURRENT AVG RES PRESSURE    =   4363.1   PREVIOUS AVG RES PRESSURE    =   4374.6  PRESSURE DPMAX(  1,  9,  1)   =    -11.5
+ OIL DSMAX(  1,  1,  1)      =  -.00000   GAS DSMAX(  0,  0,  0)       =   .00000  WATER DSMAX(  8,  3,  1)      =   .00000
+ OIL MATERIAL BALANCE (%)    = -.000017   GAS MATERIAL BALANCE (%)     = -.000034  WATER MATERIAL BALANCE (%)    = -.000026
+ CUM. OIL MATERIAL BALANCE(%)= -.002344   CUM. GAS MATERIAL BALANCE(%) = -.002100  CUM. WATER MATERIAL BALANCE(%)= -.000099
+
+ OIL PRODUCTION RATE (STB/D) =    300.0   CUM. OIL PRODUCTION (STB)    = .2700E+05
+ GAS PRODUCTION RATE (MSCF/D)=    381.0   CUM. GAS PRODUCTION (MSCF)   = .3429E+05
+ WATER PRODUCTION RATE(STB/D)=       .1
+                                         CUM. WATER PRODUCTION (STB)  = .6269E+01
+
+ GAS INJECTION RATE (MSCF/D) =       .0   CUM. GAS INJECTION (MSCF)    = .0000E+00
+ WATER INJECTION RATE (STB/D)=       .0   CUM. WATER INJECTION (STB)   = .0000E+00
+
+ PRODUCING WOR (STB/STB)     =     .000   CUM. WOR (STB/STB)           =     .000
+ PRODUCING GOR (SCF/STB)     =   1270.0   CUM. GOR (SCF/STB)           =   1270.0
+
+
+ AQUIFER MODEL FOR ROCK REGION   1:
+ AQUIFER INFLUX RATE (STB/D) =       .0   CUM. AQUIFER INFLUX (STB)    = .0000E+00
+
+
+1
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4368.   4368.   4366.   4365.   4365.   4365.   4366.   4368.   4368.
+   2    4368.   4367.   4365.   4363.   4363.   4363.   4365.   4367.   4368.
+   3    4367.   4365.   4362.   4358.   4357.   4358.   4362.   4365.   4367.
+   4    4366.   4363.   4358.   4351.   4343.   4351.   4358.   4363.   4366.
+   5    4366.   4363.   4357.   4343.   4301.   4343.   4357.   4363.   4366.
+   6    4366.   4364.   4359.   4351.   4344.   4351.   4359.   4364.   4366.
+   7    4367.   4365.   4362.   4359.   4357.   4359.   4362.   4365.   4367.
+   8    4368.   4367.   4366.   4364.   4363.   4364.   4366.   4367.   4368.
+   9    4369.   4368.   4367.   4366.   4366.   4366.   4367.   4368.   4369.
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   2     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   3     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   4     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   5     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   6     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   7     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   8     .879    .879    .879    .879    .879    .879    .879    .879    .879
+   9     .879    .879    .879    .879    .879    .879    .879    .879    .879
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   2     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   3     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   4     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   5     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   6     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   7     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   8     .000    .000    .000    .000    .000    .000    .000    .000    .000
+   9     .000    .000    .000    .000    .000    .000    .000    .000    .000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K = 1
+          1       2       3       4       5       6       7       8       9
+
+
+   1    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   2    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   3    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   4    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   5    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   6    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   7    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   8    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+   9    4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.   4015.
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+1
+                                                     *****************************
+                                                     *   TIME   STEP   SUMMARY   *
+                                                     *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ --------- ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+
+  90   90.    300.0    381.0       .1 1270.0    .0        .0      0.  4363.   .000   .000   .000  6  2  1   .000   1  9  1  11.50 1  15
+
+
+
+   **************************************** BOAST II (RELEASE 1.1) SIMULATION TERMINATED ****************************************
+
+
