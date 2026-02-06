@@ -94,9 +94,10 @@ class FlowEquation:
                     if self.sim.vp[i, j, k] <= 0.0:
                         continue
                     
-                    sso = self.sim.so[i, j, k]
-                    ssw = self.sim.sw[i, j, k]
-                    ssg = self.sim.sg[i, j, k]
+                    # Use OLD-TIME saturations for IMPES (explicit saturations)
+                    sso = self.sim.son[i, j, k]
+                    ssw = self.sim.swn[i, j, k]
+                    ssg = self.sim.sgn[i, j, k]
                     irockb = self.sim.irock[i, j, k]
                     
                     # CRITICAL: Convert rock region to 0-based index for Python arrays
@@ -170,9 +171,10 @@ class FlowEquation:
                     mug = interp_obj.interp(self.sim.pgt, self.sim.mugt, ipvtr_0,
                                            self.sim.mpgt[ipvtr_0], pp)
                     
-                    sso = self.sim.so[i, j, k]
-                    ssw = self.sim.sw[i, j, k]
-                    ssg = self.sim.sg[i, j, k]
+                    # Use OLD-TIME saturations for IMPES (explicit saturations)
+                    sso = self.sim.son[i, j, k]
+                    ssw = self.sim.swn[i, j, k]
+                    ssg = self.sim.sgn[i, j, k]
                     irockb = self.sim.irock[i, j, k]
                     
                     pcow = capow[i, j, k]

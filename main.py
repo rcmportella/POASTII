@@ -273,6 +273,34 @@ class BOASTSimulator:
         
         self.nrock = 0    # Number of rock regions
         self.npvt = 0     # Number of PVT regions
+        self.iaqopt = 0   # Aquifer option (0=no aquifer)
+        
+        # Material balance tracking
+        self.stbo = 0.0   # STB oil in place
+        self.stboi = 0.0  # Initial STB oil in place
+        self.stbw = 0.0   # STB water in place
+        self.stbwi = 0.0  # Initial STB water in place
+        self.mcfgi = 0.0  # MCF of gas initially in place
+        self.mcfgt = 0.0  # MCF of gas in place
+        
+        # Initial oil, water, gas in place (Million STB, Billion SCF)
+        self.tooip = 0.0  # Total oil initially in place (Million STB)
+        self.towip = 0.0  # Total water initially in place (Million STB)
+        self.togip = 0.0  # Total gas initially in place (Billion SCF)
+        
+        # Cumulative production/injection
+        self.cop = 0.0    # Cumulative oil production (STB)
+        self.cwp = 0.0    # Cumulative water production (STB)
+        self.cgp = 0.0    # Cumulative gas production (MSCF)
+        self.cwi = 0.0    # Cumulative water injection (STB)
+        self.cgi = 0.0    # Cumulative gas injection (MSCF)
+        
+        # Current rates (will be calculated by matbal)
+        self.opr = 0.0    # Oil production rate (STB/D)
+        self.wpr = 0.0    # Water production rate (STB/D)
+        self.gpr = 0.0    # Gas production rate (MSCF/D)
+        self.wir = 0.0    # Water injection rate (STB/D)
+        self.gir = 0.0    # Gas injection rate (MSCF/D)
         
         # Flow arrays
         self.ow = None    # Oil mobility west
@@ -445,6 +473,7 @@ class BOASTSimulator:
         self.qo = np.zeros(shape_3d)
         self.qw = np.zeros(shape_3d)
         self.qg = np.zeros(shape_3d)
+        self.ewaq = np.zeros(shape_3d)  # Aquifer influx rate
         
         # Coefficient arrays
         self.aw = np.zeros(shape_3d)
@@ -578,9 +607,41 @@ class BOASTSimulator:
                     self.bg[i, j, k] = interp_obj.interp(
                         self.pgt, self.bgt, ipvtr_0, self.mpgt[ipvtr_0], pp
                     )
+                    
+                    # Calculate total compressibility CT at initial conditions
+                    # Get derivatives from compressibility tables
+                    boder = interp_obj.intcom(
+                        self.pot, self.bopt, ipvtr_0, self.mpot[ipvtr_0], pp)
+                    rsoder = interp_obj.intcom(
+                        self.pot, self.rsopt, ipvtr_0, self.mpot[ipvtr_0], pp)
+                    bwder = interp_obj.intcom(
+                        self.pwt, self.bwpt, ipvtr_0, self.mpwt[ipvtr_0], pp)
+                    rswder = interp_obj.intcom(
+                        self.pwt, self.rswpt, ipvtr_0, self.mpwt[ipvtr_0], pp)
+                    bgder = interp_obj.intcom(
+                        self.pgt, self.bgpt, ipvtr_0, self.mpgt[ipvtr_0], pp)
+                    
+                    # Above bubble point, use slope
+                    if pp > bpt:
+                        boder = self.bslope[ipvtr_0]
+                        rsoder = self.rslope[ipvtr_0]
+                    
+                    # Calculate phase compressibilities (protect against division by zero)
+                    co = -(boder - self.bg[i, j, k] * rsoder) / self.bo[i, j, k] if abs(self.bo[i, j, k]) > 1e-30 else 0.0
+                    cw = -(bwder - self.bg[i, j, k] * rswder) / self.bw[i, j, k] if abs(self.bw[i, j, k]) > 1e-30 else 0.0
+                    cg = -bgder / self.bg[i, j, k] if abs(self.bg[i, j, k]) > 1e-30 else 0.0
+                    
+                    # Rock compressibility
+                    cr = interp_obj.interp(
+                        self.prt[ipvtr_0, :self.mpgt[ipvtr_0]],
+                        self.crt[ipvtr_0, :self.mpgt[ipvtr_0]], pp)
+                    
+                    # Total compressibility
+                    self.ct[i, j, k] = (cr + co * self.so[i, j, k] + 
+                                       cw * self.sw[i, j, k] + cg * self.sg[i, j, k])
         
         # Call CODES for solution method parameters
-        solution_params = self.solution_control.codes(self.infile, self.outfile, self)
+        solution_params, self.ksn1, self.ksm1, self.kco1, self.kcoff = self.solution_control.codes(self.infile, self.outfile, self)
         
         # Initialize time variables from solution parameters
         nmax = solution_params.nn
@@ -600,10 +661,9 @@ class BOASTSimulator:
         self.miter = solution_params.miter
         self.numdis = solution_params.numdis
         self.d288 = 288.0  # Conversion factor
+        self.d5615 = 1.0 / 5.615  # RB to STB conversion factor
         self.ksm = 1  # Saturation method
-        self.ksm1 = 1  # Previous saturation method  
         self.nn = nmax  # Number of datasets
-        self.kcoff = 0  # Debug output control
         self.ksn = 1  # Solution method flag
         
         # Call AQUI for aquifer data
@@ -695,7 +755,6 @@ class BOASTSimulator:
             # Read well data if wells are changing
             if iwlcng != 0:
                 nvqn = self.well_manager.nodes(self.infile, self.outfile)
-                print(f"DEBUG: Read well data, nvqn={nvqn}")
             
             # Run time steps for this dataset
             for istep in range(ichang):
@@ -704,15 +763,10 @@ class BOASTSimulator:
                 
                 # ===== CORE SIMULATION CALCULATIONS - STEP 1: WELL RATES =====
                 # Calculate well rates (QRATE from BLOCK2.FOR)
-                print(f"DEBUG: Time step {nstep}, nvqn={nvqn}")
                 if nvqn > 0:
                     try:
                         self.well_rates.qrate(self.ii, self.jj, self.kk, nvqn, 
                                              self.gormax, self.wormax, eti)
-                        # Check well rates after qrate
-                        print(f"DEBUG: qo range: {self.qo.min():.6f} to {self.qo.max():.6f}")
-                        print(f"DEBUG: qw range: {self.qw.min():.6f} to {self.qw.max():.6f}")
-                        print(f"DEBUG: qg range: {self.qg.min():.6f} to {self.qg.max():.6f}")
                     except Exception as e:
                         self.outfile.write(f"\n\nERROR in qrate at time {eti}: {e}\n")
                         import traceback
@@ -797,7 +851,7 @@ class BOASTSimulator:
                                 ppn = self.pn[i, j, k]
                                 pp = self.p[i, j, k]
                                 bpt = self.pbot[i, j, k]
-                                ipvtr = self.ipvt[i, j, k]
+                                ipvtr = self.ipvt[i, j, k] - 1  # Convert from 1-based to 0-based index
                                 
                                 # Helper function for linear interpolation
                                 def lerp(x_arr, y_arr, x_val):
@@ -900,36 +954,92 @@ class BOASTSimulator:
                                     self.sg[i, j, k] = 0.0
                                     self.so[i, j, k] = 0.0
                                 
+                                # Calculate total compressibility CT
+                                # CT = CR + CO*SO + CW*SW + CG*SG
+                                from block2 import Interpolation
+                                
+                                # Get derivatives from compressibility tables
+                                boder = Interpolation.intcom(
+                                    self.pot, self.bopt, ipvtr, self.mpot[ipvtr], pp)
+                                rsoder = Interpolation.intcom(
+                                    self.pot, self.rsopt, ipvtr, self.mpot[ipvtr], pp)
+                                bwder = Interpolation.intcom(
+                                    self.pwt, self.bwpt, ipvtr, self.mpwt[ipvtr], pp)
+                                rswder = Interpolation.intcom(
+                                    self.pwt, self.rswpt, ipvtr, self.mpwt[ipvtr], pp)
+                                bgder = Interpolation.intcom(
+                                    self.pgt, self.bgpt, ipvtr, self.mpgt[ipvtr], pp)
+                                
+                                # Above bubble point, use slope
+                                if pp > bpt:
+                                    boder = self.bslope[ipvtr]
+                                    rsoder = self.rslope[ipvtr]
+                                
+                                # Calculate phase compressibilities (protect against division by zero)
+                                co = -(boder - bbg * rsoder) / bbo if abs(bbo) > 1e-30 else 0.0
+                                cw = -(bwder - bbg * rswder) / bbw if abs(bbw) > 1e-30 else 0.0
+                                cg = -bgder / bbg if abs(bbg) > 1e-30 else 0.0
+                                
+                                # Rock compressibility
+                                cr = Interpolation.interp(
+                                    self.prt[ipvtr, :self.mpgt[ipvtr]],
+                                    self.crt[ipvtr, :self.mpgt[ipvtr]], pp)
+                                
+                                # Total compressibility
+                                self.ct[i, j, k] = (cr + co * self.so[i, j, k] + 
+                                                   cw * self.sw[i, j, k] + cg * self.sg[i, j, k])
+                                
                 except Exception as e:
                     self.outfile.write(f"\n\nERROR in saturation update at time {eti}: {e}\n")
                     import traceback
                     traceback.print_exc(file=self.outfile)
                     raise
                 
-                # Check if we've reached a report time
-                if eti >= ftmax:
-                    # Call detailed report function
-                    self.post_process.prtps(
-                        nloop=n,
-                        time=eti,
-                        delt=delt,
-                        oerror=0.0,   # Placeholder - need to calculate from simulation
-                        gerror=0.0,
-                        werror=0.0,
-                        coerr=0.0,
-                        cgerr=0.0,
-                        cwerr=0.0
-                    )
-                    
-                    # Move to next report time
-                    if iometh > 0 and ftio:
-                        iftcod += 1
-                        if iftcod < len(ftio):
-                            ftmax = ftio[iftcod]
-                            if ftmax > tmax:
-                                ftmax = tmax
-                        else:
-                            ftmax = tmax
+                # Calculate material balance and production/injection rates
+                from block1 import MaterialBalance
+                mb_results = MaterialBalance.matbal(
+                    self, self.ii, self.jj, self.kk,
+                    self.stbo, self.stboi, self.stbw, self.stbwi,
+                    self.towip, self.tooip, self.togip, self.mcfgi,
+                    delt, self.d5615
+                )
+                
+                # Store results in simulator for prtps
+                self.opr = mb_results['opr']
+                self.wpr = mb_results['wpr']
+                self.gpr = mb_results['gpr']
+                self.wir = mb_results['wir']
+                self.gir = mb_results['gir']
+                self.cop = mb_results['cop']
+                self.cwp = mb_results['cwp']
+                self.cgp = mb_results['cgp']
+                self.cwi = mb_results['cwi']
+                self.cgi = mb_results['cgi']
+                
+                # Update material balance errors
+                mbeo = mb_results['mbeo']
+                mbew = mb_results['mbew']
+                mbeg = mb_results['mbeg']
+                cmbeo = mb_results['cmbeo']
+                cmbew = mb_results['cmbew']
+                cmbeg = mb_results['cmbeg']
+                
+                # Calculate WOR and GOR for time step summary
+                gors = (self.gpr * 1000.0 / self.opr) if self.opr > 0.0 else 0.0
+                wors = (self.wpr / self.opr) if self.opr > 0.0 else 0.0
+                pavg = mb_results['pavg']
+                
+                # Update old-time arrays for next time step
+                for k in range(self.kk):
+                    for j in range(self.jj):
+                        for i in range(self.ii):
+                            self.qo[i, j, k] = 0.0
+                            self.qw[i, j, k] = 0.0
+                            self.qg[i, j, k] = 0.0
+                            self.pn[i, j, k] = self.p[i, j, k]
+                            self.son[i, j, k] = self.so[i, j, k]
+                            self.swn[i, j, k] = self.sw[i, j, k]
+                            self.sgn[i, j, k] = self.sg[i, j, k]
                 
                 # Print time step summary header (once only)
                 if itss == 0:
@@ -949,11 +1059,39 @@ class BOASTSimulator:
                     self.outfile.write(" ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ ")
                     self.outfile.write("-- -- -- ------ -- -- -- ------ -----\n")
                 
-                # Write one-line summary for this time step (placeholder values - will need real calculation)
-                gors = 1.0  # Placeholder
-                wors = 0.0  # Placeholder
-                self.outfile.write(f"{nstep:4d}{eti:6.0f}.    600.0       .6       .0    {gors:3.1f}    {wors:3.1f}        .0   -900.  4787.   .000   .006   .000  ")
-                self.outfile.write(f"1  1  1   .106  10  1  1 192.27 1   0\n")
+                # Write one-line summary for this time step
+                self.outfile.write(f"{nstep:4d}{eti:6.0f}.  {self.opr:8.1f}  {self.gpr:7.1f}  {self.wpr:7.1f} ")
+                self.outfile.write(f"{gors:6.1f}  {wors:5.1f} {self.gir:8.1f} {self.wir:7.0f} {pavg:7.0f}.  ")
+                self.outfile.write(f"{mbeo:6.3f} {mbeg:6.3f} {mbew:6.3f}  ")
+                self.outfile.write(f"1  1  1   .000  1  1  1   0.00 1   0\n")  # Placeholder for max changes
+                
+                # Check if we've reached a report time
+                if eti >= ftmax:
+                    # Reset time step summary header flag to reprint after summary report
+                    itss = 0
+                    
+                    # Call detailed report function
+                    self.post_process.prtps(
+                        nloop=nstep,
+                        time=eti,
+                        delt=delt,
+                        oerror=mbeo,
+                        gerror=mbeg,
+                        werror=mbew,
+                        coerr=cmbeo,
+                        cgerr=cmbeg,
+                        cwerr=cmbew
+                    )
+                    
+                    # Move to next report time
+                    if iometh > 0 and ftio:
+                        iftcod += 1
+                        if iftcod < len(ftio):
+                            ftmax = ftio[iftcod]
+                            if ftmax > tmax:
+                                ftmax = tmax
+                        else:
+                            ftmax = tmax
                 
                 # Check if we've reached max time
                 if eti >= tmax:

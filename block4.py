@@ -606,12 +606,17 @@ class TridiagonalSolver:
         gamma = np.zeros(n)
         w = np.zeros(n)
         
+        if abs(b[0]) < 1e-30:
+            raise ValueError(f"Zero diagonal element b[0]={b[0]} in Thomas algorithm")
+        
         beta[0] = b[0]
         gamma[0] = d[0] / b[0]
         
         for i in range(n-1):
-            w[i] = c[i] / beta[i]
+            w[i] = c[i] / beta[i] if abs(beta[i]) >= 1e-30 else 0.0
             beta[i+1] = b[i+1] - a[i+1] * w[i]
+            if abs(beta[i+1]) < 1e-30:
+                beta[i+1] = 1e-30  # Avoid division by zero
             gamma[i+1] = (d[i+1] - a[i+1] * gamma[i]) / beta[i+1]
         
         # Back substitution

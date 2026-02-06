@@ -474,7 +474,7 @@ class SolutionControl:
         SolutionControl._check_parameters(outfile, simulator, params, 
                                           ksn1, ksm1, kco1, kcoff)
         
-        return params
+        return params, ksn1, ksm1, kco1, kcoff
         
     @staticmethod
     def _check_parameters(outfile, simulator, params: SolutionParameters,
@@ -625,6 +625,42 @@ class Interpolation:
         else:
             raise ValueError(f"interp() takes either 3 or 5 arguments, got {len(args)+2}")
         
+    @staticmethod
+    def intcom(x_table: np.ndarray, y_table: np.ndarray, ireg: int, 
+               n: int, xo: float) -> float:
+        """
+        Get compressibility (derivative) value from table
+        Returns piecewise constant derivative value
+        
+        Parameters:
+        -----------
+        x_table : 2D array (regions, points)
+            Independent variable (pressure)
+        y_table : 2D array (regions, points)
+            Derivative values (dB/dP, dRS/dP, etc.)
+        ireg : int
+            Region index (0-based)
+        n : int
+            Number of points in table
+        xo : float
+            Query point
+            
+        Returns:
+        --------
+        yo : float
+            Derivative value at xo
+        """
+        # If beyond last point, return last value
+        if xo >= x_table[ireg, n-1]:
+            return y_table[ireg, n-1]
+        
+        # Find interval and return derivative for that interval
+        for i in range(1, n):
+            if xo < x_table[ireg, i]:
+                return y_table[ireg, i]
+        
+        return y_table[ireg, n-1]
+    
     @staticmethod
     def intpvt(x_table: np.ndarray, y_table: np.ndarray, ireg: int, 
                n: int, xo: float, bpt: float, rm: float) -> float:

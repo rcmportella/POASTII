@@ -579,11 +579,11 @@ class WellManager:
                 
                 # Read rate data
                 rate_line = infile.readline().split()
-                kip = int(rate_line[1])
-                qvo = float(rate_line[2])
-                qvw = float(rate_line[3])
-                qvg = float(rate_line[4])
-                qvt = float(rate_line[5])
+                kip = int(rate_line[2])
+                qvo = float(rate_line[3])
+                qvw = float(rate_line[4])
+                qvg = float(rate_line[5])
+                qvt = float(rate_line[6])
                 
                 # Read additional coefficients if needed
                 alit = blit = 0.0

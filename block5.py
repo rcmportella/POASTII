@@ -147,9 +147,10 @@ class WellRates:
                     self.sim.pgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]],
                     self.sim.mugt[ipvtr_0, :self.sim.mpgt[ipvtr_0]], pp)
                 
-                sso = self.sim.so[iq1, iq2, k]
-                ssw = self.sim.sw[iq1, iq2, k]
-                ssg = self.sim.sg[iq1, iq2, k]
+                # Use OLD-TIME saturations for IMPES (explicit saturations)
+                sso = self.sim.son[iq1, iq2, k]
+                ssw = self.sim.swn[iq1, iq2, k]
+                ssg = self.sim.sgn[iq1, iq2, k]
                 
                 # Interpolate relative permeabilities
                 krw = Interpolation.interp(
@@ -289,11 +290,16 @@ class WellRates:
             lay = iq3 + self.sim.layer[j] - 1
             
             # Special case: oil injection (soluble oil)
-            if self.sim.kip[j] == 1 and self.sim.qvo[j] <= -0.001:
+            if self.sim.kip[j] == 1 and self.sim.qvo[j] < -0.001:
                 self._calculate_oil_injection(j, iq1, iq2, iq3, ij, lay)
                 continue
             
-            # Standard rate-controlled wells
+            # Special case: oil production with specified oil rate (KIP=1, QVO > 0)
+            if self.sim.kip[j] == 1 and self.sim.qvo[j] > 0.001:
+                self._calculate_oil_production(j, iq1, iq2, iq3, ij, lay)
+                continue
+            
+            # Standard rate-controlled wells (water/gas injection)
             iterq = 0
             qdenom = 0.0
             
@@ -342,6 +348,64 @@ class WellRates:
                                 self.sim.pid[j, k] * (self.sim.gmo[j, k] +
                                 self.sim.gmw[j, k] + self.sim.gmg[j, k]) / qdenom)
     
+    def _calculate_oil_production(self, j: int, iq1: int, iq2: int,
+                                  iq3: int, ij: int, lay: int) -> None:
+        """Calculate rates for oil production wells (KIP=1, QVO > 0)"""
+        from block2 import Interpolation
+        
+        iterq = 0
+        qdenom = 0.0
+        
+        # Two iterations: first to calculate qdenom, second to allocate rates
+        for iterq in range(2):
+            for k in range(iq3, lay + 1):
+                pp = self.sim.p[iq1, iq2, k]
+                bpt = self.sim.pbot[iq1, iq2, k]
+                ipvtr = self.sim.ipvt[iq1, iq2, k]
+                ipvtr_0 = ipvtr - 1
+                
+                bbo = self._intpvt(ipvtr_0, bpt, self.sim.bslope[ipvtr_0],
+                                  self.sim.pot, self.sim.bot,
+                                  self.sim.mpot[ipvtr_0], pp)
+                bbw = Interpolation.interp(
+                    self.sim.pwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]],
+                    self.sim.bwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]], pp)
+                bbg = Interpolation.interp(
+                    self.sim.pgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]],
+                    self.sim.bgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]], pp)
+                rso = self._intpvt(ipvtr_0, bpt, self.sim.rslope[ipvtr_0],
+                                  self.sim.pot, self.sim.rsot,
+                                  self.sim.mpot[ipvtr_0], pp)
+                rsw = Interpolation.interp(
+                    self.sim.pwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]],
+                    self.sim.rswt[ipvtr_0, :self.sim.mpwt[ipvtr_0]], pp)
+                
+                if iterq == 0:
+                    # First iteration: calculate denominator
+                    qdenom += self.sim.pid[j, k] * self.sim.gmo[j, k] / bbo
+                    if self.sim.qvw[j] != 0.0:
+                        qdenom += self.sim.pid[j, k] * self.sim.gmw[j, k] / bbw
+                    if self.sim.qvg[j] != 0.0:
+                        qdenom += self.sim.pid[j, k] * self.sim.gmg[j, k] / bbg
+                else:
+                    # Second iteration: calculate rates
+                    if qdenom == 0.0 or self.sim.gmo[j, k] == 0.0:
+                        continue
+                    
+                    # Oil rate (specified)
+                    totor = self.sim.qvo[j]
+                    self.sim.qoc[ij, k] = (totor * 5.615 * self.sim.pid[j, k] *
+                                          self.sim.gmo[j, k] / (bbo * qdenom))
+                    
+                    # Water rate (proportional to mobility)
+                    self.sim.qwc[ij, k] = (self.sim.qoc[ij, k] * self.sim.gmw[j, k] *
+                                          bbo / (bbw * self.sim.gmo[j, k]))
+                    
+                    # Gas rate (solution gas + free gas)
+                    self.sim.qgc[ij, k] = (self.sim.qoc[ij, k] *
+                                          (self.sim.gmg[j, k] * bbo / (bbg * self.sim.gmo[j, k]) + rso) +
+                                          rsw * self.sim.qwc[ij, k])
+    
     def _calculate_oil_injection(self, j: int, iq1: int, iq2: int,
                                  iq3: int, ij: int, lay: int) -> None:
         """Calculate rates for oil injection wells with phase splitting"""
@@ -361,7 +425,7 @@ class WellRates:
                 ipvtr = self.sim.ipvt[iq1, iq2, k]
                 ipvtr_0 = ipvtr - 1
                 
-                bbo = self._intpvt(ipvtr, bpt, self.sim.bslope[ipvtr_0],
+                bbo = self._intpvt(ipvtr_0, bpt, self.sim.bslope[ipvtr_0],
                                   self.sim.pot, self.sim.bot,
                                   self.sim.mpot[ipvtr_0], pp)
                 bbw = Interpolation.interp(
@@ -370,7 +434,7 @@ class WellRates:
                 bbg = Interpolation.interp(
                     self.sim.pgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]],
                     self.sim.bgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]], pp)
-                rso = self._intpvt(ipvtr, bpt, self.sim.rslope[ipvtr_0],
+                rso = self._intpvt(ipvtr_0, bpt, self.sim.rslope[ipvtr_0],
                                   self.sim.pot, self.sim.rsot,
                                   self.sim.mpot[ipvtr_0], pp)
                 rsw = Interpolation.interp(
@@ -451,7 +515,7 @@ class WellRates:
                 bbg = Interpolation.interp(
                     self.sim.pgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]],
                     self.sim.bgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]], ppn)
-                rso = self._intpvt(ipvtr, bpt, self.sim.rslope[ipvtr_0],
+                rso = self._intpvt(ipvtr_0, bpt, self.sim.rslope[ipvtr_0],
                                   self.sim.pot, self.sim.rsot,
                                   self.sim.mpot[ipvtr_0], ppn)
                 rsw = Interpolation.interp(
@@ -511,7 +575,7 @@ class WellRates:
                 ipvtr = self.sim.ipvt[iq1, iq2, k]
                 ipvtr_0 = ipvtr - 1
                 
-                bbo = self._intpvt(ipvtr, bpt, self.sim.bslope[ipvtr_0],
+                bbo = self._intpvt(ipvtr_0, bpt, self.sim.bslope[ipvtr_0],
                                   self.sim.pot, self.sim.bot,
                                   self.sim.mpot[ipvtr_0], pp)
                 bbw = Interpolation.interp(
@@ -520,7 +584,7 @@ class WellRates:
                 bbg = Interpolation.interp(
                     self.sim.pgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]],
                     self.sim.bgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]], pp)
-                rso = self._intpvt(ipvtr, bpt, self.sim.rslope[ipvtr_0],
+                rso = self._intpvt(ipvtr_0, bpt, self.sim.rslope[ipvtr_0],
                                   self.sim.pot, self.sim.rsot,
                                   self.sim.mpot[ipvtr_0], pp)
                 rsw = Interpolation.interp(
@@ -826,7 +890,7 @@ class WellRates:
                 ipvtr = self.sim.ipvt[iq1, iq2, k]
                 ipvtr_0 = ipvtr - 1
                 
-                bbo = self._intpvt(ipvtr, bpt, self.sim.bslope[ipvtr_0],
+                bbo = self._intpvt(ipvtr_0, bpt, self.sim.bslope[ipvtr_0],
                                   self.sim.pot, self.sim.bot,
                                   self.sim.mpot[ipvtr_0], pp)
                 bbw = Interpolation.interp(
@@ -835,7 +899,8 @@ class WellRates:
                 bbg = Interpolation.interp(
                     self.sim.pgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]],
                     self.sim.bgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]], pp)
-                rso = self._intpvt(ipvtr, bpt, self.sim.rslope[ipvtr_0],
+                
+                rso = self._intpvt(ipvtr_0, bpt, self.sim.rslope[ipvtr_0],
                                   self.sim.pot, self.sim.rsot,
                                   self.sim.mpot[ipvtr_0], pp)
                 rsw = Interpolation.interp(
