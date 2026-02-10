@@ -276,6 +276,10 @@ class BOASTSimulator:
         self.iaqopt = 0   # Aquifer option (0=no aquifer)
         
         # Material balance tracking
+        self.scfo = 0.0   # Oil volume at standard conditions (cu ft)
+        self.scfw = 0.0   # Water volume at standard conditions (cu ft)
+        self.scfg = 0.0   # Free gas volume at standard conditions (cu ft)
+        self.scfg1 = 0.0  # Solution gas volume at standard conditions (cu ft)
         self.stbo = 0.0   # STB oil in place
         self.stboi = 0.0  # Initial STB oil in place
         self.stbw = 0.0   # STB water in place
@@ -382,6 +386,103 @@ class BOASTSimulator:
         MAX NO OF BLOCKS IN 2D FOR L2SOR                           {self.params.n23dir:5d}
         """
         self.outfile.write(info)
+    
+    def _calculate_fluid_volumes(self):
+        """
+        Calculate fluid volumes at standard conditions (SCFO, SCFW, SCFG, SCFG1)
+        and initial fluids in place if not yet calculated
+        From MAIN.FOR lines 486-520 and 611-730
+        """
+        self.scfo = 0.0
+        self.scfw = 0.0
+        self.scfg = 0.0
+        self.scfg1 = 0.0
+        
+        # Arrays for layer-by-layer initial volumes (if needed)
+        if not hasattr(self, 'ooip'):
+            self.ooip = [0.0] * self.kk
+            self.owip = [0.0] * self.kk
+            self.odgip = [0.0] * self.kk
+            self.ofgip = [0.0] * self.kk
+            calculate_initial = True
+        else:
+            calculate_initial = False
+        
+        interp_obj = self.interpolation
+        d5615 = 1.0 / 5.615  # RB to STB conversion
+        
+        for k in range(self.kk):
+            if calculate_initial:
+                self.ooip[k] = 0.0
+                self.owip[k] = 0.0
+                self.odgip[k] = 0.0
+                self.ofgip[k] = 0.0
+                
+            for j in range(self.jj):
+                for i in range(self.ii):
+                    pp = self.p[i, j, k]
+                    bpt = self.pbot[i, j, k]
+                    ipvtr = self.ipvt[i, j, k]
+                    ipvtr_0 = ipvtr - 1  # Convert to 0-based indexing
+                    
+                    # Get RS (solution gas-oil ratio)
+                    rso = interp_obj.intpvt(
+                        self.pot, self.rsot, ipvtr_0, self.mpot[ipvtr_0],
+                        pp, bpt, self.rslope[ipvtr_0]
+                    )
+                    
+                    # DEBUG: Print first RSO value to check
+                    if calculate_initial and i == 0 and j == 0 and k == 0:
+                        print(f"DEBUG: First block RSO={rso}, RSW will follow...")
+                    
+                    # Get RSW (solution gas-water ratio) 
+                    rsw = interp_obj.interp(
+                        self.pwt, self.rswt, ipvtr_0, self.mpwt[ipvtr_0], pp
+                    )
+                    
+                    # DEBUG: Print first RSW value
+                    if calculate_initial and i == 0 and j == 0 and k == 0:
+                        print(f"DEBUG: First block RSW={rsw}, PP={pp}, BPT={bpt}")
+                    
+                    # Calculate volumes at standard conditions
+                    ff1 = self.so[i, j, k] / self.bo[i, j, k] if abs(self.bo[i, j, k]) > 1e-30 else 0.0
+                    ff2 = self.sw[i, j, k] / self.bw[i, j, k] if abs(self.bw[i, j, k]) > 1e-30 else 0.0
+                    
+                    self.scfo += self.vp[i, j, k] * ff1
+                    self.scfw += self.vp[i, j, k] * ff2
+                    self.scfg += self.vp[i, j, k] * self.sg[i, j, k] / self.bg[i, j, k] if abs(self.bg[i, j, k]) > 1e-30 else 0.0
+                    self.scfg1 += self.vp[i, j, k] * (rso * ff1 + rsw * ff2)
+                    
+                    # Calculate initial fluids in place (only on first call)
+                    if calculate_initial:
+                        # OOIP: Oil initially in place (Million STB) - MAIN.FOR line 527
+                        if abs(self.bo[i, j, k]) > 1e-30:
+                            self.ooip[k] += d5615 * 0.000001 * self.son[i, j, k] * self.vp[i, j, k] / self.bo[i, j, k]
+                        
+                        # OWIP: Water initially in place (Million STB) - MAIN.FOR line 528
+                        if abs(self.bw[i, j, k]) > 1e-30:
+                            self.owip[k] += d5615 * 0.000001 * self.swn[i, j, k] * self.vp[i, j, k] / self.bw[i, j, k]
+                        
+                        # ODGIP: Dissolved gas initially in place (Billion SCF) - MAIN.FOR lines 529-530
+                        term1 = 0.0
+                        term2 = 0.0
+                        if abs(self.bo[i, j, k]) > 1e-30:
+                            term1 = rso * self.son[i, j, k] * self.vp[i, j, k] / self.bo[i, j, k]
+                        if abs(self.bw[i, j, k]) > 1e-30:
+                            term2 = rsw * self.swn[i, j, k] * self.vp[i, j, k] / self.bw[i, j, k]
+                        self.odgip[k] += 0.001 * 0.000001 * (term1 + term2)
+                        
+                        # OFGIP: Free gas initially in place (Billion SCF) - MAIN.FOR line 531
+                        if abs(self.bg[i, j, k]) > 1e-30:
+                            self.ofgip[k] += 0.001 * 0.000001 * self.sgn[i, j, k] * self.vp[i, j, k] / self.bg[i, j, k]
+        
+        # Calculate totals if initial calculation
+        if calculate_initial:
+            self.tooip = sum(self.ooip)
+            self.towip = sum(self.owip)
+            self.todgip = sum(self.odgip)
+            self.tofgip = sum(self.ofgip)
+            self.togip = self.todgip + self.tofgip
         
     def open_files(self):
         """Open input and output files"""
@@ -640,6 +741,32 @@ class BOASTSimulator:
                     self.ct[i, j, k] = (cr + co * self.so[i, j, k] + 
                                        cw * self.sw[i, j, k] + cg * self.sg[i, j, k])
         
+        # Calculate initial fluid volumes at standard conditions
+        self._calculate_fluid_volumes()
+        d5615 = 1.0 / 5.615  # RB to STB conversion factor (actually CF to BBL)
+        self.stbo = self.scfo * d5615
+        self.stbw = self.scfw * d5615
+        mcfg = self.scfg * 0.001
+        mcfg1 = self.scfg1 * 0.001
+        self.stboi = self.stbo
+        self.stbwi = self.stbw
+        self.mcfgt = mcfg + mcfg1
+        self.mcfgi = self.mcfgt
+        
+        # Print initial fluid volumes (like MAIN.FOR lines 553-559)
+        self.outfile.write(f"\n{'':>14}TOTAL INITIAL FLUID VOLUMES IN RESERVOIR:\n")
+        self.outfile.write(f"{'':>19}OIL IN PLACE (MILLION STB){'':>40}{self.tooip:10.4f}\n")
+        self.outfile.write(f"{'':>19}WATER IN PLACE (MILLION STB){'':>40}{self.towip:10.4f}\n")
+        self.outfile.write(f"{'':>19}SOLUTION GAS IN PLACE (BILLION SCF){'':>40}{self.todgip:10.4f}\n")
+        self.outfile.write(f"{'':>19}FREE GAS IN PLACE (BILLION SCF){'':>40}{self.tofgip:10.4f}\n")
+        self.outfile.write(f"\n   DEBUG: SCFO={self.scfo:.6e} SCF, SCFW={self.scfw:.6e} SCF\n")
+        self.outfile.write(f"   DEBUG: SCFG={self.scfg:.6e} SCF (free), SCFG1={self.scfg1:.6e} SCF (dissolved)\n")
+        self.outfile.write(f"   DEBUG: STBO={self.stbo:.6e} STB, STBW={self.stbw:.6e} STB, MCFGT={self.mcfgt:.6e} MSCF\n")
+        self.outfile.write(f"   DEBUG: TOOIP={self.tooip:.6e} MM STB, TOWIP={self.towip:.6e} MM STB\n")
+        self.outfile.write(f"   DEBUG: TODGIP={self.todgip:.6e} B SCF (dissolved), TOFGIP={self.tofgip:.6e} B SCF (free)\n")
+        self.outfile.write(f"   DEBUG: TOGIP={self.togip:.6e} B SCF (total gas)\n")
+        self.outfile.write(f"   DEBUG: Ratio TOGIP/TOOIP = {self.togip/self.tooip if self.tooip > 0 else 0:.6f}\n\n")
+        
         # Call CODES for solution method parameters
         solution_params, self.ksn1, self.ksm1, self.kco1, self.kcoff = self.solution_control.codes(self.infile, self.outfile, self)
         
@@ -760,6 +887,11 @@ class BOASTSimulator:
             for istep in range(ichang):
                 nstep += 1  # Increment cumulative time step counter
                 eti += delt
+                
+                # Update old fluid volumes for material balance (MAIN.FOR line 851-853)
+                self.stboi = self.stbo
+                self.stbwi = self.stbw
+                self.mcfgi = self.mcfgt
                 
                 # ===== CORE SIMULATION CALCULATIONS - STEP 1: WELL RATES =====
                 # Calculate well rates (QRATE from BLOCK2.FOR)
@@ -994,6 +1126,14 @@ class BOASTSimulator:
                     import traceback
                     traceback.print_exc(file=self.outfile)
                     raise
+                
+                # Update new fluid volumes (MAIN.FOR lines 855-859)
+                self._calculate_fluid_volumes()
+                self.stbo = self.scfo * self.d5615
+                self.stbw = self.scfw * self.d5615
+                mcfg = self.scfg * 0.001
+                mcfg1 = self.scfg1 * 0.001
+                self.mcfgt = mcfg + mcfg1
                 
                 # Calculate material balance and production/injection rates
                 from block1 import MaterialBalance

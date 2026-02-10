@@ -333,7 +333,7 @@ class PVTTables:
         self.sim.pmaxt = pmaxt
         self.sim.ireprs = ireprs
         
-        iocode.write(f" {vslope:10.3e} {bslope:10.3e} {pmaxt:10.2f} {ireprs:5d}\n")
+        iocode.write(f" {vslope:10.3e} {bslope:10.3e} {rslope:10.5f} {pmaxt:10.2f} {ireprs:5d}\n")
         
         # Validate slopes
         if vslope < 0.0:
@@ -361,9 +361,10 @@ class PVTTables:
             self.sim.pot[np, i] = values[0]
             self.sim.muot[np, i] = values[1]
             self.sim.bot[np, i] = values[2]
-            self.sim.rsot[np, i] = values[3] * 0.17809  # Convert to CF/CF
+            rso_input = values[3]  # Rs in SCF/STB from input
+            self.sim.rsot[np, i] = rso_input * 0.17809  # Convert to CF/CF for internal use
             
-            iocode.write(f"   {values[0]:10.1f} {values[1]:8.4f}  {values[2]:8.4f}  {values[3]:8.2f}\n")
+            iocode.write(f"   {values[0]:10.1f} {values[1]:8.4f}  {values[2]:8.4f}  {rso_input:8.2f}\n")
             
             if values[0] >= pmaxt:
                 break
