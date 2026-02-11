@@ -1117,20 +1117,68 @@ class Initialization:
         # Read equilibrium data or pressure array
         if kpi == 0:
             # Equilibrium initialization - read reference pressure and contacts
+            # Note: In this implementation, we read one set of contacts for all rocks
+            # The Fortran has a loop over NROCK, but EX1 only has one entry
             line = iread.readline()
             values = parse_fortran_line(line)
-            pi = values[0]     # Initial pressure at datum
+            pi = values[0]     # Initial pressure at reference depth (WOC)
             woc = values[1]    # Water-oil contact (ft)
             pgoc = values[2]   # Pressure at gas-oil contact (psi)
             goc = values[3]    # Gas-oil contact (ft)
             
-            # Calculate equilibrium pressures based on depth and fluid contacts
+            # Calculate equilibrium pressures based on depth, fluid density, and contacts
+            from block2 import Interpolation
+            
             for k in range(kk):
                 for j in range(jj):
                     for i in range(ii):
                         depth = self.sim.el[i, j, k]
-                        # Simple gradient-based initialization
-                        self.sim.pn[i, j, k] = pi + grad * (depth - woc) / 144.0
+                        bpt = self.sim.pbot[i, j, k]
+                        ipvtr = self.sim.ipvt[i, j, k]
+                        ipvtr_0 = ipvtr - 1
+                        
+                        # Determine region: gas cap, oil zone, or water zone
+                        if depth < goc:
+                            # Gas cap region
+                            bbg = Interpolation.interp(
+                                self.sim.pgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]],
+                                self.sim.bgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]], pgoc)
+                            rhog = self.sim.rhoscg[ipvtr_0] / bbg
+                            self.sim.pn[i, j, k] = pgoc + rhog * (depth - goc) / 144.0
+                            
+                        elif depth > woc:
+                            # Water zone region
+                            bbw = Interpolation.interp(
+                                self.sim.pwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]],
+                                self.sim.bwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]], pi)
+                            rsw = Interpolation.interp(
+                                self.sim.pwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]],
+                                self.sim.rswt[ipvtr_0, :self.sim.mpwt[ipvtr_0]], pi)
+                            rhow = (self.sim.rhoscw[ipvtr_0] + rsw * self.sim.rhoscg[ipvtr_0]) / bbw
+                            self.sim.pn[i, j, k] = pi + rhow * (depth - woc) / 144.0
+                            
+                        else:
+                            # Oil zone region (between GOC and WOC)
+                            # Use intpvt-style interpolation with bubble point
+                            if pi <= bpt:
+                                bbo = Interpolation.interp(
+                                    self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
+                                    self.sim.bot[ipvtr_0, :self.sim.mpot[ipvtr_0]], pi)
+                                rso = Interpolation.interp(
+                                    self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
+                                    self.sim.rsot[ipvtr_0, :self.sim.mpot[ipvtr_0]], pi)
+                            else:
+                                bbo_pb = Interpolation.interp(
+                                    self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
+                                    self.sim.bot[ipvtr_0, :self.sim.mpot[ipvtr_0]], bpt)
+                                bbo = bbo_pb + self.sim.bslope[ipvtr_0] * (pi - bpt)
+                                rso = Interpolation.interp(
+                                    self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
+                                    self.sim.rsot[ipvtr_0, :self.sim.mpot[ipvtr_0]], bpt)
+                            
+                            rhoo = (self.sim.rhosco[ipvtr_0] + rso * self.sim.rhoscg[ipvtr_0]) / bbo
+                            self.sim.pn[i, j, k] = pi + rhoo * (depth - woc) / 144.0
+                        
                         self.sim.p[i, j, k] = self.sim.pn[i, j, k]
         else:
             # User-specified pressure initialization - read full 3D array

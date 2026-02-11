@@ -879,15 +879,25 @@ class BOASTSimulator:
             if iwlcng != 0:
                 nvqn = self.well_manager.nodes(self.infile, self.outfile)
             
+            # Print initial arrays (MAIN.FOR line 569)
+            if n == 1:
+                # Call prtps to print initial conditions
+                self.post_process.prtps(
+                    nloop=1,  # nloop=1 for initial output
+                    time=0.0,  # eti=0 at start
+                    delt=delt,
+                    oerror=0.0,
+                    gerror=0.0,
+                    werror=0.0,
+                    coerr=0.0,
+                    cgerr=0.0,
+                    cwerr=0.0
+                )
+            
             # Run time steps for this dataset
             for istep in range(ichang):
                 nstep += 1  # Increment cumulative time step counter
                 eti += delt
-                
-                # Update old fluid volumes for material balance (MAIN.FOR line 851-853)
-                self.stboi = self.stbo
-                self.stbwi = self.stbw
-                self.mcfgi = self.mcfgt
                 
                 # ===== CORE SIMULATION CALCULATIONS - STEP 1: WELL RATES =====
                 # Calculate well rates (QRATE from BLOCK2.FOR)
@@ -1117,14 +1127,30 @@ class BOASTSimulator:
                                 self.ct[i, j, k] = (cr + co * self.so[i, j, k] + 
                                                    cw * self.sw[i, j, k] + cg * self.sg[i, j, k])
                                 
+                                # Update formation volume factors and pore volume (MAIN.FOR lines 714-717)
+                                # These must be updated BEFORE calculating fluid volumes for material balance
+                                self.vp[i, j, k] = vpp
+                                self.bo[i, j, k] = bbo
+                                self.bw[i, j, k] = bbw
+                                self.bg[i, j, k] = bbg
+                                
                 except Exception as e:
                     self.outfile.write(f"\n\nERROR in saturation update at time {eti}: {e}\n")
                     import traceback
                     traceback.print_exc(file=self.outfile)
                     raise
                 
-                # Update new fluid volumes (MAIN.FOR lines 855-859)
+                # Calculate new fluid volumes with updated saturations and FVFs
+                # (MAIN.FOR lines 722-725: SCFO accumulated during saturation update loop)
                 self._calculate_fluid_volumes()
+                
+                # Update old fluid volumes for material balance (MAIN.FOR lines 851-853)
+                # This MUST happen AFTER calculating new SCFO/SCFW/SCFG but BEFORE converting to STB/MCF
+                self.stboi = self.stbo
+                self.stbwi = self.stbw
+                self.mcfgi = self.mcfgt
+                
+                # Update new fluid volumes (MAIN.FOR lines 855-859)
                 self.stbo = self.scfo * self.d5615
                 self.stbw = self.scfw * self.d5615
                 mcfg = self.scfg * 0.001
@@ -1167,6 +1193,67 @@ class BOASTSimulator:
                 self.pavg_prev = getattr(self, 'pavg', pavg)
                 self.pavg = pavg
                 
+                # Calculate maximum pressure and saturation changes (MAIN.FOR lines 741-787)
+                ppm = 0.0
+                som = 0.0
+                swm = 0.0
+                sgm = 0.0
+                ipm = jpm = kpm = 1
+                iom = jom = kom = 1
+                iwm = jwm = kwm = 1
+                igm = jgm = kgm = 1
+                
+                for k in range(self.kk):
+                    for j in range(self.jj):
+                        for i in range(self.ii):
+                            dpo = self.p[i, j, k] - self.pn[i, j, k]
+                            dso = self.so[i, j, k] - self.son[i, j, k]
+                            dsw = self.sw[i, j, k] - self.swn[i, j, k]
+                            dsg = self.sg[i, j, k] - self.sgn[i, j, k]
+                            
+                            if abs(dpo) > abs(ppm):
+                                ppm = dpo
+                                ipm = i + 1  # Convert to 1-based
+                                jpm = j + 1
+                                kpm = k + 1
+                            
+                            if abs(dso) > abs(som):
+                                som = dso
+                                iom = i + 1
+                                jom = j + 1
+                                kom = k + 1
+                            
+                            if abs(dsw) > abs(swm):
+                                swm = dsw
+                                iwm = i + 1
+                                jwm = j + 1
+                                kwm = k + 1
+                            
+                            if abs(dsg) > abs(sgm):
+                                sgm = dsg
+                                igm = i + 1
+                                jgm = j + 1
+                                kgm = k + 1
+                
+                # Determine which saturation has largest change
+                dpmc = abs(ppm)
+                dsmc = abs(som)
+                ism = iom
+                jsm = jom
+                ksm = kom
+                
+                if abs(sgm) > dsmc:
+                    dsmc = abs(sgm)
+                    ism = igm
+                    jsm = jgm
+                    ksm = kgm
+                
+                if abs(swm) > dsmc:
+                    dsmc = abs(swm)
+                    ism = iwm
+                    jsm = jwm
+                    ksm = kwm
+                
                 # Update old-time arrays for next time step
                 for k in range(self.kk):
                     for j in range(self.jj):
@@ -1201,7 +1288,7 @@ class BOASTSimulator:
                 self.outfile.write(f"{nstep:4d}{eti:6.0f}.  {self.opr:8.1f}  {self.gpr:7.1f}  {self.wpr:7.1f} ")
                 self.outfile.write(f"{gors:6.1f}  {wors:5.1f} {self.gir:8.1f} {self.wir:7.0f} {pavg:7.0f}.  ")
                 self.outfile.write(f"{mbeo:6.3f} {mbeg:6.3f} {mbew:6.3f}  ")
-                self.outfile.write(f"1  1  1   .000  1  1  1   0.00 1   0\n")  # Placeholder for max changes
+                self.outfile.write(f"{ism:2d} {jsm:2d} {ksm:2d} {dsmc:6.3f} {ipm:2d} {jpm:2d} {kpm:2d} {dpmc:6.2f} 1   0\n")
                 
                 # Check if we've reached a report time
                 if eti >= ftmax:

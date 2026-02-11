@@ -106,21 +106,15 @@ class WellRates:
         self.sim.qg.fill(0.0)
         
         for m in range(nvqn):
-            ij = self.sim.idwell[m]
-            if ij > 0:
-                self.sim.qoc[ij, :].fill(0.0)
-                self.sim.qwc[ij, :].fill(0.0)
-                self.sim.qgc[ij, :].fill(0.0)
+            self.sim.qoc[m, :].fill(0.0)
+            self.sim.qwc[m, :].fill(0.0)
+            self.sim.qgc[m, :].fill(0.0)
         
         # Calculate mobilities for each well layer
         for j in range(nvqn):
             iq1 = self.sim.iqn1[j]
             iq2 = self.sim.iqn2[j]
             iq3 = self.sim.iqn3[j]
-            ij = self.sim.idwell[j]
-            
-            if ij == 0:
-                continue
             
             lay = iq3 + self.sim.layer[j] - 1
             
@@ -282,21 +276,17 @@ class WellRates:
             iq1 = self.sim.iqn1[j]
             iq2 = self.sim.iqn2[j]
             iq3 = self.sim.iqn3[j]
-            ij = self.sim.idwell[j]
-            
-            if ij == 0:
-                continue
             
             lay = iq3 + self.sim.layer[j] - 1
             
             # Special case: oil injection (soluble oil)
             if self.sim.kip[j] == 1 and self.sim.qvo[j] < -0.001:
-                self._calculate_oil_injection(j, iq1, iq2, iq3, ij, lay)
+                self._calculate_oil_injection(j, iq1, iq2, iq3, j, lay)
                 continue
             
             # Special case: oil production with specified oil rate (KIP=1, QVO > 0)
             if self.sim.kip[j] == 1 and self.sim.qvo[j] > 0.001:
-                self._calculate_oil_production(j, iq1, iq2, iq3, ij, lay)
+                self._calculate_oil_production(j, iq1, iq2, iq3, j, lay)
                 continue
             
             # Standard rate-controlled wells (water/gas injection)
@@ -332,19 +322,19 @@ class WellRates:
                         
                         # Oil injection (negative rate)
                         if self.sim.qvo[j] < -0.001:
-                            self.sim.qoc[ij, k] = (self.sim.qvo[j] * 5.615 *
+                            self.sim.qoc[j, k] = (self.sim.qvo[j] * 5.615 *
                                 self.sim.pid[j, k] * (self.sim.gmo[j, k] +
                                 self.sim.gmw[j, k] + self.sim.gmg[j, k]) / qdenom)
                         
                         # Water injection
                         elif self.sim.kip[j] == 2:
-                            self.sim.qwc[ij, k] = (self.sim.qvw[j] * 5.615 *
+                            self.sim.qwc[j, k] = (self.sim.qvw[j] * 5.615 *
                                 self.sim.pid[j, k] * (self.sim.gmo[j, k] +
                                 self.sim.gmw[j, k] + self.sim.gmg[j, k]) / qdenom)
                         
                         # Gas injection
                         else:
-                            self.sim.qgc[ij, k] = (self.sim.qvg[j] * 1000.0 *
+                            self.sim.qgc[j, k] = (self.sim.qvg[j] * 1000.0 *
                                 self.sim.pid[j, k] * (self.sim.gmo[j, k] +
                                 self.sim.gmw[j, k] + self.sim.gmg[j, k]) / qdenom)
     
@@ -487,16 +477,12 @@ class WellRates:
             iq1 = self.sim.iqn1[j]
             iq2 = self.sim.iqn2[j]
             iq3 = self.sim.iqn3[j]
-            ij = self.sim.idwell[j]
-            
-            if ij == 0:
-                continue
             
             lay = iq3 + self.sim.layer[j] - 1
             
             # Gas well with back-pressure equation
             if kip == -4:
-                self._calculate_gas_well(j, iq1, iq2, iq3, ij, lay)
+                self._calculate_gas_well(j, iq1, iq2, iq3, j, lay)
                 continue
             
             # Standard pressure-controlled wells
@@ -643,10 +629,6 @@ class WellRates:
             iq1 = self.sim.iqn1[j]
             iq2 = self.sim.iqn2[j]
             iq3 = self.sim.iqn3[j]
-            ij = self.sim.idwell[j]
-            
-            if ij == 0:
-                continue
             
             lay = iq3 + self.sim.layer[j] - 1
             
@@ -656,8 +638,8 @@ class WellRates:
             pidsum = 0.0
             
             for k in range(iq3, lay + 1):
-                qot += self.sim.qoc[ij, k]
-                qwt += self.sim.qwc[ij, k]
+                qot += self.sim.qoc[j, k]
+                qwt += self.sim.qwc[j, k]
                 pidsum += self.sim.pid[j, k]
             
             # Skip if well already shut-in
@@ -668,9 +650,9 @@ class WellRates:
             if qot < self.sim.qvo[j] * 5.615:
                 # Shut-in well
                 for k in range(iq3, lay + 1):
-                    self.sim.qoc[ij, k] = 0.0
-                    self.sim.qwc[ij, k] = 0.0
-                    self.sim.qgc[ij, k] = 0.0
+                    self.sim.qoc[j, k] = 0.0
+                    self.sim.qwc[j, k] = 0.0
+                    self.sim.qgc[j, k] = 0.0
                     self.sim.pid[j, k] = 0.0
                 
                 self.sim.iocode.write(
@@ -699,8 +681,8 @@ class WellRates:
                 from block2 import Interpolation
                 
                 for k in range(iq3, lay + 1):
-                    self.sim.qoc[ij, k] *= fac
-                    self.sim.qwc[ij, k] *= fac
+                    self.sim.qoc[j, k] *= fac
+                    self.sim.qwc[j, k] *= fac
                     
                     # Recalculate gas rate
                     ppn = self.sim.pn[iq1, iq2, k]
@@ -721,20 +703,19 @@ class WellRates:
                         self.sim.pwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]],
                         self.sim.rswt[ipvtr_0, :self.sim.mpwt[ipvtr_0]], ppn)
                     
-                    if self.sim.qoc[ij, k] > 0.0:
-                        qg1 = (self.sim.qoc[ij, k] * (self.sim.gmg[j, k] *
+                    if self.sim.qoc[j, k] > 0.0:
+                        qg1 = (self.sim.qoc[j, k] * (self.sim.gmg[j, k] *
                               bbo / (bbg * self.sim.gmo[j, k]) + rso))
                     else:
                         qg1 = 0.0
                     
-                    self.sim.qgc[ij, k] = qg1 + rsw * self.sim.qwc[ij, k]
+                    self.sim.qgc[j, k] = qg1 + rsw * self.sim.qwc[j, k]
         
         # Apply rate constraints on injection wells
         for j in range(nvqn):
             iq1 = self.sim.iqn1[j]
             iq2 = self.sim.iqn2[j]
             iq3 = self.sim.iqn3[j]
-            ij = self.sim.idwell[j]
             lay = iq3 + self.sim.layer[j] - 1
             
             facw = 1.0
@@ -742,20 +723,20 @@ class WellRates:
             
             # Water injector constraint
             if self.sim.kip[j] == -2:
-                qwi = sum(self.sim.qwc[ij, k] for k in range(iq3, lay + 1))
+                qwi = sum(self.sim.qwc[j, k] for k in range(iq3, lay + 1))
                 if self.sim.qvw[j] < 0.0 and abs(qwi) > abs(self.sim.qvw[j]) * 5.615:
                     facw = self.sim.qvw[j] * 5.615 / qwi
             
             # Gas injector constraint
             if self.sim.kip[j] == -3:
-                qgi = sum(self.sim.qgc[ij, k] for k in range(iq3, lay + 1))
+                qgi = sum(self.sim.qgc[j, k] for k in range(iq3, lay + 1))
                 if self.sim.qvg[j] < 0.0 and abs(qgi) > abs(self.sim.qvg[j]) * 1000.0:
                     facg = self.sim.qvg[j] * 1000.0 / qgi
             
             if facw < 1.0 or facg < 1.0:
                 for k in range(iq3, lay + 1):
-                    self.sim.qwc[ij, k] *= facw
-                    self.sim.qgc[ij, k] *= facg
+                    self.sim.qwc[j, k] *= facw
+                    self.sim.qgc[j, k] *= facg
     
     def _apply_gor_wor_constraints(self, nvqn: int, eti: float) -> None:
         """Apply GOR and WOR constraints with layer shutoff"""
@@ -764,10 +745,6 @@ class WellRates:
             iq1 = self.sim.iqn1[j]
             iq2 = self.sim.iqn2[j]
             iq3 = self.sim.iqn3[j]
-            ij = self.sim.idwell[j]
-            
-            if ij == 0:
-                continue
             
             if self.sim.ilimop[j] == 0 or self.sim.kip[j] < -10:
                 continue
@@ -782,9 +759,9 @@ class WellRates:
                 qgt = 0.0
                 
                 for k in range(iq3, lay + 1):
-                    qot += self.sim.qoc[ij, k]
-                    qwt += self.sim.qwc[ij, k]
-                    qgt += self.sim.qgc[ij, k]
+                    qot += self.sim.qoc[j, k]
+                    qwt += self.sim.qwc[j, k]
+                    qgt += self.sim.qgc[j, k]
                 
                 # Calculate ratios
                 gor = 0.0
@@ -797,13 +774,13 @@ class WellRates:
                 if gor > self.sim.gort[j]:
                     # Calculate GOR by layer
                     for k in range(iq3, lay + 1):
-                        if self.sim.qoc[ij, k] == 0.0:
+                        if self.sim.qoc[j, k] == 0.0:
                             self.sim.pid[j, k] = 0.0
-                            self.sim.qwc[ij, k] = 0.0
-                            self.sim.qgc[ij, k] = 0.0
+                            self.sim.qwc[j, k] = 0.0
+                            self.sim.qgc[j, k] = 0.0
                             self.sim.gorl[k] = 0.0
                         else:
-                            self.sim.gorl[k] = self.sim.qgc[ij, k] * 5.615 / self.sim.qoc[ij, k]
+                            self.sim.gorl[k] = self.sim.qgc[j, k] * 5.615 / self.sim.qoc[j, k]
                     
                     # Find layer with max GOR
                     gorsi = self.sim.gorl[iq3]
@@ -815,9 +792,9 @@ class WellRates:
                     
                     # Shut-in layer
                     self.sim.pid[j, kmax] = 0.0
-                    self.sim.qoc[ij, kmax] = 0.0
-                    self.sim.qwc[ij, kmax] = 0.0
-                    self.sim.qgc[ij, kmax] = 0.0
+                    self.sim.qoc[j, kmax] = 0.0
+                    self.sim.qwc[j, kmax] = 0.0
+                    self.sim.qgc[j, kmax] = 0.0
                     
                     self.sim.iocode.write(
                         f"\n{'':>9}{'-'*110}\n"
@@ -830,13 +807,13 @@ class WellRates:
                 if wor > self.sim.wort[j]:
                     # Calculate WOR by layer
                     for k in range(iq3, lay + 1):
-                        if self.sim.qoc[ij, k] == 0.0:
+                        if self.sim.qoc[j, k] == 0.0:
                             self.sim.pid[j, k] = 0.0
-                            self.sim.qwc[ij, k] = 0.0
-                            self.sim.qgc[ij, k] = 0.0
+                            self.sim.qwc[j, k] = 0.0
+                            self.sim.qgc[j, k] = 0.0
                             self.sim.worl[k] = 0.0
                         else:
-                            self.sim.worl[k] = self.sim.qwc[ij, k] / self.sim.qoc[ij, k]
+                            self.sim.worl[k] = self.sim.qwc[j, k] / self.sim.qoc[j, k]
                     
                     # Find layer with max WOR
                     worsi = self.sim.worl[lay]
@@ -848,9 +825,9 @@ class WellRates:
                     
                     # Shut-in layer
                     self.sim.pid[j, kmax] = 0.0
-                    self.sim.qoc[ij, kmax] = 0.0
-                    self.sim.qwc[ij, kmax] = 0.0
-                    self.sim.qgc[ij, kmax] = 0.0
+                    self.sim.qoc[j, kmax] = 0.0
+                    self.sim.qwc[j, kmax] = 0.0
+                    self.sim.qgc[j, kmax] = 0.0
                     
                     self.sim.iocode.write(
                         f"\n{'':>9}{'-'*110}\n"
@@ -869,9 +846,8 @@ class WellRates:
             iq1 = self.sim.iqn1[j]
             iq2 = self.sim.iqn2[j]
             iq3 = self.sim.iqn3[j]
-            ij = self.sim.idwell[j]
             
-            if ij == 0 or self.sim.kip[j] < -10:
+            if self.sim.kip[j] < -10:
                 continue
             
             lay = iq3 + self.sim.layer[j] - 1
@@ -910,8 +886,8 @@ class WellRates:
                 fac = self.sim.pid[j, k] * 5.615
                 gmtb = (self.sim.gmo[j, k] / bbo + self.sim.gmw[j, k] / bbw +
                        self.sim.gmg[j, k] / bbg)
-                soln = rso * self.sim.qoc[ij, k] + rsw * self.sim.qwc[ij, k]
-                qt = self.sim.qoc[ij, k] + self.sim.qwc[ij, k] + self.sim.qgc[ij, k]
+                soln = rso * self.sim.qoc[j, k] + rsw * self.sim.qwc[j, k]
+                qt = self.sim.qoc[j, k] + self.sim.qwc[j, k] + self.sim.qgc[j, k]
                 
                 self.sim.pwfc[j, k] = pp - (qt - soln) / (fac * gmtb)
     
@@ -925,17 +901,13 @@ class WellRates:
             iq1 = self.sim.iqn1[j]
             iq2 = self.sim.iqn2[j]
             iq3 = self.sim.iqn3[j]
-            ij = self.sim.idwell[j]
-            
-            if ij == 0:
-                continue
             
             lay = iq3 + self.sim.layer[j] - 1
             
             for k in range(iq3, lay + 1):
-                self.sim.qo[iq1, iq2, k] += self.sim.qoc[ij, k]
-                self.sim.qw[iq1, iq2, k] += self.sim.qwc[ij, k]
-                self.sim.qg[iq1, iq2, k] += self.sim.qgc[ij, k]
+                self.sim.qo[iq1, iq2, k] += self.sim.qoc[j, k]
+                self.sim.qw[iq1, iq2, k] += self.sim.qwc[j, k]
+                self.sim.qg[iq1, iq2, k] += self.sim.qgc[j, k]
     
     def pratei(self, nvqn: int) -> None:
         """
@@ -1006,10 +978,6 @@ class WellRates:
             iq1 = self.sim.iqn1[j]
             iq2 = self.sim.iqn2[j]
             iq3 = self.sim.iqn3[j]
-            ij = self.sim.idwell[j]
-            
-            if ij == 0:
-                continue
             
             lay = iq3 + self.sim.layer[j] - 1
             
@@ -1040,21 +1008,21 @@ class WellRates:
                 
                 # Water producer/injector (KIP = -12 or -13)
                 if self.sim.kip[j] == -13:
-                    self.sim.qgc[ij, k] = ((self.sim.gmo[j, k] + self.sim.gmw[j, k] +
+                    self.sim.qgc[j, k] = ((self.sim.gmo[j, k] + self.sim.gmw[j, k] +
                                            self.sim.gmg[j, k]) /
                                           self.sim.bg[iq1, iq2, k] * factor)
                 else:
-                    self.sim.qwc[ij, k] = self.sim.gmw[j, k] / self.sim.bw[iq1, iq2, k] * factor
+                    self.sim.qwc[j, k] = self.sim.gmw[j, k] / self.sim.bw[iq1, iq2, k] * factor
                     
                     if self.sim.kip[j] == -12:
-                        self.sim.qwc[ij, k] = ((self.sim.gmo[j, k] + self.sim.gmw[j, k] +
+                        self.sim.qwc[j, k] = ((self.sim.gmo[j, k] + self.sim.gmw[j, k] +
                                                self.sim.gmg[j, k]) /
                                               self.sim.bw[iq1, iq2, k] * factor)
                     else:
-                        self.sim.qoc[ij, k] = self.sim.gmo[j, k] / self.sim.bo[iq1, iq2, k] * factor
-                        self.sim.qgc[ij, k] = (self.sim.gmg[j, k] / self.sim.bg[iq1, iq2, k] * factor +
-                                              rsoav * self.sim.qoc[ij, k] +
-                                              rswav * self.sim.qwc[ij, k])
+                        self.sim.qoc[j, k] = self.sim.gmo[j, k] / self.sim.bo[iq1, iq2, k] * factor
+                        self.sim.qgc[j, k] = (self.sim.gmg[j, k] / self.sim.bg[iq1, iq2, k] * factor +
+                                              rsoav * self.sim.qoc[j, k] +
+                                              rswav * self.sim.qwc[j, k])
         
         # Sum rates by grid block including implicit wells
         for j in range(nvqn):
@@ -1064,14 +1032,10 @@ class WellRates:
             iq1 = self.sim.iqn1[j]
             iq2 = self.sim.iqn2[j]
             iq3 = self.sim.iqn3[j]
-            ij = self.sim.idwell[j]
-            
-            if ij == 0:
-                continue
             
             lay = iq3 + self.sim.layer[j] - 1
             
             for k in range(iq3, lay + 1):
-                self.sim.qo[iq1, iq2, k] += self.sim.qoc[ij, k]
-                self.sim.qw[iq1, iq2, k] += self.sim.qwc[ij, k]
-                self.sim.qg[iq1, iq2, k] += self.sim.qgc[ij, k]
+                self.sim.qo[iq1, iq2, k] += self.sim.qoc[j, k]
+                self.sim.qw[iq1, iq2, k] += self.sim.qwc[j, k]
+                self.sim.qg[iq1, iq2, k] += self.sim.qgc[j, k]

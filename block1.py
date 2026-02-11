@@ -476,6 +476,7 @@ class MaterialBalance:
             
         mcfgt = simulator.mcfgt
         denom3 = mcfgi - gp - gi
+
         if abs(denom3 - mcfgt) >= 1.0e-4:
             mbeg = (mcfgt / (mcfgi - gp - gi) - 1.0) * 100.0
             
@@ -572,12 +573,14 @@ class WellManager:
                 lay = iq3 + i5
                 
                 pid_line = infile.readline().split()
-                pwf_line = infile.readline().split()
+                pwf_line = infile.readline().split() # BHP data for each layer
                 
                 pid_values = [float(x) for x in pid_line]
                 pwf_values = [float(x) for x in pwf_line]
                 
                 # Read rate data
+                # rate_line[0] = well name, rate_line[1] = well ID, rate_line[2] = kip,
+                # rate_line[3] = qvo, rate_line[4] = qvw, rate_line[5] = qvg, rate_line[6] = qvt
                 rate_line = infile.readline().split()
                 kip = int(rate_line[2])
                 qvo = float(rate_line[3])
@@ -664,7 +667,7 @@ class WellManager:
             self.sim.iqn3[idx] = well.k
             self.sim.layer[idx] = well.layer
             self.sim.kip[idx] = well.kip
-            self.sim.idwell[idx] = well.idwell
+            self.sim.idwell[idx] = idx  # Use 0-based well index
             self.sim.qvo[idx] = well.qvo
             self.sim.qvw[idx] = well.qvw
             self.sim.qvg[idx] = well.qvg
