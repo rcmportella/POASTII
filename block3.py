@@ -479,11 +479,6 @@ class RockProperties:
         # to compute pore volume. We must do the same.
         np.copyto(self.sim.vp, self.sim.phi)
         
-        # DEBUG: Verify porosity was copied
-        iocode.write(f"\n   DEBUG: Porosity copied to VP array\n")
-        iocode.write(f"   DEBUG: VP min={self.sim.vp.min():.6f}, max={self.sim.vp.max():.6f}, mean={self.sim.vp.mean():.6f}\n")
-        iocode.write(f"   DEBUG: PHI min={self.sim.phi.min():.6f}, max={self.sim.phi.max():.6f}, mean={self.sim.phi.mean():.6f}\n")
-        
         iocode.write("\n   ROCK PROPERTIES SUCCESSFULLY READ AND VALIDATED\n")
 
 
@@ -644,27 +639,66 @@ class PostProcessing:
         ii, jj, kk = self.sim.ii, self.sim.jj, self.sim.kk
         iocode = self.sim.iocode
         
-        # Print header
+        # Compute maxima for pressure and saturation changes (Fortran PRTPS)
+        ppm = som = swm = sgm = 0.0
+        ipm = jpm = kpm = 1
+        iom = jom = kom = 1
+        iwm = jwm = kwm = 1
+        igm = jgm = kgm = 1
+
+        if nloop != 1:
+            for k in range(kk):
+                for j in range(jj):
+                    for i in range(ii):
+                        dpo = self.sim.p[i, j, k] - self.sim.pn[i, j, k]
+                        dso = self.sim.so[i, j, k] - self.sim.son[i, j, k]
+                        dsw = self.sim.sw[i, j, k] - self.sim.swn[i, j, k]
+                        dsg = self.sim.sg[i, j, k] - self.sim.sgn[i, j, k]
+
+                        if abs(dpo) > abs(ppm):
+                            ppm = dpo
+                            ipm, jpm, kpm = i + 1, j + 1, k + 1
+                        if abs(dso) > abs(som):
+                            som = dso
+                            iom, jom, kom = i + 1, j + 1, k + 1
+                        if abs(dsw) > abs(swm):
+                            swm = dsw
+                            iwm, jwm, kwm = i + 1, j + 1, k + 1
+                        if abs(dsg) > abs(sgm):
+                            sgm = dsg
+                            igm, jgm, kgm = i + 1, j + 1, k + 1
+
+        pavg = getattr(self.sim, 'pavg', 0.0)
+        pavg0 = getattr(self.sim, 'pavg_prev', pavg)
+
+        # Print header (match Fortran layout)
         iocode.write("\f")  # Form feed
         iocode.write(" " * 30 + "*" * 69 + "\n")
         iocode.write(" " * 30 + "*" + " " * 67 + "*\n")
         iocode.write(" " * 30 + "*" + " " * 67 + "*\n")
-        iocode.write(" " * 30 + "* " + " " * 13 + 
-                    "SUMMARY REPORT: BOAST II (RELEASE 1.2)  " + " " * 13 + "*\n")
+        iocode.write(" " * 30 + "*" + " " * 13 + "SUMMARY REPORT: BOAST II (RELEASE 1.1)  " + " " * 13 + "*\n")
         iocode.write(" " * 30 + "*" + " " * 67 + "*\n")
         iocode.write(" " * 30 + "*" + " " * 67 + "*\n")
         iocode.write(" " * 30 + "*" * 69 + "\n\n\n")
-        
-        # Print time step info
-        iocode.write(f"\n TIME STEP NUMBER             = {nloop:8d}        ")
-        iocode.write(f"CUMULATIVE TIME (DAYS)        = {time:10.2f}\n")
-        iocode.write(f" TIME STEP SIZE (DAYS)        = {delt:10.4f}\n\n")
-        
+
+        # Print time step info and max change locations (Fortran order)
+        iocode.write(f"\n ELAPSED TIME (DAYS)         = {time:9.2f}   ")
+        iocode.write(f"TIME STEP NUMBER             = {nloop:5d}      ")
+        iocode.write(f"TIME STEP SIZE (DAYS)         = {delt:9.2f}\n\n")
+
+        iocode.write(f" CURRENT AVG RES PRESSURE    = {pavg:9.1f}   ")
+        iocode.write(f"PREVIOUS AVG RES PRESSURE    = {pavg0:9.1f}  ")
+        iocode.write(f"PRESSURE DPMAX({ipm:3d},{jpm:3d},{kpm:3d})   = {ppm:9.1f}\n")
+
+        iocode.write(f" OIL DSMAX({iom:3d},{jom:3d},{kom:3d})      = {som:9.5f}   ")
+        iocode.write(f"GAS DSMAX({igm:3d},{jgm:3d},{kgm:3d})       = {sgm:9.5f}  ")
+        iocode.write(f"WATER DSMAX({iwm:3d},{jwm:3d},{kwm:3d})      = {swm:9.5f}\n")
+
         # Print material balance errors
         iocode.write(f" OIL MATERIAL BALANCE (%)    = {oerror:9.6f}   ")
         iocode.write(f"GAS MATERIAL BALANCE (%)     = {gerror:9.6f}  ")
         iocode.write(f"WATER MATERIAL BALANCE (%)    = {werror:9.6f}\n")
-        
+
         iocode.write(f" CUM. OIL MATERIAL BALANCE(%)= {coerr:9.6f}   ")
         iocode.write(f"CUM. GAS MATERIAL BALANCE(%) = {cgerr:9.6f}  ")
         iocode.write(f"CUM. WATER MATERIAL BALANCE(%)= {cwerr:9.6f}\n\n")
@@ -696,16 +730,17 @@ class PostProcessing:
         iocode.write(f" WATER INJECTION RATE (STB/D)= {wir:9.1f}   ")
         iocode.write(f"CUM. WATER INJECTION (STB)   = {cwi:10.4e}\n\n")
         
-        # Calculate and print WOR and GOR
+        # Calculate and print WOR and GOR (match Fortran scaling)
         wor = wpr / opr if opr > 0.001 else 0.0
         cwor = cwp / cop if cop > 0.001 else 0.0
         gor = gpr / opr if opr > 0.001 else 0.0
         cgor = cgp / cop if cop > 0.001 else 0.0
-        
+        gorm = (gor * 1000.0) if gor > 0.0 else 0.0
+
         iocode.write(f" PRODUCING WOR (STB/STB)     = {wor:9.3f}   ")
         iocode.write(f"CUM. WOR (STB/STB)           = {cwor:9.3f}\n")
-        
-        iocode.write(f" PRODUCING GOR (SCF/STB)     = {gor:9.1f}   ")
+
+        iocode.write(f" PRODUCING GOR (SCF/STB)     = {gorm:9.1f}   ")
         iocode.write(f"CUM. GOR (SCF/STB)           = {cgor:9.1f}\n\n")
         
         # Call aquifer print routine if needed

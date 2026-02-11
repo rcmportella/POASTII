@@ -431,18 +431,10 @@ class BOASTSimulator:
                         pp, bpt, self.rslope[ipvtr_0]
                     )
                     
-                    # DEBUG: Print first RSO value to check
-                    if calculate_initial and i == 0 and j == 0 and k == 0:
-                        print(f"DEBUG: First block RSO={rso}, RSW will follow...")
-                    
                     # Get RSW (solution gas-water ratio) 
                     rsw = interp_obj.interp(
                         self.pwt, self.rswt, ipvtr_0, self.mpwt[ipvtr_0], pp
                     )
-                    
-                    # DEBUG: Print first RSW value
-                    if calculate_initial and i == 0 and j == 0 and k == 0:
-                        print(f"DEBUG: First block RSW={rsw}, PP={pp}, BPT={bpt}")
                     
                     # Calculate volumes at standard conditions
                     ff1 = self.so[i, j, k] / self.bo[i, j, k] if abs(self.bo[i, j, k]) > 1e-30 else 0.0
@@ -640,7 +632,17 @@ class BOASTSimulator:
         
         # Read header
         header = self.infile.readline().strip()
-        self.outfile.write(f'\n{header}\n\n')
+        if header:
+            indent = " " * 23
+            inner_width = max(len(header) + 2, 78)
+            border = "*" * (inner_width + 2)
+            self.outfile.write(f"\n{indent}{border}\n")
+            self.outfile.write(f"{indent}*{' ' * inner_width}*\n")
+            self.outfile.write(f"{indent}*{header:^{inner_width}}*\n")
+            self.outfile.write(f"{indent}*{' ' * inner_width}*\n")
+            self.outfile.write(f"{indent}{border}\n\n")
+        else:
+            self.outfile.write("\n\n")
         
         # Read restart options
         iplotp, nn, tmax = self.read_restart_options()
@@ -759,13 +761,7 @@ class BOASTSimulator:
         self.outfile.write(f"{'':>19}WATER IN PLACE (MILLION STB){'':>40}{self.towip:10.4f}\n")
         self.outfile.write(f"{'':>19}SOLUTION GAS IN PLACE (BILLION SCF){'':>40}{self.todgip:10.4f}\n")
         self.outfile.write(f"{'':>19}FREE GAS IN PLACE (BILLION SCF){'':>40}{self.tofgip:10.4f}\n")
-        self.outfile.write(f"\n   DEBUG: SCFO={self.scfo:.6e} SCF, SCFW={self.scfw:.6e} SCF\n")
-        self.outfile.write(f"   DEBUG: SCFG={self.scfg:.6e} SCF (free), SCFG1={self.scfg1:.6e} SCF (dissolved)\n")
-        self.outfile.write(f"   DEBUG: STBO={self.stbo:.6e} STB, STBW={self.stbw:.6e} STB, MCFGT={self.mcfgt:.6e} MSCF\n")
-        self.outfile.write(f"   DEBUG: TOOIP={self.tooip:.6e} MM STB, TOWIP={self.towip:.6e} MM STB\n")
-        self.outfile.write(f"   DEBUG: TODGIP={self.todgip:.6e} B SCF (dissolved), TOFGIP={self.tofgip:.6e} B SCF (free)\n")
-        self.outfile.write(f"   DEBUG: TOGIP={self.togip:.6e} B SCF (total gas)\n")
-        self.outfile.write(f"   DEBUG: Ratio TOGIP/TOOIP = {self.togip/self.tooip if self.tooip > 0 else 0:.6f}\n\n")
+        self.outfile.write("\n")
         
         # Call CODES for solution method parameters
         solution_params, self.ksn1, self.ksm1, self.kco1, self.kcoff = self.solution_control.codes(self.infile, self.outfile, self)
@@ -1168,6 +1164,8 @@ class BOASTSimulator:
                 gors = (self.gpr * 1000.0 / self.opr) if self.opr > 0.0 else 0.0
                 wors = (self.wpr / self.opr) if self.opr > 0.0 else 0.0
                 pavg = mb_results['pavg']
+                self.pavg_prev = getattr(self, 'pavg', pavg)
+                self.pavg = pavg
                 
                 # Update old-time arrays for next time step
                 for k in range(self.kk):

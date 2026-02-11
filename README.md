@@ -106,8 +106,15 @@ Flow equation assembly (two-point weighting).
 
 ### Prerequisites
 ```bash
-python 3.10+
+python 3.12+
 numpy
+```
+
+### Recommended: Use Python 3.12 virtual environment (Windows)
+```bash
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 ### Basic Execution

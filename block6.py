@@ -348,9 +348,9 @@ class PVTTables:
         
         # Read oil table
         iread.readline()  # Skip comment
-        iocode.write("\n\n{'':>4} **** SATURATED OIL PVT PROPERTIES ****\n")
-        iocode.write("{'':>4} PRESSURE  VISCOSITY    FVF    SOLN. GAS\n")
-        iocode.write("{'':>4}  (PSI)       (CP)    (RB/STB)  (SCF/STB)\n\n")
+        iocode.write(f"\n\n{'':>4} **** SATURATED OIL PVT PROPERTIES ****\n")
+        iocode.write(f"{'':>4} PRESSURE  VISCOSITY    FVF    SOLN. GAS\n")
+        iocode.write(f"{'':>4}  (PSI)       (CP)    (RB/STB)  (SCF/STB)\n\n")
         
         for i in range(25):
             line = iread.readline()
@@ -379,9 +379,9 @@ class PVTTables:
         iread = self.sim.iread
         
         iread.readline()  # Skip comment
-        iocode.write("\n\n{'':>4}     **** WATER PVT PROPERTIES ***\n")
-        iocode.write("{'':>4} PRESSURE  VISCOSITY    FVF    SOLN. GAS\n")
-        iocode.write("{'':>4}  (PSI)       (CP)    (RB/STB)  (SCF/STB)\n\n")
+        iocode.write(f"\n\n{'':>4}     **** WATER PVT PROPERTIES ***\n")
+        iocode.write(f"{'':>4} PRESSURE  VISCOSITY    FVF    SOLN. GAS\n")
+        iocode.write(f"{'':>4}  (PSI)       (CP)    (RB/STB)  (SCF/STB)\n\n")
         
         for i in range(25):
             line = iread.readline()
@@ -418,9 +418,9 @@ class PVTTables:
         
         if kgcor != 1:
             # Read gas table
-            iocode.write("\n\n{'':>5}  ****  GAS  PVT AND ROCK COMP. ****\n")
-            iocode.write("{'':>4} PRESSURE  VISCOSITY    FVF     PSEUDO-PRS  ROCK COMP.\n")
-            iocode.write("{'':>4}  (PSI)       (CP)   (RCF/SCF) (PSIA**2/CP)  (1/PSI)\n\n")
+            iocode.write(f"\n\n{'':>5}  ****  GAS  PVT AND ROCK COMP. ****\n")
+            iocode.write(f"{'':>4} PRESSURE  VISCOSITY    FVF     PSEUDO-PRS  ROCK COMP.\n")
+            iocode.write(f"{'':>4}  (PSI)       (CP)   (RCF/SCF) (PSIA**2/CP)  (1/PSI)\n\n")
             
             for i in range(999):
                 line = iread.readline()
@@ -447,9 +447,9 @@ class PVTTables:
             self.sim.ifatal = gas_props.pseudo(np, self.sim.ifatal, iocode)
             
             # Read rock compressibility
-            iocode.write("\n\n{'':>5}  **** ROCK COMPRESSIBILITY ****\n")
-            iocode.write("{'':>4} PRESSURE    ROCK COMP.\n")
-            iocode.write("{'':>4}  (PSI)      (1/PSI)\n\n")
+            iocode.write(f"\n\n{'':>5}  **** ROCK COMPRESSIBILITY ****\n")
+            iocode.write(f"{'':>4} PRESSURE    ROCK COMP.\n")
+            iocode.write(f"{'':>4}  (PSI)      (1/PSI)\n\n")
             
             iread.readline()  # Skip comment
             
@@ -474,9 +474,9 @@ class PVTTables:
         
         # Read stock tank densities
         iread.readline()  # Skip comment
-        iocode.write("\n\n{'':>7}*** DENSITIES AT STD. CONDITIONS ***\n")
-        iocode.write("{'':>13}OIL      WATER      GAS\n")
-        iocode.write("{'':>9} (LBM/SCF) (LBM/SCF) (LBM/SCF)\n\n")
+        iocode.write(f"\n\n{'':>7}*** DENSITIES AT STD. CONDITIONS ***\n")
+        iocode.write(f"{'':>13}OIL      WATER      GAS\n")
+        iocode.write(f"{'':>9} (LBM/SCF) (LBM/SCF) (LBM/SCF)\n\n")
         
         line = iread.readline()
         values = parse_fortran_line(line)
@@ -501,11 +501,11 @@ class PVTTables:
     
     def _calculate_slopes(self, iocode: TextIO, np: int) -> None:
         """Calculate slopes for compressibility calculations"""
-        iocode.write("\n\n{'':>14}***** SLOPES FOR COMPRESSIBILITY CALCULATIONS ****\n")
+        iocode.write(f"\n\n{'':>14}***** SLOPES FOR COMPRESSIBILITY CALCULATIONS ****\n")
         
         # Oil slopes
-        iocode.write("\n\n{'':>11}PRESSURE{'':>13}BO{'':>9}DBO/DP{'':>13}RSO{'':>8}DRSO/DP\n")
-        iocode.write("{'':>12}(PSI){'':>9}(RB/STB){'':>9}(RB/STB/PSI){'':>9}(CF/CF){'':>10}(1/PSI)\n\n")
+        iocode.write(f"\n\n{'':>11}PRESSURE{'':>13}BO{'':>9}DBO/DP{'':>13}RSO{'':>8}DRSO/DP\n")
+        iocode.write(f"{'':>12}(PSI){'':>9}(RB/STB){'':>9}(RB/STB/PSI){'':>9}(CF/CF){'':>10}(1/PSI)\n\n")
         
         for i in range(1, self.sim.mpot[np]):
             div = 1.0 / (self.sim.pot[np, i] - self.sim.pot[np, i-1])
@@ -516,8 +516,8 @@ class PVTTables:
                         f"{self.sim.bopt[np, i]:11.4e}{self.sim.rsot[np, i]:9.1f}  {self.sim.rsopt[np, i]:11.4e}\n")
         
         # Water slopes
-        iocode.write("\n\n{'':>11}PRESSURE{'':>13}BW{'':>9}DBW/DP{'':>13}RSW{'':>8}DRSW/DP\n")
-        iocode.write("{'':>12}(PSI){'':>9}(RB/STB){'':>9}(RB/STB/PSI){'':>9}(CF/CF){'':>10}(1/PSI)\n\n")
+        iocode.write(f"\n\n{'':>11}PRESSURE{'':>13}BW{'':>9}DBW/DP{'':>13}RSW{'':>8}DRSW/DP\n")
+        iocode.write(f"{'':>12}(PSI){'':>9}(RB/STB){'':>9}(RB/STB/PSI){'':>9}(CF/CF){'':>10}(1/PSI)\n\n")
         
         for i in range(1, self.sim.mpwt[np]):
             div = 1.0 / (self.sim.pwt[np, i] - self.sim.pwt[np, i-1])
@@ -528,8 +528,8 @@ class PVTTables:
                         f"{self.sim.bwpt[np, i]:11.4e}{self.sim.rswt[np, i]:9.1f}  {self.sim.rswpt[np, i]:11.4e}\n")
         
         # Gas slopes
-        iocode.write("\n\n{'':>11}PRESSURE{'':>9}BG{'':>12}DBG/DP\n")
-        iocode.write("{'':>13}(PSI){'':>13}(RCF/SCF){'':>8}(RCF/SCF/PSI)\n\n")
+        iocode.write(f"\n\n{'':>11}PRESSURE{'':>9}BG{'':>12}DBG/DP\n")
+        iocode.write(f"{'':>13}(PSI){'':>13}(RCF/SCF){'':>8}(RCF/SCF/PSI)\n\n")
         
         for i in range(1, self.sim.mpgt[np]):
             self.sim.bgpt[np, i] = (self.sim.bgt[np, i] - self.sim.bgt[np, i-1]) / \
@@ -636,11 +636,6 @@ class Transmissibility:
         """
         # Calculate geometric factors A1, A2, A3
         iocode = self.sim.iocode
-        iocode.write(f"\n   DEBUG: TRANS starting - checking grid dimensions\n")
-        iocode.write(f"   DEBUG: DX min={self.sim.dx.min():.2f}, max={self.sim.dx.max():.2f}\n")
-        iocode.write(f"   DEBUG: DY min={self.sim.dy.min():.2f}, max={self.sim.dy.max():.2f}\n")
-        iocode.write(f"   DEBUG: DZNET min={self.sim.dznet.min():.2f}, max={self.sim.dznet.max():.2f}\n")
-        iocode.write(f"   DEBUG: VP before calc min={self.sim.vp.min():.6f}, max={self.sim.vp.max():.6f}\n")
         
         for k in range(kk):
             for j in range(jj):
@@ -716,11 +711,7 @@ class Transmissibility:
                     self.sim.vp[i, j, k] *= (self.sim.dx[i, j, k] * self.sim.dy[i, j, k] *
                                             self.sim.dznet[i, j, k])
         
-        # DEBUG: Check pore volume calculation
-        iocode = self.sim.iocode
-        iocode.write(f"\n   DEBUG: TRANS completed pore volume calculation\n")
-        iocode.write(f"   DEBUG: VP min={self.sim.vp.min():.2f}, max={self.sim.vp.max():.2f}, mean={self.sim.vp.mean():.2f} RB\n")
-        iocode.write(f"   DEBUG: Blocks with VP>0: {np.count_nonzero(self.sim.vp > 0)} of {ii*jj*kk}\n")
+        # Pore volume calculation complete
         
         # Set zero transmissibility for zero PV blocks
         for k in range(kk):
