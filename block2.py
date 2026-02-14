@@ -201,17 +201,17 @@ class GridSetup:
         # One value per row/column/layer
         elif kcode == 0:
             if name == 'DX':
-                vals = [float(x) for x in infile.readline().split()]
+                vals = parse_fortran_line(infile.readline())
                 for i in range(ii):
                     arr[i, :, :] = vals[i]
                     outfile.write(f'               GRID SIZE (DX) IN COLUMN {i+1:5d} IS INITIALLY SET AT {vals[i]:8.2f} FOR ALL NODES\n')
             elif name == 'DY':
-                vals = [float(x) for x in infile.readline().split()]
+                vals = parse_fortran_line(infile.readline())
                 for j in range(jj):
                     arr[:, j, :] = vals[j]
                     outfile.write(f'               GRID SIZE (DY) IN ROW    {j+1:5d} IS INITIALLY SET AT {vals[j]:8.2f} FOR ALL NODES\n')
             elif name in ['DZ', 'DZNET']:
-                vals = [float(x) for x in infile.readline().split()]
+                vals = parse_fortran_line(infile.readline())
                 for k in range(kk):
                     arr[:, :, k] = vals[k]
                     outfile.write(f'               GRID SIZE ({name}) IN LAYER  {k+1:5d} IS INITIALLY SET AT {vals[k]:8.2f} FOR ALL NODES\n')
@@ -300,7 +300,7 @@ class GridSetup:
             else:  # kel == 1
                 varel = np.zeros((ii, jj))
                 for j in range(jj):
-                    vals = [float(x) for x in infile.readline().split()]
+                    vals = parse_fortran_line(infile.readline())
                     varel[:, j] = vals[:ii]
                     
             # Calculate depths for each layer
@@ -313,7 +313,7 @@ class GridSetup:
                     
         elif kel == 2:
             # One elevation per layer
-            elevations = [float(x) for x in infile.readline().split()]
+            elevations = parse_fortran_line(infile.readline())
             for k in range(kk):
                 el[:, :, k] = elevations[k]
                 
@@ -321,7 +321,7 @@ class GridSetup:
             # Full 2D elevation per layer
             for k in range(kk):
                 for j in range(jj):
-                    vals = [float(x) for x in infile.readline().split()]
+                    vals = parse_fortran_line(infile.readline())
                     el[:, j, k] = vals[:ii]
                     
         # Write depths to grid block tops
@@ -761,7 +761,7 @@ class LSORSolver:
                         
             # Check convergence
             if dmax <= tol:
-                if n == ksn:
+                if ksn > 0 and n == ksn:
                     simulator.outfile.write(f'     CONVERGENCE(LSORX) HAS BEEN REACHED AFTER {niter:3d} ITERATIONS     OMEGA = {omega:6.3f}\n')
                     simulator.outfile.write(f'     DMAX = {dmax:10.6f}     THETA = {theta:10.6f}     RHO1 = {rho1:10.6f}\n\n')
                 return omega, niter
@@ -774,9 +774,75 @@ class LSORSolver:
         Iterative solution: Y-direction tridiagonal algorithm
         Returns (final omega, number of iterations)
         """
-        # Similar implementation to lsorx but solving in Y-direction
-        # Implementation follows same pattern with different loop order
-        return omega, 0  # Placeholder
+        niter = 0
+        dmax = 1.0
+        rho1 = 0.0
+        theta = 0.0
+        
+        while True:
+            tw = 1.0 - omega
+            dmax0 = dmax
+            theta0 = theta
+            
+            if niter >= miter:
+                simulator.outfile.write(f'               CONVERGENCE(LSORY) WAS NOT REACHED IN {niter:5d} ITERATIONS\n')
+                simulator.outfile.write(f'               TOL = {tol:10.7f}          DMAX = {dmax:15.7f}\n')
+                return omega, niter
+                
+            niter += 1
+            dmax = 0.0
+            
+            # Solve line by line in Y-direction
+            for k in range(nz):
+                for i in range(nx):
+                    # Build tridiagonal system
+                    azl = simulator.as_[i, :ny, k]
+                    bzl = simulator.e[i, :ny, k]
+                    czl = simulator.an[i, :ny, k]
+                    dzl = simulator.b[i, :ny, k].copy()
+                    
+                    # Subtract X-direction terms
+                    if nx > 1:
+                        im = max(0, i-1)
+                        ip = min(nx-1, i+1)
+                        dzl -= simulator.aw[i, :ny, k] * simulator.p[im, :ny, k]
+                        dzl -= simulator.ae[i, :ny, k] * simulator.p[ip, :ny, k]
+                        
+                    # Subtract Z-direction terms
+                    if nz > 1:
+                        km = max(0, k-1)
+                        kp = min(nz-1, k+1)
+                        dzl -= simulator.at[i, :ny, k] * simulator.p[i, :ny, km]
+                        dzl -= simulator.ab[i, :ny, k] * simulator.p[i, :ny, kp]
+                        
+                    # Solve tridiagonal system
+                    uzl = LSORSolver._solve_tridiagonal(azl, bzl, czl, dzl, ny)
+                    
+                    # Update pressure with over-relaxation
+                    um = simulator.p[i, :ny, k].copy()
+                    simulator.p[i, :ny, k] = tw * um + omega * uzl
+                    
+                    # Track maximum change
+                    dm = np.max(np.abs(simulator.p[i, :ny, k] - um))
+                    if dm > dmax:
+                        dmax = dm
+                        
+            # Update omega if appropriate
+            if tol1 != 0.0 and niter > 1:
+                theta = dmax / dmax0
+                delta = abs(theta - theta0)
+                if delta <= tol1:
+                    om = omega - 1.0
+                    rho1 = (theta + om) ** 2 / (theta * omega ** 2)
+                    if rho1 < 1.0:
+                        omega = 2.0 / (1.0 + np.sqrt(1.0 - rho1))
+                        
+            # Check convergence
+            if dmax <= tol:
+                if ksn > 0 and n == ksn:
+                    simulator.outfile.write(f'     CONVERGENCE(LSORY) HAS BEEN REACHED AFTER {niter:3d} ITERATIONS     OMEGA = {omega:6.3f}\n')
+                    simulator.outfile.write(f'     DMAX = {dmax:10.6f}     THETA = {theta:10.6f}     RHO1 = {rho1:10.6f}\n\n')
+                return omega, niter
         
     @staticmethod
     def lsorz(simulator, nx: int, ny: int, nz: int, omega: float, 
@@ -786,9 +852,75 @@ class LSORSolver:
         Iterative solution: Z-direction tridiagonal algorithm
         Returns (final omega, number of iterations)
         """
-        # Similar implementation to lsorx but solving in Z-direction
-        # Implementation follows same pattern with different loop order
-        return omega, 0  # Placeholder
+        niter = 0
+        dmax = 1.0
+        rho1 = 0.0
+        theta = 0.0
+        
+        while True:
+            tw = 1.0 - omega
+            dmax0 = dmax
+            theta0 = theta
+            
+            if niter >= miter:
+                simulator.outfile.write(f'               CONVERGENCE(LSORZ) WAS NOT REACHED IN {niter:5d} ITERATIONS\n')
+                simulator.outfile.write(f'               TOL = {tol:10.7f}          DMAX = {dmax:15.7f}\n')
+                return omega, niter
+                
+            niter += 1
+            dmax = 0.0
+            
+            # Solve line by line in Z-direction
+            for j in range(ny):
+                for i in range(nx):
+                    # Build tridiagonal system
+                    azl = simulator.at[i, j, :nz]
+                    bzl = simulator.e[i, j, :nz]
+                    czl = simulator.ab[i, j, :nz]
+                    dzl = simulator.b[i, j, :nz].copy()
+                    
+                    # Subtract X-direction terms
+                    if nx > 1:
+                        im = max(0, i-1)
+                        ip = min(nx-1, i+1)
+                        dzl -= simulator.aw[i, j, :nz] * simulator.p[im, j, :nz]
+                        dzl -= simulator.ae[i, j, :nz] * simulator.p[ip, j, :nz]
+                        
+                    # Subtract Y-direction terms
+                    if ny > 1:
+                        jm = max(0, j-1)
+                        jp = min(ny-1, j+1)
+                        dzl -= simulator.as_[i, j, :nz] * simulator.p[i, jm, :nz]
+                        dzl -= simulator.an[i, j, :nz] * simulator.p[i, jp, :nz]
+                        
+                    # Solve tridiagonal system
+                    uzl = LSORSolver._solve_tridiagonal(azl, bzl, czl, dzl, nz)
+                    
+                    # Update pressure with over-relaxation
+                    um = simulator.p[i, j, :nz].copy()
+                    simulator.p[i, j, :nz] = tw * um + omega * uzl
+                    
+                    # Track maximum change
+                    dm = np.max(np.abs(simulator.p[i, j, :nz] - um))
+                    if dm > dmax:
+                        dmax = dm
+                        
+            # Update omega if appropriate
+            if tol1 != 0.0 and niter > 1:
+                theta = dmax / dmax0
+                delta = abs(theta - theta0)
+                if delta <= tol1:
+                    om = omega - 1.0
+                    rho1 = (theta + om) ** 2 / (theta * omega ** 2)
+                    if rho1 < 1.0:
+                        omega = 2.0 / (1.0 + np.sqrt(1.0 - rho1))
+                        
+            # Check convergence
+            if dmax <= tol:
+                if ksn > 0 and n == ksn:
+                    simulator.outfile.write(f'     CONVERGENCE(LSORZ) HAS BEEN REACHED AFTER {niter:3d} ITERATIONS     OMEGA = {omega:6.3f}\n')
+                    simulator.outfile.write(f'     DMAX = {dmax:10.6f}     THETA = {theta:10.6f}     RHO1 = {rho1:10.6f}\n\n')
+                return omega, niter
         
     @staticmethod
     def _solve_tridiagonal(a: np.ndarray, b: np.ndarray, c: np.ndarray, 

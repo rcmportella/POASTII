@@ -512,39 +512,39 @@ class WellRates:
                 
                 # Oil producer (KIP = -1)
                 if kip == -1:
-                    self.sim.qoc[ij, k] = (self.sim.pid[j, k] * 5.615 *
+                    self.sim.qoc[j, k] = (self.sim.pid[j, k] * 5.615 *
                         self.sim.gmo[j, k] * (ppn - pwf_k) / bbo)
                     if ppn <= pwf_k:
-                        self.sim.qoc[ij, k] = 0.0
+                        self.sim.qoc[j, k] = 0.0
                     
-                    self.sim.qwc[ij, k] = (self.sim.pid[j, k] * 5.615 *
+                    self.sim.qwc[j, k] = (self.sim.pid[j, k] * 5.615 *
                         self.sim.gmw[j, k] * (ppn - pwf_k) / bbw)
                     if ppn <= pwf_k:
-                        self.sim.qwc[ij, k] = 0.0
+                        self.sim.qwc[j, k] = 0.0
                     
-                    if self.sim.qoc[ij, k] > 0.0:
-                        qg1 = (self.sim.qoc[ij, k] * (self.sim.gmg[j, k] *
+                    if self.sim.qoc[j, k] > 0.0:
+                        qg1 = (self.sim.qoc[j, k] * (self.sim.gmg[j, k] *
                               bbo / (bbg * self.sim.gmo[j, k]) + rso))
                     else:
                         qg1 = 0.0
                     
-                    self.sim.qgc[ij, k] = qg1 + rsw * self.sim.qwc[ij, k]
+                    self.sim.qgc[j, k] = qg1 + rsw * self.sim.qwc[j, k]
                 
                 # Water injector (KIP = -2)
                 elif kip == -2:
-                    self.sim.qwc[ij, k] = (self.sim.pid[j, k] * 5.615 *
+                    self.sim.qwc[j, k] = (self.sim.pid[j, k] * 5.615 *
                         (self.sim.gmo[j, k] + self.sim.gmw[j, k] + self.sim.gmg[j, k]) *
                         (ppn - pwf_k) / bbw)
                     if ppn >= pwf_k:
-                        self.sim.qwc[ij, k] = 0.0
+                        self.sim.qwc[j, k] = 0.0
                 
                 # Gas injector (KIP = -3)
                 elif kip == -3:
-                    self.sim.qgc[ij, k] = (self.sim.pid[j, k] * 5.615 *
+                    self.sim.qgc[j, k] = (self.sim.pid[j, k] * 5.615 *
                         (self.sim.gmo[j, k] + self.sim.gmw[j, k] + self.sim.gmg[j, k]) *
                         (ppn - pwf_k) / bbg)
                     if ppn >= pwf_k:
-                        self.sim.qgc[ij, k] = 0.0
+                        self.sim.qgc[j, k] = 0.0
     
     def _calculate_gas_well(self, j: int, iq1: int, iq2: int,
                            iq3: int, ij: int, lay: int) -> None:

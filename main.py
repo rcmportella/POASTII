@@ -952,17 +952,17 @@ class BOASTSimulator:
                         # LSOR - line sweeps in X direction (LSORX from BLOCK2.FOR)
                         self.lsor_solver.lsorx(self, self.ii, self.jj, self.kk, self.omega,
                                               self.tol, self.tol1, self.miter, delt, delt, 
-                                              self.ksn, n, 0)
+                                              self.ksn1, n)
                     elif self.ksol == 3:
                         # LSOR - line sweeps in Y direction (LSORY from BLOCK2.FOR)
                         self.lsor_solver.lsory(self, self.ii, self.jj, self.kk, self.omega,
                                               self.tol, self.tol1, self.miter, delt, delt,
-                                              self.ksn, n, 0)
+                                              self.ksn1, n)
                     elif self.ksol == 4:
                         # LSOR - line sweeps in Z direction (LSORZ from BLOCK2.FOR)
                         self.lsor_solver.lsorz(self, self.ii, self.jj, self.kk, self.omega,
                                               self.tol, self.tol1, self.miter, delt, delt,
-                                              self.ksn, n, 0)
+                                              self.ksn1, n)
                 except Exception as e:
                     self.outfile.write(f"\n\nERROR in pressure solver at time {eti}: {e}\n")
                     import traceback

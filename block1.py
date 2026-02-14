@@ -17,6 +17,39 @@ from dataclasses import dataclass
 TDCMAX = np.array([0., 0., 0.6, 5., 5., 10., 15., 30., 45., 70., 1000.])
 
 
+def parse_fortran_value(value_str: str) -> List[float]:
+    """
+    Parse Fortran-style repeated values like '5*0' or '3*1.5'
+    Returns a list of values
+    
+    Examples:
+    '5*0' -> [0, 0, 0, 0, 0]
+    '3*1.5' -> [1.5, 1.5, 1.5]
+    '10' -> [10]
+    """
+    if '*' in value_str:
+        parts = value_str.split('*')
+        count = int(parts[0])
+        value = float(parts[1])
+        return [value] * count
+    else:
+        return [float(value_str)]
+
+
+def parse_fortran_line(line: str) -> List[float]:
+    """
+    Parse a line with Fortran-style repeated values
+    
+    Example:
+    '5*0 2*1 10' -> [0, 0, 0, 0, 0, 1, 1, 10]
+    """
+    tokens = line.split()
+    result = []
+    for token in tokens:
+        result.extend(parse_fortran_value(token))
+    return result
+
+
 @dataclass
 class AquiferParameters:
     """Parameters for aquifer model"""
@@ -572,11 +605,11 @@ class WellManager:
                 iq3 = i4 - 1  # Convert to 0-based
                 lay = iq3 + i5
                 
-                pid_line = infile.readline().split()
-                pwf_line = infile.readline().split() # BHP data for each layer
+                pid_line = infile.readline()
+                pwf_line = infile.readline() # BHP data for each layer
                 
-                pid_values = [float(x) for x in pid_line]
-                pwf_values = [float(x) for x in pwf_line]
+                pid_values = parse_fortran_line(pid_line)
+                pwf_values = parse_fortran_line(pwf_line)
                 
                 # Read rate data
                 # rate_line[0] = well name, rate_line[1] = well ID, rate_line[2] = kip,

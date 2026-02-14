@@ -14,6 +14,39 @@ from typing import TextIO, List, Tuple
 from dataclasses import dataclass
 
 
+def parse_fortran_value(value_str: str) -> List[float]:
+    """
+    Parse Fortran-style repeated values like '5*0' or '3*1.5'
+    Returns a list of values
+    
+    Examples:
+    '5*0' -> [0, 0, 0, 0, 0]
+    '3*1.5' -> [1.5, 1.5, 1.5]
+    '10' -> [10]
+    """
+    if '*' in value_str:
+        parts = value_str.split('*')
+        count = int(parts[0])
+        value = float(parts[1])
+        return [value] * count
+    else:
+        return [float(value_str)]
+
+
+def parse_fortran_line(line: str) -> List[float]:
+    """
+    Parse a line with Fortran-style repeated values
+    
+    Example:
+    '5*0 2*1 10' -> [0, 0, 0, 0, 0, 1, 1, 10]
+    """
+    tokens = line.split()
+    result = []
+    for token in tokens:
+        result.extend(parse_fortran_value(token))
+    return result
+
+
 class OutputVisualization:
     """Handles visualization output including contour plots and line printer plots"""
     
@@ -228,32 +261,31 @@ class RockProperties:
         # Read porosity
         iocode.write("\n   READING POROSITY DISTRIBUTION...\n")
         
-        if iphi == -1 or iphi == 0:
+        if iphi < 0:
             # Constant porosity
-            if iphi == -1:
-                line = iread.readline()
-                phi_const = float(line.strip())
-            else:
-                phi_const = float(line.split()[1])
+            line = iread.readline()
+            phi_const = parse_fortran_line(line)[0]
             self.sim.phi.fill(phi_const)
             iocode.write(f"   CONSTANT POROSITY = {phi_const:.4f}\n")
         
-        elif iphi == 1:
+        elif iphi == 0:
             # Porosity by layer
             iocode.write("   POROSITY BY LAYER:\n")
+            line = iread.readline()
+            phi_values = parse_fortran_line(line)
             for k in range(kk):
-                line = iread.readline()
-                phi_k = float(line.strip())
+                phi_k = phi_values[k]
                 self.sim.phi[:, :, k] = phi_k
                 iocode.write(f"   LAYER {k+1}: PHI = {phi_k:.4f}\n")
         
-        elif iphi == 2:
-            # Full 3D porosity distribution
-            iocode.write("   READING FULL 3D POROSITY DISTRIBUTION\n")
+        else:  # iphi > 0
+            # 2D porosity distribution per layer
+            iocode.write("   READING 2D POROSITY DISTRIBUTION PER LAYER\n")
             for k in range(kk):
+                iocode.write(f"   LAYER {k+1}:\n")
                 for j in range(jj):
                     line = iread.readline()
-                    values = [float(x) for x in line.split()]
+                    values = parse_fortran_line(line)
                     for i in range(ii):
                         self.sim.phi[i, j, k] = values[i]
         
@@ -273,93 +305,87 @@ class RockProperties:
         # Read X-direction permeability
         iocode.write("\n   READING X-DIRECTION PERMEABILITY...\n")
         
-        if ikx == -1 or ikx == 0:
+        if ikx < 0:
             # Constant KX
-            if ikx == -1:
-                line = iread.readline()
-                kx_const = float(line.strip())
-            else:
-                line = iread.readline()
-                kx_const = float(line.split()[1])
+            line = iread.readline()
+            kx_const = parse_fortran_line(line)[0]
             self.sim.kx.fill(kx_const)
             iocode.write(f"   CONSTANT KX = {kx_const:.2f} md\n")
         
-        elif ikx == 1:
+        elif ikx == 0:
             iocode.write("   KX BY LAYER:\n")
+            line = iread.readline()
+            kx_values = parse_fortran_line(line)
             for k in range(kk):
-                line = iread.readline()
-                kx_k = float(line.strip())
+                kx_k = kx_values[k]
                 self.sim.kx[:, :, k] = kx_k
                 iocode.write(f"   LAYER {k+1}: KX = {kx_k:.2f} md\n")
         
-        elif ikx == 2:
-            iocode.write("   READING FULL 3D KX DISTRIBUTION\n")
+        else:  # ikx > 0
+            iocode.write("   READING2D KX DISTRIBUTION PER LAYER\n")
             for k in range(kk):
+                iocode.write(f"   LAYER {k+1}:\n")
                 for j in range(jj):
                     line = iread.readline()
-                    values = [float(x) for x in line.split()]
+                    values = parse_fortran_line(line)
                     for i in range(ii):
                         self.sim.kx[i, j, k] = values[i]
         
         # Read Y-direction permeability
         iocode.write("\n   READING Y-DIRECTION PERMEABILITY...\n")
         
-        if iky == -1 or iky == 0:
+        if iky < 0:
             # Constant KY
-            if iky == -1:
-                line = iread.readline()
-                ky_const = float(line.strip())
-            else:
-                line = iread.readline()
-                ky_const = float(line.split()[1])
+            line = iread.readline()
+            ky_const = parse_fortran_line(line)[0]
             self.sim.ky.fill(ky_const)
             iocode.write(f"   CONSTANT KY = {ky_const:.2f} md\n")
         
-        elif iky == 1:
+        elif iky == 0:
             iocode.write("   KY BY LAYER:\n")
+            line = iread.readline()
+            ky_values = parse_fortran_line(line)
             for k in range(kk):
-                line = iread.readline()
-                ky_k = float(line.strip())
+                ky_k = ky_values[k]
                 self.sim.ky[:, :, k] = ky_k
                 iocode.write(f"   LAYER {k+1}: KY = {ky_k:.2f} md\n")
         
-        elif iky == 2:
-            iocode.write("   READING FULL 3D KY DISTRIBUTION\n")
+        else:  # iky > 0
+            iocode.write("   READING 2D KY DISTRIBUTION PER LAYER\n")
             for k in range(kk):
+                iocode.write(f"   LAYER {k+1}:\n")
                 for j in range(jj):
                     line = iread.readline()
-                    values = [float(x) for x in line.split()]
+                    values = parse_fortran_line(line)
                     for i in range(ii):
                         self.sim.ky[i, j, k] = values[i]
         
         # Read Z-direction permeability
         iocode.write("\n   READING Z-DIRECTION PERMEABILITY...\n")
         
-        if ikz == -1 or ikz == 0:
+        if ikz < 0:
             # Constant KZ
-            if ikz == -1:
-                line = iread.readline()
-                kz_const = float(line.strip())
-            else:
-                line = iread.readline()
-                kz_const = float(line.split()[1])
+            line = iread.readline()
+            kz_const = parse_fortran_line(line)[0]
             self.sim.kz.fill(kz_const)
             iocode.write(f"   CONSTANT KZ = {kz_const:.2f} md\n")
         
-        elif ikz == 1:
+        elif ikz == 0:
             iocode.write("   KZ BY LAYER:\n")
+            line = iread.readline()
+            kz_values = parse_fortran_line(line)
             for k in range(kk):
-                line = iread.readline()
-                kz_k = float(line.strip())
+                kz_k = kz_values[k]
                 self.sim.kz[:, :, k] = kz_k
                 iocode.write(f"   LAYER {k+1}: KZ = {kz_k:.2f} md\n")
         
-        elif ikz == 2:
-            iocode.write("   READING FULL 3D KZ DISTRIBUTION\n")
+        else:  # ikz > 0
+            iocode.write("   READING 2D KZ DISTRIBUTION PER LAYER\n")
             for k in range(kk):
+                iocode.write(f"   LAYER {k+1}:\n")
                 for j in range(jj):
                     line = iread.readline()
-                    values = [float(x) for x in line.split()]
+                    values = parse_fortran_line(line)
                     for i in range(ii):
                         self.sim.kz[i, j, k] = values[i]
         
@@ -384,7 +410,6 @@ class RockProperties:
         # Read porosity and permeability modifications
         iread.readline()  # Skip comment "POROSITY AND PERMEABILITY MODIFICATIONS"
         line = iread.readline()
-        from block2 import parse_fortran_line
         values = parse_fortran_line(line)
         while len(values) < 5:
             values.append(0.0)

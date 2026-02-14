@@ -1026,7 +1026,7 @@ def trikro(simulator, ireg: int, so: float, sw: float) -> float:
     simulator : BOASTSimulator
         Main simulator object
     ireg : int
-        Rock region number
+        Rock region number (1-based, will be converted to 0-based)
     so : float
         Oil saturation
     sw : float
@@ -1039,37 +1039,47 @@ def trikro(simulator, ireg: int, so: float, sw: float) -> float:
     """
     from block2 import Interpolation
     
-    sowr = 1.0 - simulator.swr[ireg]
+    # CRITICAL: Convert 1-based Fortran ireg to 0-based Python index
+    ireg_0 = ireg - 1
+    
+    sowr = 1.0 - simulator.swr[ireg_0]
     sl = so + sw
     sg = 1.0 - sl
     
     # If no free gas, use 2-phase oil rel perm
     if sg <= 0.001:
         rkro = Interpolation.interp(
-            simulator.sat[ireg, :simulator.msat[ireg]],
-            simulator.krot[ireg, :simulator.msat[ireg]], so)
+            simulator.sat[ireg_0, :simulator.msat[ireg_0]],
+            simulator.krot[ireg_0, :simulator.msat[ireg_0]], so)
         return rkro
     
     # Three-phase calculation using Stone's method
     krow = Interpolation.interp(
-        simulator.sat[ireg, :simulator.msat[ireg]],
-        simulator.krot[ireg, :simulator.msat[ireg]], 1.0 - sw)
+        simulator.sat[ireg_0, :simulator.msat[ireg_0]],
+        simulator.krot[ireg_0, :simulator.msat[ireg_0]], 1.0 - sw)
     
     krog = Interpolation.interp(
-        simulator.sat[ireg, :simulator.msat[ireg]],
-        simulator.krogt[ireg, :simulator.msat[ireg]], sl)
+        simulator.sat[ireg_0, :simulator.msat[ireg_0]],
+        simulator.krogt[ireg_0, :simulator.msat[ireg_0]], sl)
     
     krowr = Interpolation.interp(
-        simulator.sat[ireg, :simulator.msat[ireg]],
-        simulator.krot[ireg, :simulator.msat[ireg]], sowr)
+        simulator.sat[ireg_0, :simulator.msat[ireg_0]],
+        simulator.krot[ireg_0, :simulator.msat[ireg_0]], sowr)
     
     krw = Interpolation.interp(
-        simulator.sat[ireg, :simulator.msat[ireg]],
-        simulator.krwt[ireg, :simulator.msat[ireg]], sw)
+        simulator.sat[ireg_0, :simulator.msat[ireg_0]],
+        simulator.krwt[ireg_0, :simulator.msat[ireg_0]], sw)
     
     krg = Interpolation.interp(
-        simulator.sat[ireg, :simulator.msat[ireg]],
-        simulator.krgt[ireg, :simulator.msat[ireg]], sg)
+        simulator.sat[ireg_0, :simulator.msat[ireg_0]],
+        simulator.krgt[ireg_0, :simulator.msat[ireg_0]], sg)
+    
+    # CRITICAL: Check for zero krowr BEFORE division
+    if krowr == 0.0 or abs(krowr) < 1e-10:
+        # Check if sowr is in range of sat table
+        sat_min = simulator.sat[ireg_0, 0]
+        sat_max = simulator.sat[ireg_0, simulator.msat[ireg_0]-1]
+        raise ZeroDivisionError(f"krowr=0 for ireg={ireg}, sowr={sowr:.4f}, sat range=[{sat_min:.4f},{sat_max:.4f}]")
     
     # Stone's three-phase relative permeability formula
     rkro = ((krow + krw) * (krog + krg)) / krowr - (krw + krg)
