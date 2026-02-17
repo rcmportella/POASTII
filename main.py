@@ -8,6 +8,7 @@ This is the main entry point for the BOAST II simulator
 """
 
 import sys
+import os
 import numpy as np
 from dataclasses import dataclass
 from typing import List, Tuple, Optional
@@ -172,6 +173,8 @@ class BOASTSimulator:
         self.outfile = None
         self.resin_file = None
         self.resout_file = None
+        self.map_file = None
+        self.well_file = None
         
         # Restart parameters
         self.ireopt = 0   # Restart option
@@ -493,6 +496,90 @@ class BOASTSimulator:
         except IOError:
             print(f"Error: Cannot create output file '{outdat}'")
             sys.exit(1)
+
+        # Open auxiliary output files for maps and well data
+        self._open_aux_files(outdat)
+
+    def _open_aux_files(self, outdat: str) -> None:
+        """Open auxiliary output files for maps and well time-step data"""
+        base, _ = os.path.splitext(outdat)
+        map_path = f"{base}_maps.csv"
+        well_path = f"{base}_wells.csv"
+
+        try:
+            self.map_file = open(map_path, 'w')
+            self.map_file.write("time_days,layer,i,j,pressure_psia,sw,sg\n")
+        except IOError:
+            print(f"Error: Cannot create map output file '{map_path}'")
+            sys.exit(1)
+
+        try:
+            self.well_file = open(well_path, 'w')
+            self.well_file.write(
+                "time_days,well_index,well_id,well_name,i,j,k,qo_stb_d,qw_stb_d,qg_mscf_d,bhp_psia\n"
+            )
+        except IOError:
+            print(f"Error: Cannot create well output file '{well_path}'")
+            sys.exit(1)
+
+    def _write_maps_snapshot(self, time_days: float) -> None:
+        """Write pressure, water saturation, and gas saturation maps for a time step."""
+        if self.map_file is None:
+            return
+
+        ii, jj, kk = self.ii, self.jj, self.kk
+        for k in range(kk):
+            for j in range(jj):
+                for i in range(ii):
+                    self.map_file.write(
+                        f"{time_days:.6f},{k+1},{i+1},{j+1},"
+                        f"{self.p[i, j, k]:.6f},{self.sw[i, j, k]:.6f},{self.sg[i, j, k]:.6f}\n"
+                    )
+
+    def _write_well_snapshot(self, time_days: float, nvqn: int) -> None:
+        """Write well rates and BHP for a time step."""
+        if self.well_file is None or nvqn <= 0:
+            return
+
+        for idx in range(nvqn):
+            well_name = ""
+            well_id = idx
+            if hasattr(self.well_manager, 'wells') and idx < len(self.well_manager.wells):
+                well = self.well_manager.wells[idx]
+                well_name = well.welnam
+                well_id = well.idwell
+
+            i = int(self.iqn1[idx]) + 1
+            j = int(self.iqn2[idx]) + 1
+            k = int(self.iqn3[idx]) + 1
+
+            # Sum layer rates (match Fortran well report totals)
+            k0 = int(self.iqn3[idx])
+            lay = int(self.layer[idx])
+            qoc_sum = 0.0
+            qwc_sum = 0.0
+            qgc_sum = 0.0
+            for kk in range(k0, min(k0 + lay, self.qoc.shape[1])):
+                qoc_sum += float(self.qoc[idx, kk])
+                qwc_sum += float(self.qwc[idx, kk])
+                qgc_sum += float(self.qgc[idx, kk])
+
+            d5615 = getattr(self, 'd5615', 1.0 / 5.615)
+            qo = qoc_sum * d5615
+            qw = qwc_sum * d5615
+            qg = qgc_sum * 0.001
+
+            # Prefer calculated BHP if available, else specified PWF
+            bhp = 0.0
+            if 0 <= k0 < self.pwfc.shape[1] and self.pwfc[idx, k0] > -0.5:
+                bhp = float(self.pwfc[idx, k0])
+            elif 0 <= k0 < self.pwf.shape[1]:
+                bhp = float(self.pwf[idx, k0])
+
+            self.well_file.write(
+                f"{time_days:.6f},{idx+1},{well_id},{well_name},{i},{j},{k},"
+                f"{qo:.6f},{qw:.6f},{qg:.6f},{bhp:.6f}\n"
+            )
             
     def read_restart_options(self):
         """Read restart options from input file"""
@@ -783,7 +870,8 @@ class BOASTSimulator:
         self.tol1 = solution_params.tol1
         self.miter = solution_params.miter
         self.numdis = solution_params.numdis
-        self.d288 = 288.0  # Conversion factor
+        self.d288 = 1.0 / 288.0  # Gravity conversion factor (field units)
+        self.d144 = 1.0 / 144.0  # Field unit conversion used in MAIN.FOR
         self.d5615 = 1.0 / 5.615  # RB to STB conversion factor
         self.ksm = 1  # Saturation method
         self.nn = nmax  # Number of datasets
@@ -893,6 +981,9 @@ class BOASTSimulator:
                     cgerr=0.0,
                     cwerr=0.0
                 )
+                # Write initial map and well snapshots
+                self._write_maps_snapshot(0.0)
+                self._write_well_snapshot(0.0, nvqn)
             
             # Run time steps for this dataset
             for istep in range(ichang):
@@ -1177,6 +1268,10 @@ class BOASTSimulator:
                 self.cgp = mb_results['cgp']
                 self.cwi = mb_results['cwi']
                 self.cgi = mb_results['cgi']
+
+                # Write map and well snapshots for this time step
+                self._write_maps_snapshot(eti)
+                self._write_well_snapshot(eti, nvqn)
                 
                 # Update material balance errors
                 mbeo = mb_results['mbeo']
@@ -1340,6 +1435,10 @@ class BOASTSimulator:
             self.resin_file.close()
         if self.resout_file:
             self.resout_file.close()
+        if self.map_file:
+            self.map_file.close()
+        if self.well_file:
+            self.well_file.close()
 
 
 def main():

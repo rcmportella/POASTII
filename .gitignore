@@ -11,6 +11,9 @@ env/
 
 # Output files
 OUT*.DAT
+OUT.*.PYTHON
+OUT.*_maps.csv
+OUT.*_wells.csv
 *.out
 *.log
 test_error.txt
