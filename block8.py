@@ -164,9 +164,10 @@ class FlowEquationTwoPoint:
                     pcgo = capgo[i, j, k]
                     
                     # Phase densities
-                    ro = (self.sim.rhosco[ipvtr] + rso * self.sim.rhoscg[ipvtr]) / self.sim.bo[i, j, k]
-                    rw = (self.sim.rhoscw[ipvtr] + rsw * self.sim.rhoscg[ipvtr]) / self.sim.bw[i, j, k]
-                    rg = self.sim.rhoscg[ipvtr] / self.sim.bg[i, j, k]
+                    ipvtr_0 = ipvtr - 1
+                    ro = (self.sim.rhosco[ipvtr_0] + rso * self.sim.rhoscg[ipvtr_0]) / self.sim.bo[i, j, k]
+                    rw = (self.sim.rhoscw[ipvtr_0] + rsw * self.sim.rhoscg[ipvtr_0]) / self.sim.bw[i, j, k]
+                    rg = self.sim.rhoscg[ipvtr_0] / self.sim.bg[i, j, k]
                     
                     # Process I-1 neighbor (West) with two-point upstream
                     if i > 0 and self.sim.vp[i-1, j, k] > 0.0:
@@ -190,9 +191,10 @@ class FlowEquationTwoPoint:
                         pcow1 = capow[i-1, j, k]
                         pcgo1 = capgo[i-1, j, k]
                         
-                        ro1 = (self.sim.rhosco[ipvtr1] + rso1 * self.sim.rhoscg[ipvtr1]) / self.sim.bo[i-1, j, k]
-                        rw1 = (self.sim.rhoscw[ipvtr1] + rsw1 * self.sim.rhoscg[ipvtr1]) / self.sim.bw[i-1, j, k]
-                        rg1 = self.sim.rhoscg[ipvtr1] / self.sim.bg[i-1, j, k]
+                        ipvtr1_0 = ipvtr1 - 1
+                        ro1 = (self.sim.rhosco[ipvtr1_0] + rso1 * self.sim.rhoscg[ipvtr1_0]) / self.sim.bo[i-1, j, k]
+                        rw1 = (self.sim.rhoscw[ipvtr1_0] + rsw1 * self.sim.rhoscg[ipvtr1_0]) / self.sim.bw[i-1, j, k]
+                        rg1 = self.sim.rhoscg[ipvtr1_0] / self.sim.bg[i-1, j, k]
                         
                         # Gravity and capillary terms
                         fact = -d288 * (self.sim.el[i-1, j, k] - self.sim.el[i, j, k])
@@ -275,9 +277,10 @@ class FlowEquationTwoPoint:
                         pcow2 = capow[i+1, j, k]
                         pcgo2 = capgo[i+1, j, k]
                         
-                        ro2 = (self.sim.rhosco[ipvtr2] + rso2 * self.sim.rhoscg[ipvtr2]) / self.sim.bo[i+1, j, k]
-                        rw2 = (self.sim.rhoscw[ipvtr2] + rsw2 * self.sim.rhoscg[ipvtr2]) / self.sim.bw[i+1, j, k]
-                        rg2 = self.sim.rhoscg[ipvtr2] / self.sim.bg[i+1, j, k]
+                        ipvtr2_0 = ipvtr2 - 1
+                        ro2 = (self.sim.rhosco[ipvtr2_0] + rso2 * self.sim.rhoscg[ipvtr2_0]) / self.sim.bo[i+1, j, k]
+                        rw2 = (self.sim.rhoscw[ipvtr2_0] + rsw2 * self.sim.rhoscg[ipvtr2_0]) / self.sim.bw[i+1, j, k]
+                        rg2 = self.sim.rhoscg[ipvtr2_0] / self.sim.bg[i+1, j, k]
                         
                         fact = -d288 * (self.sim.el[i+1, j, k] - self.sim.el[i, j, k])
                         gow2 = (ro2 + ro) * fact
@@ -342,9 +345,10 @@ class FlowEquationTwoPoint:
                         
                         pcow3 = self.sim.capow[i, j-1, k]
                         pcgo3 = self.sim.capgo[i, j-1, k]
-                        ro3 = (self.sim.rhosco[ipvtr] + rso3 * self.sim.rhoscg[ipvtr]) / self.sim.bo[i, j-1, k]
-                        rw3 = (self.sim.rhoscw[ipvtr] + rsw3 * self.sim.rhoscg[ipvtr]) / self.sim.bw[i, j-1, k]
-                        rg3 = self.sim.rhoscg[ipvtr] / self.sim.bg[i, j-1, k]
+                        ipvtr_0 = ipvtr - 1
+                        ro3 = (self.sim.rhosco[ipvtr_0] + rso3 * self.sim.rhoscg[ipvtr_0]) / self.sim.bo[i, j-1, k]
+                        rw3 = (self.sim.rhoscw[ipvtr_0] + rsw3 * self.sim.rhoscg[ipvtr_0]) / self.sim.bw[i, j-1, k]
+                        rg3 = self.sim.rhoscg[ipvtr_0] / self.sim.bg[i, j-1, k]
                         
                         fact = -d288 * (self.sim.el[i, j-1, k] - self.sim.el[i, j, k])
                         gow3 = (ro3 + ro) * fact
@@ -373,9 +377,10 @@ class FlowEquationTwoPoint:
                         
                         pcow4 = self.sim.capow[i, j+1, k]
                         pcgo4 = self.sim.capgo[i, j+1, k]
-                        ro4 = (self.sim.rhosco[ipvtr] + rso4 * self.sim.rhoscg[ipvtr]) / self.sim.bo[i, j+1, k]
-                        rw4 = (self.sim.rhoscw[ipvtr] + rsw4 * self.sim.rhoscg[ipvtr]) / self.sim.bw[i, j+1, k]
-                        rg4 = self.sim.rhoscg[ipvtr] / self.sim.bg[i, j+1, k]
+                        ipvtr_0 = ipvtr - 1
+                        ro4 = (self.sim.rhosco[ipvtr_0] + rso4 * self.sim.rhoscg[ipvtr_0]) / self.sim.bo[i, j+1, k]
+                        rw4 = (self.sim.rhoscw[ipvtr_0] + rsw4 * self.sim.rhoscg[ipvtr_0]) / self.sim.bw[i, j+1, k]
+                        rg4 = self.sim.rhoscg[ipvtr_0] / self.sim.bg[i, j+1, k]
                         
                         fact = -d288 * (self.sim.el[i, j+1, k] - self.sim.el[i, j, k])
                         gow4 = (ro4 + ro) * fact
@@ -404,9 +409,10 @@ class FlowEquationTwoPoint:
                         
                         pcow5 = self.sim.capow[i, j, k-1]
                         pcgo5 = self.sim.capgo[i, j, k-1]
-                        ro5 = (self.sim.rhosco[ipvtr] + rso5 * self.sim.rhoscg[ipvtr]) / self.sim.bo[i, j, k-1]
-                        rw5 = (self.sim.rhoscw[ipvtr] + rsw5 * self.sim.rhoscg[ipvtr]) / self.sim.bw[i, j, k-1]
-                        rg5 = self.sim.rhoscg[ipvtr] / self.sim.bg[i, j, k-1]
+                        ipvtr_0 = ipvtr - 1
+                        ro5 = (self.sim.rhosco[ipvtr_0] + rso5 * self.sim.rhoscg[ipvtr_0]) / self.sim.bo[i, j, k-1]
+                        rw5 = (self.sim.rhoscw[ipvtr_0] + rsw5 * self.sim.rhoscg[ipvtr_0]) / self.sim.bw[i, j, k-1]
+                        rg5 = self.sim.rhoscg[ipvtr_0] / self.sim.bg[i, j, k-1]
                         
                         fact = -d288 * (self.sim.el[i, j, k-1] - self.sim.el[i, j, k])
                         gow5 = (ro5 + ro) * fact
@@ -435,9 +441,10 @@ class FlowEquationTwoPoint:
                         
                         pcow6 = self.sim.capow[i, j, k+1]
                         pcgo6 = self.sim.capgo[i, j, k+1]
-                        ro6 = (self.sim.rhosco[ipvtr] + rso6 * self.sim.rhoscg[ipvtr]) / self.sim.bo[i, j, k+1]
-                        rw6 = (self.sim.rhoscw[ipvtr] + rsw6 * self.sim.rhoscg[ipvtr]) / self.sim.bw[i, j, k+1]
-                        rg6 = self.sim.rhoscg[ipvtr] / self.sim.bg[i, j, k+1]
+                        ipvtr_0 = ipvtr - 1
+                        ro6 = (self.sim.rhosco[ipvtr_0] + rso6 * self.sim.rhoscg[ipvtr_0]) / self.sim.bo[i, j, k+1]
+                        rw6 = (self.sim.rhoscw[ipvtr_0] + rsw6 * self.sim.rhoscg[ipvtr_0]) / self.sim.bw[i, j, k+1]
+                        rg6 = self.sim.rhoscg[ipvtr_0] / self.sim.bg[i, j, k+1]
                         
                         fact = -d288 * (self.sim.el[i, j, k+1] - self.sim.el[i, j, k])
                         gow6 = (ro6 + ro) * fact

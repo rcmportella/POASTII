@@ -133,6 +133,22 @@ python run_test.py
 ```
 Uses predefined input/output filenames.
 
+#### Map Viewer (CSV)
+```bash
+python map_viewer_gui.py
+```
+Then:
+- Click **Open _maps.csv** and select a file like `OUT.1_maps.csv`
+- Choose map variable: `pressure`, `sw`, or `sg`
+- Choose slice direction: `XY`, `XZ`, or `YZ`
+- Select time and slice index to display the map with Matplotlib
+
+Map viewer behavior:
+- **Fixed color scale per variable**: color limits use the full loaded simulation range for the selected variable (`pressure`, `sw`, `sg`) and do not change with time.
+- **Animation stops at final time step**: animation no longer loops back to the first time unless restarted manually.
+- **Depth-style Z orientation in sections**: in `XZ` and `YZ` views, the vertical axis is inverted so higher layer numbers are shown at the bottom.
+- **Block hover readout**: moving the mouse over a block shows block indices (`i`, `j`, `layer`) and the current variable value.
+
 #### Command Line
 ```bash
 echo -e "EX1.DAT\nOUT1.DAT" | python main.py
