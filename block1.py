@@ -266,16 +266,31 @@ class AquiferModel:
                     self.sim.cumaqw[i, j, k] = self.sim.cumew[i, j, k] / 5.615
                     
                     # Rock region aquifer influx rates and cumulative
-                    iroc = self.sim.irock[i, j, k]
-                    qwaqr[iroc] += self.sim.qwaq[i, j, k]
-                    cumaqr[iroc] += delt * self.sim.qwaq[i, j, k]
+                    iroc = int(self.sim.irock[i, j, k]) - 1
+                    if 0 <= iroc < nrock:
+                        qwaqr[iroc] += self.sim.qwaq[i, j, k]
+                        cumaqr[iroc] += delt * self.sim.qwaq[i, j, k]
                     
         # Total run summary aquifer entries
         cumrat = np.sum(qwaqr)
         cumprd = np.sum(cumaqr)
+
+        self.sim.qwaqr[:nrock] = qwaqr
+        self.sim.cumaqr[:nrock] = cumaqr
+
+        if not hasattr(self.sim, 'saquir'):
+            self.sim.saquir = np.zeros(1001)
+        if not hasattr(self.sim, 'saquic'):
+            self.sim.saquic = np.zeros(1001)
+
+        idx = max(0, int(nloop) - 1)
+        if idx >= len(self.sim.saquir):
+            extra = idx + 1 - len(self.sim.saquir)
+            self.sim.saquir = np.pad(self.sim.saquir, (0, extra))
+            self.sim.saquic = np.pad(self.sim.saquic, (0, extra))
         
-        self.sim.saquir[nloop] = cumrat / 1000.0
-        self.sim.saquic[nloop] = cumprd / 1.0e6
+        self.sim.saquir[idx] = cumrat / 1000.0
+        self.sim.saquic[idx] = cumprd / 1.0e6
         
     def aqprnt(self, outfile):
         """Print aquifer influx information"""
@@ -416,9 +431,37 @@ class AquiferModel:
     def interp(self, region: int, xtable: np.ndarray, ytable: np.ndarray, 
                x: float) -> float:
         """Linear interpolation helper"""
-        # This would need actual implementation based on table structure
-        # Placeholder for now
-        return 0.0
+        if region < 0 or region >= xtable.shape[0]:
+            return 0.0
+
+        if xtable.shape[1] == 0:
+            return 0.0
+
+        x_arr = xtable[region]
+        y_arr = ytable[region]
+
+        valid = np.nonzero(x_arr)[0]
+        if valid.size == 0:
+            n = xtable.shape[1]
+        else:
+            n = valid[-1] + 1
+
+        if n <= 0:
+            return 0.0
+
+        x_last = x_arr[n - 1]
+        if x >= x_last:
+            return y_arr[n - 1]
+
+        for i in range(1, n):
+            if x < x_arr[i]:
+                x1, x2 = x_arr[i - 1], x_arr[i]
+                y1, y2 = y_arr[i - 1], y_arr[i]
+                if abs(x2 - x1) < 1e-12:
+                    return y1
+                return y1 + (x - x1) * (y2 - y1) / (x2 - x1)
+
+        return y_arr[n - 1]
 
 
 class MaterialBalance:

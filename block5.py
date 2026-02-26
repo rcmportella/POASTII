@@ -100,16 +100,6 @@ class WellRates:
                     if self.sim.worock[irockr_0] > self.sim.wort[j]:
                         self.sim.wort[j] = self.sim.worock[irockr_0]
         
-        # Initialize rates
-        self.sim.qo.fill(0.0)
-        self.sim.qw.fill(0.0)
-        self.sim.qg.fill(0.0)
-        
-        for m in range(nvqn):
-            self.sim.qoc[m, :].fill(0.0)
-            self.sim.qwc[m, :].fill(0.0)
-            self.sim.qgc[m, :].fill(0.0)
-        
         # Calculate mobilities for each well layer
         for j in range(nvqn):
             iq1 = self.sim.iqn1[j]
@@ -166,24 +156,119 @@ class WellRates:
                 self.sim.gmw[j, k] = krw / muw
                 self.sim.gmo[j, k] = kro / muo
                 self.sim.gmg[j, k] = krg / mug
-        
+
+        self.sim.qo.fill(0.0)
+        self.sim.qw.fill(0.0)
+        self.sim.qg.fill(0.0)
+
+        for m in range(nvqn):
+            self.sim.qoc[m, :].fill(0.0)
+            self.sim.qwc[m, :].fill(0.0)
+            self.sim.qgc[m, :].fill(0.0)
+
         # Calculate rates for rate-controlled wells
         self._calculate_rate_controlled_wells(nvqn)
-        
+
         # Calculate rates for pressure-controlled wells
         self._calculate_pressure_controlled_wells(nvqn)
-        
+
         # Apply rate constraints
         self._apply_rate_constraints(nvqn, eti)
-        
+
         # Apply GOR and WOR constraints
         self._apply_gor_wor_constraints(nvqn, eti)
-        
+
         # Calculate bottom-hole flowing pressures
         self._calculate_bhp(nvqn)
-        
+
         # Sum rates by grid block (excluding implicit wells)
         self._sum_rates_by_block(nvqn)
+
+    def _switch_rate_wells_to_bhp_control(self, nvqn: int, eti: float) -> bool:
+        """Switch violating rate-controlled wells to BHP control permanently."""
+        switched_any = False
+        tol = 1.0e-6
+
+        for j in range(nvqn):
+            kip = self.sim.kip[j]
+            if kip not in (1, 2, 3):
+                continue
+
+            iq1 = self.sim.iqn1[j]
+            iq2 = self.sim.iqn2[j]
+            iq3 = self.sim.iqn3[j]
+            lay = iq3 + self.sim.layer[j] - 1
+
+            violation = False
+            new_kip = None
+            reason = ""
+
+            if kip == 1:
+                is_producer = (
+                    self.sim.qvo[j] > 0.0
+                    or self.sim.qvw[j] > 0.0
+                    or self.sim.qvg[j] > 0.0
+                    or self.sim.qvt[j] > 0.0
+                )
+                if not is_producer:
+                    continue
+
+                for k in range(iq3, lay + 1):
+                    if self.sim.pid[j, k] <= 1.0e-4:
+                        continue
+                    pwfc = self.sim.pwfc[j, k]
+                    pwf_limit = self.sim.pwf[j, k]
+                    if pwfc > -0.5 and pwfc < pwf_limit - tol:
+                        violation = True
+                        reason = (
+                            f"PWFC={pwfc:10.2f} below producer limit PWF={pwf_limit:10.2f}"
+                        )
+                        break
+
+                if violation:
+                    new_kip = -11
+
+            elif kip == 2:
+                for k in range(iq3, lay + 1):
+                    if self.sim.pid[j, k] <= 1.0e-4:
+                        continue
+                    pwfc = self.sim.pwfc[j, k]
+                    pwf_limit = self.sim.pwf[j, k]
+                    if pwfc > -0.5 and pwfc > pwf_limit + tol:
+                        violation = True
+                        reason = (
+                            f"PWFC={pwfc:10.2f} above injector limit PWF={pwf_limit:10.2f}"
+                        )
+                        break
+
+                if violation:
+                    new_kip = -12
+
+            elif kip == 3:
+                for k in range(iq3, lay + 1):
+                    if self.sim.pid[j, k] <= 1.0e-4:
+                        continue
+                    pwfc = self.sim.pwfc[j, k]
+                    pwf_limit = self.sim.pwf[j, k]
+                    if pwfc > -0.5 and pwfc > pwf_limit + tol:
+                        violation = True
+                        reason = (
+                            f"PWFC={pwfc:10.2f} above injector limit PWF={pwf_limit:10.2f}"
+                        )
+                        break
+
+                if violation:
+                    new_kip = -13
+
+            if new_kip is not None:
+                self.sim.kip[j] = new_kip
+                switched_any = True
+                self.sim.iocode.write(
+                    f"\nWELL MODE SWITCH: t={eti:.2f} d, well #{j+1}, "
+                    f"loc=({iq1+1},{iq2+1}), KIP {kip}->{new_kip}, {reason}\n"
+                )
+
+        return switched_any
     
     def _intpvt(self, ipvtr: int, bpt: float, slope: float,
                 pot_table: np.ndarray, prop_table: np.ndarray,

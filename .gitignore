@@ -12,8 +12,11 @@ env/
 # Output files
 OUT*.DAT
 OUT.*.PYTHON
+OUT*.PYTHON
 OUT.*_maps.csv
 OUT.*_wells.csv
+OUT*_maps.csv
+OUT*_wells.csv
 *.out
 *.log
 test_error.txt
@@ -36,3 +39,15 @@ Thumbs.db
 # Fix scripts (temporary)
 fix_indexing.py
 fix_indexing2.py
+
+# Debug scripts and outputs
+debug_calc.py
+debug_depths.py
+debug_full.txt
+output.txt
+pressure_comparison.py
+run_test_ex3.py
+test_debug_ex3.py
+test_fix.py
+test_well_debug.py
+test_well_out.txt

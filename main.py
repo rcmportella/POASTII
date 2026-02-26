@@ -614,6 +614,19 @@ class BOASTSimulator:
             self.outfile.write(f'THIS IS A RESTART RUN BEGINNING AT TIME STEP {self.irstrt}\n\n')
             
         return iplotp, nn, tmax
+
+    def _seek_to_section(self, section_name: str) -> None:
+        """Advance input cursor to a section header line (inclusive)."""
+        target = section_name.strip().upper()
+        while True:
+            position = self.infile.tell()
+            line = self.infile.readline()
+            if not line:
+                raise ValueError(f"Required section '{section_name}' not found in input file")
+
+            if line.strip().upper() == target:
+                self.infile.seek(position)
+                return
         
     def initialize_arrays(self, ii: int, jj: int, kk: int):
         """Initialize arrays based on grid dimensions"""
@@ -654,6 +667,18 @@ class BOASTSimulator:
         self.qw = np.zeros(shape_3d)
         self.qg = np.zeros(shape_3d)
         self.ewaq = np.zeros(shape_3d)  # Aquifer influx rate
+        self.cpiaq1 = np.zeros(shape_3d)
+        self.cpiaq2 = np.zeros(shape_3d)
+        self.cpi1 = np.zeros(shape_3d)
+        self.cpi2 = np.zeros(shape_3d)
+        self.cumaqw = np.zeros(shape_3d)
+        self.qwaq = np.zeros(shape_3d)
+        self.cumew = np.zeros(shape_3d)
+        self.iaqreg = np.zeros(shape_3d, dtype=int)
+        self.paq = np.zeros(shape_3d)
+        self.piaq = np.zeros(shape_3d)
+        self.qwaqr = np.zeros(LP7)
+        self.cumaqr = np.zeros(LP7)
         
         # Coefficient arrays
         self.aw = np.zeros(shape_3d)
@@ -733,6 +758,10 @@ class BOASTSimulator:
         
         # Read restart options
         iplotp, nn, tmax = self.read_restart_options()
+
+        # Some datasets (e.g., restart-enabled decks) include additional lines
+        # before GRID DATA; align parser explicitly to this section.
+        self._seek_to_section("GRID DATA")
         
         # Call GRIDSZ to establish reservoir and block dimensions
         self.ii, self.jj, self.kk = self.grid_setup.gridsz(self.infile, self.outfile)
@@ -903,9 +932,27 @@ class BOASTSimulator:
         # Main time loop
         for n in range(1, nmax + 1):
             # Read dataset header
-            self.infile.readline()  # Skip comment "DATA SET X"
+            dataset_header = self.infile.readline()  # "DATA SET X" or EOF
+            if not dataset_header:
+                break
+
+            while dataset_header and not dataset_header.strip():
+                dataset_header = self.infile.readline()
+            if not dataset_header:
+                break
+
             line = self.infile.readline()
+            if not line:
+                break
+
+            while line and not line.strip():
+                line = self.infile.readline()
+            if not line:
+                break
+
             values = [float(x) for x in line.split()]
+            if len(values) < 3:
+                break
             ichang = int(values[0])  # Number of time steps this dataset
             iwlcng = int(values[1])  # Well change flag
             iometh = int(values[2])  # Output method
@@ -1030,6 +1077,16 @@ class BOASTSimulator:
                         import traceback
                         traceback.print_exc(file=self.outfile)
                         raise
+
+                # AQUIFER MODEL: pressure equation coefficient modifications (AQIN)
+                if self.iaqopt != 0:
+                    try:
+                        self.aquifer.aqin(self.ii, self.jj, self.kk, delt, eti)
+                    except Exception as e:
+                        self.outfile.write(f"\n\nERROR in aqin at time {eti}: {e}\n")
+                        import traceback
+                        traceback.print_exc(file=self.outfile)
+                        raise
                 
                 # Solve pressure equation
                 try:
@@ -1066,6 +1123,16 @@ class BOASTSimulator:
                         self.well_rates.prateo(nvqn)
                     except Exception as e:
                         self.outfile.write(f"\n\nERROR in prateo at time {eti}: {e}\n")
+                        import traceback
+                        traceback.print_exc(file=self.outfile)
+                        raise
+
+                # AQUIFER MODEL: rates (AQOUT)
+                if self.iaqopt != 0:
+                    try:
+                        self.aquifer.aqout(self.ii, self.jj, self.kk, delt)
+                    except Exception as e:
+                        self.outfile.write(f"\n\nERROR in aqout at time {eti}: {e}\n")
                         import traceback
                         traceback.print_exc(file=self.outfile)
                         raise
@@ -1157,7 +1224,7 @@ class BOASTSimulator:
                                     continue
                                 
                                 # Update water saturation
-                                ewaq = 0.0  # Aquifer influx (if applicable)
+                                ewaq = self.ewaq[i, j, k] if self.iaqopt != 0 else 0.0
                                 self.sw[i, j, k] = ((dawdp + self.gwwt[i, j, k] - 
                                                     (self.qw[i, j, k] + ewaq)) * delt +
                                                    self.vp[i, j, k] * self.swn[i, j, k] / 
@@ -1247,6 +1314,16 @@ class BOASTSimulator:
                 mcfg = self.scfg * 0.001
                 mcfg1 = self.scfg1 * 0.001
                 self.mcfgt = mcfg + mcfg1
+
+                # AQUIFER MODEL: cumulatives (AQCUM)
+                if self.iaqopt != 0:
+                    try:
+                        self.aquifer.aqcum(nstep, delt)
+                    except Exception as e:
+                        self.outfile.write(f"\n\nERROR in aqcum at time {eti}: {e}\n")
+                        import traceback
+                        traceback.print_exc(file=self.outfile)
+                        raise
                 
                 # Calculate material balance and production/injection rates
                 from block1 import MaterialBalance
