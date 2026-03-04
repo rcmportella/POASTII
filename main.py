@@ -928,6 +928,21 @@ class BOASTSimulator:
         ftmax = tmax  # Next report time
         nstep = 0  # Cumulative time step counter
         nvqn = 0  # Number of wells (persists across datasets)
+
+        def _read_float_values(expected_count: int) -> list[float]:
+            values: list[float] = []
+            while len(values) < expected_count:
+                data_line = self.infile.readline()
+                if not data_line:
+                    raise ValueError(
+                        f"Unexpected end of file while reading recurrent data values "
+                        f"(expected {expected_count}, got {len(values)})"
+                    )
+                stripped = data_line.strip()
+                if not stripped:
+                    continue
+                values.extend(float(x) for x in stripped.split())
+            return values[:expected_count]
         
         # Main time loop
         for n in range(1, nmax + 1):
@@ -983,8 +998,7 @@ class BOASTSimulator:
                     ftmax = tmax
             else:
                 # Read output times
-                line = self.infile.readline()
-                ftio = [float(x) for x in line.split()]
+                ftio = _read_float_values(iometh)
                 line = self.infile.readline()
                 values = [int(x) for x in line.split()]
                 ipmap = values[0]    # Pressure map
@@ -996,6 +1010,8 @@ class BOASTSimulator:
                 line = self.infile.readline()
                 values = [float(x) for x in line.split()]
                 day = values[0]
+                dtmin = values[1]
+                dtmax = values[2]
                 delt = day
                 iftcod = 0
                 ftmax = ftio[iftcod] if ftio else tmax

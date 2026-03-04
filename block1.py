@@ -612,7 +612,7 @@ class WellManager:
         nwello = int(line[1])  # Wells with only rate/pressure updates
         
         if nwelln == 0 and nwello == 0:
-            return 0
+            return len(self.wells)
             
         nchang = nwelln + nwello
         
@@ -625,8 +625,6 @@ class WellManager:
         outfile.write('TOTAL(RBD)   BHFP(PSIA)      PID      ALIT      BLIT\n')
         
         ncount = []
-        idmax = 0
-        
         # Read new wells
         if nwelln > 0:
             infile.readline()  # Skip comment
@@ -641,9 +639,6 @@ class WellManager:
                 i4 = int(line[4])  # K-location (top layer)
                 i5 = int(line[5])  # Number of layers
                 
-                if idmax < i1:
-                    idmax = i1
-                    
                 # Read pressure data for each layer
                 iq3 = i4 - 1  # Convert to 0-based
                 lay = iq3 + i5
@@ -758,7 +753,7 @@ class WellManager:
                 if k < len(well.pwf):
                     self.sim.pwf[idx, well.k + k] = well.pwf[k]
         
-        return idmax
+        return len(self.wells)
         
     def _write_well_descriptions(self, outfile, ncount: List[int]):
         """Write descriptions of well control types"""
