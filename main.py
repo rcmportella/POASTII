@@ -928,6 +928,8 @@ class BOASTSimulator:
         ftmax = tmax  # Next report time
         nstep = 0  # Cumulative time step counter
         nvqn = 0  # Number of wells (persists across datasets)
+        prev_dsmc = None  # Previous accepted max saturation change
+        prev_dpmc = None  # Previous accepted max pressure change
 
         def _read_float_values(expected_count: int) -> list[float]:
             values: list[float] = []
@@ -1048,22 +1050,96 @@ class BOASTSimulator:
                 self._write_maps_snapshot(0.0)
                 self._write_well_snapshot(0.0, nvqn)
             
-            # Run time steps for this dataset
-            for istep in range(ichang):
-                nstep += 1  # Increment cumulative time step counter
+            # Run time steps for this dataset (Fortran-like adaptive/retry control)
+            istep = 0
+            retry_count = 0
+            while istep < ichang:
+                if retry_count == 0:
+                    if prev_dsmc is not None and prev_dpmc is not None:
+                        if prev_dsmc <= dsmax and prev_dpmc <= dpmax:
+                            delt *= fact1
+                        else:
+                            delt *= fact2
+
+                    if delt < dtmin:
+                        delt = dtmin
+                    if delt > dtmax:
+                        delt = dtmax
+                    if eti + delt > tmax:
+                        delt = max(dtmin, tmax - eti)
+                    if eti < ftmax and eti + delt > ftmax:
+                        delt = ftmax - eti
+
+                if delt <= 0.0:
+                    raise RuntimeError("Non-positive DELT encountered during adaptive stepping")
+
+                # Snapshot mutable state so rejected attempts can be retried with a smaller DELT
+                p_backup = self.p.copy()
+                so_backup = self.so.copy()
+                sw_backup = self.sw.copy()
+                sg_backup = self.sg.copy()
+                vp_backup = self.vp.copy()
+                bo_backup = self.bo.copy()
+                bw_backup = self.bw.copy()
+                bg_backup = self.bg.copy()
+                ct_backup = self.ct.copy()
+                qo_backup = self.qo.copy()
+                qw_backup = self.qw.copy()
+                qg_backup = self.qg.copy()
+                pid_backup = self.pid.copy()
+                if self.iaqopt != 0:
+                    ewaq_backup = self.ewaq.copy()
+                else:
+                    ewaq_backup = None
+
                 eti += delt
                 
                 # ===== CORE SIMULATION CALCULATIONS - STEP 1: WELL RATES =====
                 # Calculate well rates (QRATE from BLOCK2.FOR)
+                gor_wor_retry_required = False
                 if nvqn > 0:
                     try:
-                        self.well_rates.qrate(self.ii, self.jj, self.kk, nvqn, 
-                                             self.gormax, self.wormax, eti)
+                        gor_wor_retry_required = self.well_rates.qrate(
+                            self.ii,
+                            self.jj,
+                            self.kk,
+                            nvqn,
+                            self.gormax,
+                            self.wormax,
+                            eti,
+                        )
                     except Exception as e:
                         self.outfile.write(f"\n\nERROR in qrate at time {eti}: {e}\n")
                         import traceback
                         traceback.print_exc(file=self.outfile)
                         raise
+
+                # Enforce same reject/retry behavior used for DSMAX/DPMAX: if
+                # GOR/WOR limits are hit, rollback, reduce DELT, and retry.
+                if gor_wor_retry_required and delt > dtmin + 1.0e-12:
+                    self.p[:, :, :] = p_backup
+                    self.so[:, :, :] = so_backup
+                    self.sw[:, :, :] = sw_backup
+                    self.sg[:, :, :] = sg_backup
+                    self.vp[:, :, :] = vp_backup
+                    self.bo[:, :, :] = bo_backup
+                    self.bw[:, :, :] = bw_backup
+                    self.bg[:, :, :] = bg_backup
+                    self.ct[:, :, :] = ct_backup
+                    self.qo[:, :, :] = qo_backup
+                    self.qw[:, :, :] = qw_backup
+                    self.qg[:, :, :] = qg_backup
+                    self.pid[:, :] = pid_backup
+                    if ewaq_backup is not None:
+                        self.ewaq[:, :, :] = ewaq_backup
+                    eti -= delt
+                    delt = max(dtmin, delt * fact2)
+                    retry_count += 1
+                    if retry_count > 50:
+                        raise RuntimeError(
+                            "Exceeded maximum timestep retries while enforcing GOR/WOR limits"
+                        )
+                    continue
                 
                 # Build 7-diagonal matrix for pressure equation
                 try:
@@ -1142,6 +1218,39 @@ class BOASTSimulator:
                         import traceback
                         traceback.print_exc(file=self.outfile)
                         raise
+
+                # Re-check well BHP/PWF limits with solved pressures; if any
+                # rate-controlled well is switched to implicit pressure control,
+                # rollback and repeat this timestep under updated controls.
+                switched_well_control_postsolve = False
+                if nvqn > 0:
+                    switched_well_control_postsolve = self.well_rates.enforce_well_bhp_constraints(
+                        nvqn, eti
+                    )
+
+                if switched_well_control_postsolve:
+                    self.p[:, :, :] = p_backup
+                    self.so[:, :, :] = so_backup
+                    self.sw[:, :, :] = sw_backup
+                    self.sg[:, :, :] = sg_backup
+                    self.vp[:, :, :] = vp_backup
+                    self.bo[:, :, :] = bo_backup
+                    self.bw[:, :, :] = bw_backup
+                    self.bg[:, :, :] = bg_backup
+                    self.ct[:, :, :] = ct_backup
+                    self.qo[:, :, :] = qo_backup
+                    self.qw[:, :, :] = qw_backup
+                    self.qg[:, :, :] = qg_backup
+                    self.pid[:, :] = pid_backup
+                    if ewaq_backup is not None:
+                        self.ewaq[:, :, :] = ewaq_backup
+                    eti -= delt
+                    retry_count += 1
+                    if retry_count > 50:
+                        raise RuntimeError(
+                            "Exceeded maximum timestep retries while switching well controls"
+                        )
+                    continue
 
                 # AQUIFER MODEL: rates (AQOUT)
                 if self.iaqopt != 0:
@@ -1331,56 +1440,6 @@ class BOASTSimulator:
                 mcfg1 = self.scfg1 * 0.001
                 self.mcfgt = mcfg + mcfg1
 
-                # AQUIFER MODEL: cumulatives (AQCUM)
-                if self.iaqopt != 0:
-                    try:
-                        self.aquifer.aqcum(nstep, delt)
-                    except Exception as e:
-                        self.outfile.write(f"\n\nERROR in aqcum at time {eti}: {e}\n")
-                        import traceback
-                        traceback.print_exc(file=self.outfile)
-                        raise
-                
-                # Calculate material balance and production/injection rates
-                from block1 import MaterialBalance
-                mb_results = MaterialBalance.matbal(
-                    self, self.ii, self.jj, self.kk,
-                    self.stbo, self.stboi, self.stbw, self.stbwi,
-                    self.towip, self.tooip, self.togip, self.mcfgi,
-                    delt, self.d5615
-                )
-                
-                # Store results in simulator for prtps
-                self.opr = mb_results['opr']
-                self.wpr = mb_results['wpr']
-                self.gpr = mb_results['gpr']
-                self.wir = mb_results['wir']
-                self.gir = mb_results['gir']
-                self.cop = mb_results['cop']
-                self.cwp = mb_results['cwp']
-                self.cgp = mb_results['cgp']
-                self.cwi = mb_results['cwi']
-                self.cgi = mb_results['cgi']
-
-                # Write map and well snapshots for this time step
-                self._write_maps_snapshot(eti)
-                self._write_well_snapshot(eti, nvqn)
-                
-                # Update material balance errors
-                mbeo = mb_results['mbeo']
-                mbew = mb_results['mbew']
-                mbeg = mb_results['mbeg']
-                cmbeo = mb_results['cmbeo']
-                cmbew = mb_results['cmbew']
-                cmbeg = mb_results['cmbeg']
-                
-                # Calculate WOR and GOR for time step summary
-                gors = (self.gpr * 1000.0 / self.opr) if self.opr > 0.0 else 0.0
-                wors = (self.wpr / self.opr) if self.opr > 0.0 else 0.0
-                pavg = mb_results['pavg']
-                self.pavg_prev = getattr(self, 'pavg', pavg)
-                self.pavg = pavg
-                
                 # Calculate maximum pressure and saturation changes (MAIN.FOR lines 741-787)
                 ppm = 0.0
                 som = 0.0
@@ -1441,6 +1500,86 @@ class BOASTSimulator:
                     ism = iwm
                     jsm = jwm
                     ksm = kwm
+
+                # Reject and retry this same time step if change limits are exceeded
+                if (dsmc > dsmax or dpmc > dpmax) and delt > dtmin + 1.0e-12:
+                    self.p[:, :, :] = p_backup
+                    self.so[:, :, :] = so_backup
+                    self.sw[:, :, :] = sw_backup
+                    self.sg[:, :, :] = sg_backup
+                    self.vp[:, :, :] = vp_backup
+                    self.bo[:, :, :] = bo_backup
+                    self.bw[:, :, :] = bw_backup
+                    self.bg[:, :, :] = bg_backup
+                    self.ct[:, :, :] = ct_backup
+                    self.qo[:, :, :] = qo_backup
+                    self.qw[:, :, :] = qw_backup
+                    self.qg[:, :, :] = qg_backup
+                    self.pid[:, :] = pid_backup
+                    if ewaq_backup is not None:
+                        self.ewaq[:, :, :] = ewaq_backup
+                    eti -= delt
+                    delt = max(dtmin, delt * fact2)
+                    retry_count += 1
+                    if retry_count > 50:
+                        raise RuntimeError("Exceeded maximum timestep retries while enforcing DSMAX/DPMAX")
+                    continue
+
+                prev_dsmc = dsmc
+                prev_dpmc = dpmc
+                nstep += 1
+                istep += 1
+                retry_count = 0
+
+                # AQUIFER MODEL: cumulatives (AQCUM)
+                if self.iaqopt != 0:
+                    try:
+                        self.aquifer.aqcum(nstep, delt)
+                    except Exception as e:
+                        self.outfile.write(f"\n\nERROR in aqcum at time {eti}: {e}\n")
+                        import traceback
+                        traceback.print_exc(file=self.outfile)
+                        raise
+
+                # Calculate material balance and production/injection rates
+                from block1 import MaterialBalance
+                mb_results = MaterialBalance.matbal(
+                    self, self.ii, self.jj, self.kk,
+                    self.stbo, self.stboi, self.stbw, self.stbwi,
+                    self.towip, self.tooip, self.togip, self.mcfgi,
+                    delt, self.d5615
+                )
+
+                # Store results in simulator for prtps
+                self.opr = mb_results['opr']
+                self.wpr = mb_results['wpr']
+                self.gpr = mb_results['gpr']
+                self.wir = mb_results['wir']
+                self.gir = mb_results['gir']
+                self.cop = mb_results['cop']
+                self.cwp = mb_results['cwp']
+                self.cgp = mb_results['cgp']
+                self.cwi = mb_results['cwi']
+                self.cgi = mb_results['cgi']
+
+                # Write map and well snapshots for this accepted time step
+                self._write_maps_snapshot(eti)
+                self._write_well_snapshot(eti, nvqn)
+
+                # Update material balance errors
+                mbeo = mb_results['mbeo']
+                mbew = mb_results['mbew']
+                mbeg = mb_results['mbeg']
+                cmbeo = mb_results['cmbeo']
+                cmbew = mb_results['cmbew']
+                cmbeg = mb_results['cmbeg']
+
+                # Calculate WOR and GOR for time step summary
+                gors = (self.gpr * 1000.0 / self.opr) if self.opr > 0.0 else 0.0
+                wors = (self.wpr / self.opr) if self.opr > 0.0 else 0.0
+                pavg = mb_results['pavg']
+                self.pavg_prev = getattr(self, 'pavg', pavg)
+                self.pavg = pavg
                 
                 # Update old-time arrays for next time step
                 for k in range(self.kk):
@@ -1509,6 +1648,9 @@ class BOASTSimulator:
                 # Check if we've reached max time
                 if eti >= tmax:
                     break
+
+                # Continue to next logical time step
+                continue
             
             if eti >= tmax:
                 break

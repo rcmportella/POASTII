@@ -43,7 +43,7 @@ class WellRates:
         self.sim = simulator
     
     def qrate(self, ii: int, jj: int, kk: int, nvqn: int,
-              gormax: float, wormax: float, eti: float) -> None:
+              gormax: float, wormax: float, eti: float) -> bool:
         """
         Calculate well production and injection rates
         
@@ -59,6 +59,12 @@ class WellRates:
             Maximum producing WOR (STB/STB)
         eti : float
             Elapsed time (days)
+        Returns:
+        --------
+        retry_required : bool
+            True if tentative well-rate calculations triggered a GOR/WOR
+            constraint action that requires the current time step to be
+            retried with a reduced DELT.
         """
         from block2 import Interpolation
         
@@ -176,13 +182,20 @@ class WellRates:
         self._apply_rate_constraints(nvqn, eti)
 
         # Apply GOR and WOR constraints
-        self._apply_gor_wor_constraints(nvqn, eti)
+        retry_required = self._apply_gor_wor_constraints(nvqn, eti)
 
         # Calculate bottom-hole flowing pressures
         self._calculate_bhp(nvqn)
 
+        # Keep current well control mode during qrate. Constraint-triggered mode
+        # switching is handled after pressure solve so the timestep can be retried
+        # under the new control mode.
+        # BHP/PWF control switching is handled after pressure solve in main loop.
+
         # Sum rates by grid block (excluding implicit wells)
         self._sum_rates_by_block(nvqn)
+
+        return retry_required
 
     def _switch_rate_wells_to_bhp_control(self, nvqn: int, eti: float) -> bool:
         """Switch violating rate-controlled wells to BHP control permanently."""
@@ -269,6 +282,16 @@ class WellRates:
                 )
 
         return switched_any
+
+    def enforce_well_bhp_constraints(self, nvqn: int, eti: float) -> bool:
+        """Recompute PWFC using current pressures/rates and switch violating wells.
+
+        This is intended to be called after pressure solve (`prateo`) so any
+        newly violated well BHP constraints trigger a timestep retry under the
+        updated control mode.
+        """
+        self._calculate_bhp(nvqn)
+        return self._switch_rate_wells_to_bhp_control(nvqn, eti)
     
     def _intpvt(self, ipvtr: int, bpt: float, slope: float,
                 pot_table: np.ndarray, prop_table: np.ndarray,
@@ -823,8 +846,9 @@ class WellRates:
                     self.sim.qwc[j, k] *= facw
                     self.sim.qgc[j, k] *= facg
     
-    def _apply_gor_wor_constraints(self, nvqn: int, eti: float) -> None:
-        """Apply GOR and WOR constraints with layer shutoff"""
+    def _apply_gor_wor_constraints(self, nvqn: int, eti: float) -> bool:
+        """Apply GOR/WOR constraints and indicate whether a retry is required."""
+        violated_any = False
         
         for j in range(nvqn):
             iq1 = self.sim.iqn1[j]
@@ -857,6 +881,7 @@ class WellRates:
                 
                 # Check GOR constraint
                 if gor > self.sim.gort[j]:
+                    violated_any = True
                     # Calculate GOR by layer
                     for k in range(iq3, lay + 1):
                         if self.sim.qoc[j, k] == 0.0:
@@ -890,6 +915,7 @@ class WellRates:
                 
                 # Check WOR constraint
                 if wor > self.sim.wort[j]:
+                    violated_any = True
                     # Calculate WOR by layer
                     for k in range(iq3, lay + 1):
                         if self.sim.qoc[j, k] == 0.0:
@@ -922,6 +948,8 @@ class WellRates:
                     continue  # Repeat check
                 
                 break  # No violations, exit loop
+
+            return violated_any
     
     def _calculate_bhp(self, nvqn: int) -> None:
         """Calculate bottom-hole flowing pressure for each layer"""

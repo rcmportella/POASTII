@@ -1,4 +1,5 @@
 import os
+import sys
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
@@ -29,7 +30,7 @@ MAP_FIELDS = {
 
 
 class MapViewerApp(tk.Tk):
-    def __init__(self) -> None:
+    def __init__(self, initial_file: str | None = None) -> None:
         super().__init__()
         self.title("BOAST II Map Viewer")
         self.geometry("1100x760")
@@ -60,6 +61,8 @@ class MapViewerApp(tk.Tk):
         self._build_ui()
         self.protocol("WM_DELETE_WINDOW", self._on_close)
         self.after(100, self._ensure_window_visible)
+        if initial_file:
+            self.after(150, lambda: self.load_file(initial_file))
 
     def _ensure_window_visible(self) -> None:
         self.deiconify()
@@ -208,6 +211,16 @@ class MapViewerApp(tk.Tk):
         if not file_path:
             return
 
+        self.load_file(file_path)
+
+    def load_file(self, file_path: str) -> None:
+        if self.animating:
+            self.stop_animation()
+
+        if not os.path.isfile(file_path):
+            messagebox.showerror("File not found", f"Could not find file:\n{file_path}")
+            return
+
         try:
             df = pd.read_csv(file_path)
         except Exception as exc:
@@ -313,6 +326,16 @@ class MapViewerApp(tk.Tk):
         nearest = min(range(len(self.time_values)), key=lambda idx: abs(self.time_values[idx] - selected_time))
         self.time_index = nearest
 
+    def _selected_time_mask(self, selected_time: float) -> tuple[float, pd.Series]:
+        """Return canonical selected time and a tolerant boolean mask for dataframe filtering."""
+        if not self.time_values:
+            return selected_time, pd.Series(dtype=bool)
+
+        canonical_time = self.time_values[self.time_index]
+        tolerance = max(1.0e-9, abs(canonical_time) * 1.0e-9)
+        mask = (self.df["time_days"] - canonical_time).abs() <= tolerance
+        return canonical_time, mask
+
     def toggle_animation(self) -> None:
         if self.df is None or not self.time_values:
             messagebox.showinfo("No data", "Load a _maps.csv file before starting animation.")
@@ -395,8 +418,9 @@ class MapViewerApp(tk.Tk):
             self.canvas.draw_idle()
             return
         self._sync_time_index_from_var()
+        selected_time, time_mask = self._selected_time_mask(selected_time)
 
-        data_t = self.df[self.df["time_days"] == selected_time]
+        data_t = self.df[time_mask]
         if data_t.empty:
             self.ax.set_title("No data for selected time")
             self.canvas.draw_idle()
@@ -479,7 +503,8 @@ class MapViewerApp(tk.Tk):
 
 
 def main() -> None:
-    app = MapViewerApp()
+    initial_file = sys.argv[1] if len(sys.argv) > 1 else None
+    app = MapViewerApp(initial_file=initial_file)
     app.mainloop()
 
 
