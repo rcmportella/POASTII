@@ -288,6 +288,15 @@ class GridSetup:
                               kk: int, dz: np.ndarray) -> np.ndarray:
         """Establish node mid-point elevations"""
         el = np.zeros((ii, jj, kk))
+
+        def _read_n_values(nvals: int) -> np.ndarray:
+            values = []
+            while len(values) < nvals:
+                line = infile.readline()
+                if not line:
+                    raise ValueError("Unexpected end of file while reading elevation data")
+                values.extend(parse_fortran_line(line))
+            return np.array(values[:nvals], dtype=float)
         
         infile.readline()  # Skip comment
         kel = int(infile.readline().split()[0])
@@ -300,8 +309,8 @@ class GridSetup:
             else:  # kel == 1
                 varel = np.zeros((ii, jj))
                 for j in range(jj):
-                    vals = parse_fortran_line(infile.readline())
-                    varel[:, j] = vals[:ii]
+                    vals = _read_n_values(ii)
+                    varel[:, j] = vals
                     
             # Calculate depths for each layer
             for k in range(kk):
@@ -313,7 +322,7 @@ class GridSetup:
                     
         elif kel == 2:
             # One elevation per layer
-            elevations = parse_fortran_line(infile.readline())
+            elevations = _read_n_values(kk)
             for k in range(kk):
                 el[:, :, k] = elevations[k]
                 
@@ -321,8 +330,8 @@ class GridSetup:
             # Full 2D elevation per layer
             for k in range(kk):
                 for j in range(jj):
-                    vals = parse_fortran_line(infile.readline())
-                    el[:, j, k] = vals[:ii]
+                    vals = _read_n_values(ii)
+                    el[:, j, k] = vals
                     
         # Write depths to grid block tops
         outfile.write('\n\n               ********** DEPTHS TO GRID BLOCK TOPS **********\n\n')

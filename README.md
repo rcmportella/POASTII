@@ -149,6 +149,11 @@ Map viewer behavior:
 - **Depth-style Z orientation in sections**: in `XZ` and `YZ` views, the vertical axis is inverted so higher layer numbers are shown at the bottom.
 - **Block hover readout**: moving the mouse over a block shows block indices (`i`, `j`, `layer`) and the current variable value.
 
+Optional direct startup with file path:
+```bash
+python map_viewer_gui.py OUT1_14_maps.csv
+```
+
 #### Command Line
 ```bash
 echo -e "EX1.DAT\nOUT1.DAT" | python main.py
@@ -229,6 +234,24 @@ All fixes validated against Fortran BOAST II output (OUT.1) for EX1.DAT test cas
 - ✅ DSMAX values: 0.106 at (1,1,1) - matches Fortran exactly
 - ✅ DPMAX values: 192.14 psi at (10,1,1) - matches Fortran (192.27 psi)
 - ✅ Material balance: 0.000% error (Python more accurate than Fortran's 0.006%)
+
+### ✅ Recent Updates (Mar 2026)
+
+- **Time-step retry state rollback hardened (main.py)**
+  - Added backup/restore of scalar material-balance and volume accumulators during retry paths.
+  - Prevents failed or rejected sub-steps from contaminating subsequent retry attempts.
+  - Added explicit warning when GOR/WOR requires smaller time step but `DELT` is already at `DTMIN`.
+
+- **Interpolation/indexing consistency fixes (block6.py, block7.py, block8.py)**
+  - Standardized PVT and saturation interpolation calls to the current Python function signatures.
+  - Corrected multiple Fortran-to-Python index conversions (`-1` offsets) for rock/PVT region arrays.
+  - Fixed `ITHREE` access paths to consistently use 0-based region indices.
+
+- **Well viewer GUI refactor (well_viewer_gui.py)**
+  - Reworked app into `WellViewerApp` class with cleaner session lifecycle.
+  - Added multi-case loading and side-by-side plotting for `*_wells.csv` datasets.
+  - Added per-metric tabs, axis controls (linear/log + manual limits), and session reset action.
+  - Preserved Matplotlib toolbar integration for navigation and zoom workflows.
 
 ### 🔄 In Progress
 - Validation against additional test cases beyond EX1.DAT

@@ -1,0 +1,127 @@
+BOAST II Input Data Reading Method
+Overview
+The BOAST II simulator reads input data from a structured ASCII file (e.g., EX3.DAT) using a sequential, section-based approach. Each section has a specific format with comment lines followed by data lines, using Fortran-style repeated value notation (e.g., 4*0 means four zeros).
+
+Reading Sequence
+The input file is read in strict order through the following stages:
+
+1. Header and Restart Options (main.py:619-649)
+Line 1: Title/description (free format text)
+Section: RESTART DATA
+Restart flags and options
+Initial time, cumulative production data
+Plot option flags
+Returns: iplotp, nn (datasets), tmax (max simulation time)
+2. Grid Dimensions (block2.py:gridsz())
+Section: GRID DATA
+II JJ KK - Grid dimensions (X, Y, Z directions)
+Section: GRID BLOCK LENGTHS
+Default X-direction block sizes (DX)
+Default Y-direction block sizes (DY)
+Default Z-direction layer thicknesses (DZ)
+Section: GRID BLOCK LENGTH MODIFICATIONS
+Individual block size modifications
+Section: CAPROCK BASE DEPTHS
+Top elevation of each layer
+Returns: ii, jj, kk (grid dimensions)
+3. Porosity and Permeability (block3.py:porprm())
+Section: POROSITY AND PERMEABILITY
+Default porosity values by zone
+Default permeabilities (X, Y, Z directions)
+Section: POROSITY AND PERMEABILITY MODIFICATIONS
+Block-specific porosity/permeability values
+Format: I J K IPOR KX KY KZ PHI or ranges
+4. Transmissibility Modifications (block2.py:trans())
+Section: TRANSMISSIBILITY MODIFICATIONS
+Manual adjustments to interblock transmissibilities
+Calculated automatically from grid geometry and permeability
+5. PVT Tables (block6.py:table())
+Section: ROCK PVT
+Number of PVT regions
+Relative permeability tables: Saturation-dependent kro, krw, krg, capillary pressures
+Oil PVT properties: Bubble point data, viscosity-pressure tables (MUO, BO, RSO)
+Water PVT properties: Viscosity, formation volume factor tables (MUW, BW, RSW)
+Gas PVT properties: Viscosity, formation volume factor, compressibility (MUG, BG, CR)
+Fluid densities: Standard condition densities (RHOSCO, RHOSCW, RHOSCG)
+6. Initial Conditions (block6.py:uinitl())
+Section: EQUILIBRIUM PRESSURE INITIALIZATION/CONSTANT SATURATIONS
+Initialization method flags
+Reference depth and pressure for equilibrium calculations
+Contact depths (oil-water, gas-oil)
+Initial uniform saturations if not using equilibrium
+Initializes pressure (p), saturations (so, sw, sg) for all grid blocks
+7. Solution Control Parameters (block2.py:codes())
+Section: Debug control flags
+KSN1 - LSOR debug frequency (0 = no output)
+KSM1 - Solution method debug frequency
+KCO1 - Compressibility debug frequency
+KCOFF - Density/saturation debug
+Section: Run control parameters
+NMAX - Maximum timesteps
+FACT1, FACT2 - Timestep multipliers (increase/decrease)
+TMAX - Maximum simulation time (days)
+WORMAX, GORMAX - Maximum producing water-oil ratio, gas-oil ratio
+PAMIN, PAMAX - Min/max average reservoir pressure limits
+Section: Solver parameters
+KSOL - Solution method (1=Direct, 2=LSORX, 3=LSORY, 4=LSORZ)
+MITER - Maximum iterations
+OMEGA - Over-relaxation parameter
+TOL - Convergence tolerance
+TOL1 - Omega adjustment tolerance
+DSMAX, DPMAX - Max saturation/pressure changes per timestep
+Section: Discretization options
+NUMDIS - 0=one-point upstream, 1=two-point weighted
+IRK - Relative permeability method
+THRUIN - Threshold for upstream weighting
+8. Aquifer Data (block8.py:aqui())
+Section: AQUIFER DATA
+Number of aquifer connections
+Aquifer parameters (Carter-Tracy analytical aquifer model)
+9. Recurrent Data (main.py:805+, block1.py:nodes())
+For each dataset (time period):
+
+Section: DATA SET N
+ICHANG - Number of timesteps in this dataset
+IWLCNG - Well changes flag
+IOMETH - Output method (0=regular intervals, >0=specified times)
+Report frequencies or specific report times
+Map output flags (pressure, saturation maps)
+Timestep size control
+Section: RATES or well data
+Well modifications flag
+Number of new wells
+For each well:
+Name, control type, location (I, J, K range)
+Productivity index (PID) by layer
+Bottomhole flowing pressure (PWF) by layer
+Rate constraints (min oil rate, max liquid rate, max GOR, max WOR)
+Parsing Features
+Fortran-style repeated values: 5*0 expands to [0, 0, 0, 0, 0]
+Comment lines: Descriptive headers before each data section (ignored)
+Flag-controlled reading:
+-1 = use defaults or skip modifications
+0 = no data follows
+Positive values = number of entries to read
+Free-format numeric input: Whitespace-delimited values
+Sequential access: File pointer advances through sections in order
+Error checking: Validates dimensions, physical constraints, table consistency
+Key Functions
+parse_fortran_line() (block3.py): Converts Fortran notation to Python lists
+read_restart_options() (main.py): Parses restart section
+gridsz() (block2.py): Reads grid geometry
+porprm() (block3.py): Reads rock properties
+table() (block6.py): Reads PVT tables
+uinitl() (block6.py): Initializes reservoir state
+codes() (block2.py): Reads solution control parameters
+nodes() (block1.py): Reads well definitions
+
+Input File (EX3.DAT)
+    ↓
+open_files() → Open file streams
+    ↓
+Sequential Reading:
+  Header → restart → grid → rock → PVT → initial → control → aquifer → recurrent
+    ↓
+Initialize Arrays (p, so, sw, sg, bo, bw, bg, etc.)
+    ↓
+Main Simulation Loop (uses recurrent data for each timestep)

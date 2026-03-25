@@ -1017,7 +1017,7 @@ def fdptd(a1: float, a2: float, a3: float, x: float) -> float:
     return a1 + (a2 / x) + (2.0 * a3 * math.log(x) / x)
 
 
-def trikro(simulator, ireg: int, so: float, sw: float) -> float:
+def trikro(simulator, ireg_0: int, so: float, sw: float) -> float:
     """
     Calculate three-phase oil relative permeability using Stone's method
     
@@ -1025,8 +1025,8 @@ def trikro(simulator, ireg: int, so: float, sw: float) -> float:
     -----------
     simulator : BOASTSimulator
         Main simulator object
-    ireg : int
-        Rock region number (1-based, will be converted to 0-based)
+    ireg_0 : int
+        Rock region index (0-based)
     so : float
         Oil saturation
     sw : float
@@ -1038,9 +1038,6 @@ def trikro(simulator, ireg: int, so: float, sw: float) -> float:
         Oil relative permeability for 3-phase flow
     """
     from block2 import Interpolation
-    
-    # CRITICAL: Convert 1-based Fortran ireg to 0-based Python index
-    ireg_0 = ireg - 1
     
     sowr = 1.0 - simulator.swr[ireg_0]
     sl = so + sw
@@ -1079,7 +1076,7 @@ def trikro(simulator, ireg: int, so: float, sw: float) -> float:
         # Check if sowr is in range of sat table
         sat_min = simulator.sat[ireg_0, 0]
         sat_max = simulator.sat[ireg_0, simulator.msat[ireg_0]-1]
-        raise ZeroDivisionError(f"krowr=0 for ireg={ireg}, sowr={sowr:.4f}, sat range=[{sat_min:.4f},{sat_max:.4f}]")
+        raise ZeroDivisionError(f"krowr=0 for ireg_0={ireg_0}, sowr={sowr:.4f}, sat range=[{sat_min:.4f},{sat_max:.4f}]")
     
     # Stone's three-phase relative permeability formula
     rkro = ((krow + krw) * (krog + krg)) / krowr - (krw + krg)
@@ -1123,73 +1120,72 @@ class Initialization:
         
         self.sim.pdatum = pdatum
         self.sim.grad = grad
+
+        nrock = max(1, int(getattr(self.sim, 'nrock', 1)))
+        woc = np.full(nrock, np.inf)
+        goc = np.full(nrock, -np.inf)
         
         # Read equilibrium data or pressure array
         if kpi == 0:
-            # Equilibrium initialization - read reference pressure and contacts
-            # Note: In this implementation, we read one set of contacts for all rocks
-            # The Fortran has a loop over NROCK, but EX1 only has one entry
-            line = iread.readline()
-            values = parse_fortran_line(line)
-            pi = values[0]     # Initial pressure at reference depth (WOC)
-            woc = values[1]    # Water-oil contact (ft)
-            pgoc = values[2]   # Pressure at gas-oil contact (psi)
-            goc = values[3]    # Gas-oil contact (ft)
-            
-            # Calculate equilibrium pressures based on depth, fluid density, and contacts
+            # Equilibrium initialization - read one contact line per rock region
             from block2 import Interpolation
-            
-            for k in range(kk):
-                for j in range(jj):
-                    for i in range(ii):
-                        depth = self.sim.el[i, j, k]
-                        bpt = self.sim.pbot[i, j, k]
-                        ipvtr = self.sim.ipvt[i, j, k]
-                        ipvtr_0 = ipvtr - 1
-                        
-                        # Determine region: gas cap, oil zone, or water zone
-                        if depth < goc:
-                            # Gas cap region
-                            bbg = Interpolation.interp(
-                                self.sim.pgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]],
-                                self.sim.bgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]], pgoc)
-                            rhog = self.sim.rhoscg[ipvtr_0] / bbg
-                            self.sim.pn[i, j, k] = pgoc + rhog * (depth - goc) / 144.0
-                            
-                        elif depth > woc:
-                            # Water zone region
-                            bbw = Interpolation.interp(
-                                self.sim.pwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]],
-                                self.sim.bwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]], pi)
-                            rsw = Interpolation.interp(
-                                self.sim.pwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]],
-                                self.sim.rswt[ipvtr_0, :self.sim.mpwt[ipvtr_0]], pi)
-                            rhow = (self.sim.rhoscw[ipvtr_0] + rsw * self.sim.rhoscg[ipvtr_0]) / bbw
-                            self.sim.pn[i, j, k] = pi + rhow * (depth - woc) / 144.0
-                            
-                        else:
-                            # Oil zone region (between GOC and WOC)
-                            # Use intpvt-style interpolation with bubble point
-                            if pi <= bpt:
-                                bbo = Interpolation.interp(
-                                    self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
-                                    self.sim.bot[ipvtr_0, :self.sim.mpot[ipvtr_0]], pi)
-                                rso = Interpolation.interp(
-                                    self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
-                                    self.sim.rsot[ipvtr_0, :self.sim.mpot[ipvtr_0]], pi)
+
+            for nr in range(nrock):
+                line = iread.readline()
+                values = parse_fortran_line(line)
+                pi = values[0]
+                woc[nr] = values[1]
+                pgoc = values[2]
+                goc[nr] = values[3]
+
+                for k in range(kk):
+                    for j in range(jj):
+                        for i in range(ii):
+                            if self.sim.irock[i, j, k] != (nr + 1):
+                                continue
+
+                            depth = self.sim.el[i, j, k]
+                            bpt = self.sim.pbot[i, j, k]
+                            ipvtr = self.sim.ipvt[i, j, k]
+                            ipvtr_0 = ipvtr - 1
+
+                            if depth < goc[nr]:
+                                bbg = Interpolation.interp(
+                                    self.sim.pgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]],
+                                    self.sim.bgt[ipvtr_0, :self.sim.mpgt[ipvtr_0]], pgoc)
+                                rhog = self.sim.rhoscg[ipvtr_0] / bbg
+                                self.sim.pn[i, j, k] = pgoc + rhog * (depth - goc[nr]) / 144.0
+
+                            elif depth > woc[nr]:
+                                bbw = Interpolation.interp(
+                                    self.sim.pwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]],
+                                    self.sim.bwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]], pi)
+                                rsw = Interpolation.interp(
+                                    self.sim.pwt[ipvtr_0, :self.sim.mpwt[ipvtr_0]],
+                                    self.sim.rswt[ipvtr_0, :self.sim.mpwt[ipvtr_0]], pi)
+                                rhow = (self.sim.rhoscw[ipvtr_0] + rsw * self.sim.rhoscg[ipvtr_0]) / bbw
+                                self.sim.pn[i, j, k] = pi + rhow * (depth - woc[nr]) / 144.0
+
                             else:
-                                bbo_pb = Interpolation.interp(
-                                    self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
-                                    self.sim.bot[ipvtr_0, :self.sim.mpot[ipvtr_0]], bpt)
-                                bbo = bbo_pb + self.sim.bslope[ipvtr_0] * (pi - bpt)
-                                rso = Interpolation.interp(
-                                    self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
-                                    self.sim.rsot[ipvtr_0, :self.sim.mpot[ipvtr_0]], bpt)
-                            
-                            rhoo = (self.sim.rhosco[ipvtr_0] + rso * self.sim.rhoscg[ipvtr_0]) / bbo
-                            self.sim.pn[i, j, k] = pi + rhoo * (depth - woc) / 144.0
-                        
-                        self.sim.p[i, j, k] = self.sim.pn[i, j, k]
+                                if pi <= bpt:
+                                    bbo = Interpolation.interp(
+                                        self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
+                                        self.sim.bot[ipvtr_0, :self.sim.mpot[ipvtr_0]], pi)
+                                    rso = Interpolation.interp(
+                                        self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
+                                        self.sim.rsot[ipvtr_0, :self.sim.mpot[ipvtr_0]], pi)
+                                else:
+                                    bbo_pb = Interpolation.interp(
+                                        self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
+                                        self.sim.bot[ipvtr_0, :self.sim.mpot[ipvtr_0]], bpt)
+                                    bbo = bbo_pb + self.sim.bslope[ipvtr_0] * (pi - bpt)
+                                    rso = Interpolation.interp(
+                                        self.sim.pot[ipvtr_0, :self.sim.mpot[ipvtr_0]],
+                                        self.sim.rsot[ipvtr_0, :self.sim.mpot[ipvtr_0]], bpt)
+
+                                rhoo = (self.sim.rhosco[ipvtr_0] + rso * self.sim.rhoscg[ipvtr_0]) / bbo
+                                self.sim.pn[i, j, k] = pi + rhoo * (depth - woc[nr]) / 144.0
+
         else:
             # User-specified pressure initialization - read full 3D array
             for k in range(kk):
@@ -1200,26 +1196,56 @@ class Initialization:
                         if i < len(values):
                             self.sim.pn[i, j, k] = values[i]
                             self.sim.p[i, j, k] = values[i]
+
+        # Initialize n+1 pressure array from PN
+        self.sim.p[:, :, :] = self.sim.pn[:, :, :]
         
         # Read saturation initialization
         line = iread.readline()
         values = parse_fortran_line(line)
         
         if ksi == 0:
-            # Constant saturation initialization
+            # Constant saturation initialization (one line per rock region)
             soi = values[0]
             swi = values[1]
-            sgi = values[2]
-            
-            for k in range(kk):
-                for j in range(jj):
-                    for i in range(ii):
-                        self.sim.son[i, j, k] = soi
-                        self.sim.so[i, j, k] = soi
-                        self.sim.swn[i, j, k] = swi
-                        self.sim.sw[i, j, k] = swi
-                        self.sim.sgn[i, j, k] = sgi
-                        self.sim.sg[i, j, k] = sgi
+
+            for nr in range(nrock):
+                if nr > 0:
+                    line = iread.readline()
+                    values = parse_fortran_line(line)
+                    soi = values[0]
+                    swi = values[1]
+
+                swr_nr = self.sim.swr[nr] if nr < len(self.sim.swr) else swi
+
+                for k in range(kk):
+                    for j in range(jj):
+                        for i in range(ii):
+                            if self.sim.irock[i, j, k] != (nr + 1):
+                                continue
+
+                            son = soi
+                            if self.sim.el[i, j, k] > woc[nr]:
+                                son = 0.0
+                            if self.sim.el[i, j, k] < goc[nr]:
+                                son = 0.0
+
+                            swn = swi
+                            if self.sim.el[i, j, k] > woc[nr]:
+                                swn = 1.0
+                            if self.sim.el[i, j, k] < goc[nr]:
+                                swn = swr_nr
+
+                            sgn = 1.0 - soi - swi
+                            if sgn < 0.0:
+                                sgn = 0.0
+
+                            self.sim.son[i, j, k] = son
+                            self.sim.so[i, j, k] = son
+                            self.sim.swn[i, j, k] = swn
+                            self.sim.sw[i, j, k] = swn
+                            self.sim.sgn[i, j, k] = sgn
+                            self.sim.sg[i, j, k] = sgn
         else:
             # User-specified saturation initialization - read arrays
             # Read oil saturation

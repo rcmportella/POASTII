@@ -778,37 +778,37 @@ class PostProcessing:
         if nloop == 1:
             iocode.write(f"\n{'':>14}{'*' * 7} INITIAL ARRAYS {'*' * 7}\n\n")
         
-        # Print arrays based on map options
-        if self.sim.ipmap == 1:
+        # Print arrays based on map options (match Fortran PRTPS logic)
+        if self.sim.ipmap != 0 or nloop == 1:
             self.print_pressure_array()
-        elif self.sim.ipmap == 2:
-            OutputVisualization.plot(self.sim.p, ii, jj, kk, iocode, 1)
+            if self.sim.ipmap != 1 and nloop != 1:
+                OutputVisualization.plot(self.sim.p, ii, jj, kk, iocode, 1)
         
-        if self.sim.isomap == 1:
+        if self.sim.isomap != 0 or nloop == 1:
             self.print_saturation_array('OIL', self.sim.so)
-        elif self.sim.isomap == 2:
-            OutputVisualization.plot(self.sim.so, ii, jj, kk, iocode, 2)
+            if self.sim.isomap != 1 and nloop != 1:
+                OutputVisualization.plot(self.sim.so, ii, jj, kk, iocode, 2)
         
-        if self.sim.iswmap == 1:
+        if self.sim.iswmap != 0 or nloop == 1:
             self.print_saturation_array('WATER', self.sim.sw)
-        elif self.sim.iswmap == 2:
-            OutputVisualization.plot(self.sim.sw, ii, jj, kk, iocode, 3)
+            if self.sim.iswmap != 1 and nloop != 1:
+                OutputVisualization.plot(self.sim.sw, ii, jj, kk, iocode, 3)
         
-        if self.sim.isgmap == 1:
+        if self.sim.isgmap != 0 or nloop == 1:
             self.print_saturation_array('GAS', self.sim.sg)
-        elif self.sim.isgmap == 2:
-            OutputVisualization.plot(self.sim.sg, ii, jj, kk, iocode, 4)
+            if self.sim.isgmap != 1 and nloop != 1:
+                OutputVisualization.plot(self.sim.sg, ii, jj, kk, iocode, 4)
         
-        if self.sim.ipbmap == 1 or nloop == 1:
+        if self.sim.ipbmap != 0 or nloop == 1:
             self.print_bubble_point_array()
-        elif self.sim.ipbmap == 2:
-            OutputVisualization.plot(self.sim.pbot, ii, jj, kk, iocode, 5)
+            if self.sim.ipbmap != 1 and nloop != 1:
+                OutputVisualization.plot(self.sim.pbot, ii, jj, kk, iocode, 5)
         
         if hasattr(self.sim, 'iaqopt') and self.sim.iaqopt > 0:
-            if self.sim.iaqmap == 1 or nloop == 1:
+            if self.sim.iaqmap != 0 or nloop == 1:
                 self.print_aquifer_array()
-            elif self.sim.iaqmap == 2:
-                OutputVisualization.plot(self.sim.cumaqw, ii, jj, kk, iocode, 6)
+                if self.sim.iaqmap != 1 and nloop != 1:
+                    OutputVisualization.plot(self.sim.cumaqw, ii, jj, kk, iocode, 6)
         
         # Print footer
         if nloop != 1:

@@ -70,7 +70,7 @@ class FlowEquationTwoPoint:
             Output file handle
         """
         from block2 import Interpolation
-        from block7 import trikro
+        from block6 import trikro
         
         interp_obj = Interpolation(self.sim)
         
@@ -97,31 +97,32 @@ class FlowEquationTwoPoint:
                     ssw = self.sim.sw[i, j, k]
                     ssg = self.sim.sg[i, j, k]
                     irockb = self.sim.irock[i, j, k]
+                    irockb_0 = irockb - 1
                     
                     # Interpolate relative permeabilities
-                    kro1 = interp_obj.interp(irockb, self.sim.sat, self.sim.krot,
-                                            self.sim.msat[irockb], sso)
+                    kro1 = interp_obj.interp(self.sim.sat, self.sim.krot, irockb_0,
+                                            self.sim.msat[irockb_0], sso)
                     rpow[i, j, k] = kro1
                     
-                    krw1 = interp_obj.interp(irockb, self.sim.sat, self.sim.krwt,
-                                            self.sim.msat[irockb], ssw)
+                    krw1 = interp_obj.interp(self.sim.sat, self.sim.krwt, irockb_0,
+                                            self.sim.msat[irockb_0], ssw)
                     rpw[i, j, k] = krw1
                     
-                    krg1 = interp_obj.interp(irockb, self.sim.sat, self.sim.krgt,
-                                            self.sim.msat[irockb], ssg)
+                    krg1 = interp_obj.interp(self.sim.sat, self.sim.krgt, irockb_0,
+                                            self.sim.msat[irockb_0], ssg)
                     rpg[i, j, k] = krg1
                     
                     # Three-phase oil relative permeability
-                    kro3 = trikro(self.sim, irockb, sso, ssw)
+                    kro3 = trikro(self.sim, irockb_0, sso, ssw)
                     rpo3[i, j, k] = kro3
                     
                     # Capillary pressures
-                    pcow = interp_obj.interp(irockb, self.sim.sat, self.sim.pcowt,
-                                            self.sim.msat[irockb], ssw)
+                    pcow = interp_obj.interp(self.sim.sat, self.sim.pcowt, irockb_0,
+                                            self.sim.msat[irockb_0], ssw)
                     capow[i, j, k] = pcow
                     
-                    pcgo = interp_obj.interp(irockb, self.sim.sat, self.sim.pcgot,
-                                            self.sim.msat[irockb], ssg)
+                    pcgo = interp_obj.interp(self.sim.sat, self.sim.pcgot, irockb_0,
+                                            self.sim.msat[irockb_0], ssg)
                     capgo[i, j, k] = pcgo
         
         # Calculate flow coefficients for all blocks
@@ -140,31 +141,32 @@ class FlowEquationTwoPoint:
                     pp = self.sim.p[i, j, k]
                     bpt = self.sim.pbot[i, j, k]
                     ipvtr = self.sim.ipvt[i, j, k]
+                    ipvtr_0 = ipvtr - 1
                     
                     # Interpolate PVT properties
-                    rso = interp_obj.intpvt(ipvtr, bpt, self.sim.rslope[ipvtr],
-                                           self.sim.pot, self.sim.rsot,
-                                           self.sim.mpot[ipvtr], pp)
-                    muo = interp_obj.intpvt(ipvtr, bpt, self.sim.vslope[ipvtr],
-                                           self.sim.pot, self.sim.muot,
-                                           self.sim.mpot[ipvtr], pp)
-                    rsw = interp_obj.interp(ipvtr, self.sim.pwt, self.sim.rswt,
-                                           self.sim.mpwt[ipvtr], pp)
-                    muw = interp_obj.interp(ipvtr, self.sim.pwt, self.sim.muwt,
-                                           self.sim.mpwt[ipvtr], pp)
-                    mug = interp_obj.interp(ipvtr, self.sim.pgt, self.sim.mugt,
-                                           self.sim.mpgt[ipvtr], pp)
+                    rso = interp_obj.intpvt(self.sim.pot, self.sim.rsot, ipvtr_0,
+                                           self.sim.mpot[ipvtr_0], pp, bpt,
+                                           self.sim.rslope[ipvtr_0])
+                    muo = interp_obj.intpvt(self.sim.pot, self.sim.muot, ipvtr_0,
+                                           self.sim.mpot[ipvtr_0], pp, bpt,
+                                           self.sim.vslope[ipvtr_0])
+                    rsw = interp_obj.interp(self.sim.pwt, self.sim.rswt, ipvtr_0,
+                                           self.sim.mpwt[ipvtr_0], pp)
+                    muw = interp_obj.interp(self.sim.pwt, self.sim.muwt, ipvtr_0,
+                                           self.sim.mpwt[ipvtr_0], pp)
+                    mug = interp_obj.interp(self.sim.pgt, self.sim.mugt, ipvtr_0,
+                                           self.sim.mpgt[ipvtr_0], pp)
                     
                     sso = self.sim.so[i, j, k]
                     ssw = self.sim.sw[i, j, k]
                     ssg = self.sim.sg[i, j, k]
                     irockb = self.sim.irock[i, j, k]
+                    irockb_0 = irockb - 1
                     
                     pcow = capow[i, j, k]
                     pcgo = capgo[i, j, k]
                     
                     # Phase densities
-                    ipvtr_0 = ipvtr - 1
                     ro = (self.sim.rhosco[ipvtr_0] + rso * self.sim.rhoscg[ipvtr_0]) / self.sim.bo[i, j, k]
                     rw = (self.sim.rhoscw[ipvtr_0] + rsw * self.sim.rhoscg[ipvtr_0]) / self.sim.bw[i, j, k]
                     rg = self.sim.rhoscg[ipvtr_0] / self.sim.bg[i, j, k]
@@ -174,24 +176,24 @@ class FlowEquationTwoPoint:
                         p1 = self.sim.p[i-1, j, k]
                         bpt1 = self.sim.pbot[i-1, j, k]
                         ipvtr1 = self.sim.ipvt[i-1, j, k]
+                        ipvtr1_0 = ipvtr1 - 1
                         
-                        rso1 = interp_obj.intpvt(ipvtr1, bpt1, self.sim.rslope[ipvtr1],
-                                                self.sim.pot, self.sim.rsot,
-                                                self.sim.mpot[ipvtr1], p1)
-                        muo1 = interp_obj.intpvt(ipvtr1, bpt1, self.sim.vslope[ipvtr1],
-                                                self.sim.pot, self.sim.muot,
-                                                self.sim.mpot[ipvtr1], p1)
-                        rsw1 = interp_obj.interp(ipvtr1, self.sim.pwt, self.sim.rswt,
-                                                self.sim.mpwt[ipvtr1], p1)
-                        muw1 = interp_obj.interp(ipvtr1, self.sim.pwt, self.sim.muwt,
-                                                self.sim.mpwt[ipvtr1], p1)
-                        mug1 = interp_obj.interp(ipvtr1, self.sim.pgt, self.sim.mugt,
-                                                self.sim.mpgt[ipvtr1], p1)
+                        rso1 = interp_obj.intpvt(self.sim.pot, self.sim.rsot, ipvtr1_0,
+                                                self.sim.mpot[ipvtr1_0], p1, bpt1,
+                                                self.sim.rslope[ipvtr1_0])
+                        muo1 = interp_obj.intpvt(self.sim.pot, self.sim.muot, ipvtr1_0,
+                                                self.sim.mpot[ipvtr1_0], p1, bpt1,
+                                                self.sim.vslope[ipvtr1_0])
+                        rsw1 = interp_obj.interp(self.sim.pwt, self.sim.rswt, ipvtr1_0,
+                                                self.sim.mpwt[ipvtr1_0], p1)
+                        muw1 = interp_obj.interp(self.sim.pwt, self.sim.muwt, ipvtr1_0,
+                                                self.sim.mpwt[ipvtr1_0], p1)
+                        mug1 = interp_obj.interp(self.sim.pgt, self.sim.mugt, ipvtr1_0,
+                                                self.sim.mpgt[ipvtr1_0], p1)
                         
                         pcow1 = capow[i-1, j, k]
                         pcgo1 = capgo[i-1, j, k]
                         
-                        ipvtr1_0 = ipvtr1 - 1
                         ro1 = (self.sim.rhosco[ipvtr1_0] + rso1 * self.sim.rhoscg[ipvtr1_0]) / self.sim.bo[i-1, j, k]
                         rw1 = (self.sim.rhoscw[ipvtr1_0] + rsw1 * self.sim.rhoscg[ipvtr1_0]) / self.sim.bw[i-1, j, k]
                         rg1 = self.sim.rhoscg[ipvtr1_0] / self.sim.bg[i-1, j, k]
@@ -212,7 +214,7 @@ class FlowEquationTwoPoint:
                         imm = max(0, i - 2)
                         ip = min(ii - 1, i + 1)
                         
-                        if self.sim.ithree[irockb] == 1:
+                        if self.sim.ithree[irockb_0] == 1:
                             # Three-phase oil
                             kro1 = rpo3[i, j, k] + 0.5 * (rpo3[i, j, k] - rpo3[ip, j, k])
                             kro1 = min(kro1, rpo3[i, j, k])
@@ -260,24 +262,24 @@ class FlowEquationTwoPoint:
                         p2 = self.sim.p[i+1, j, k]
                         bpt2 = self.sim.pbot[i+1, j, k]
                         ipvtr2 = self.sim.ipvt[i+1, j, k]
+                        ipvtr2_0 = ipvtr2 - 1
                         
-                        rso2 = interp_obj.intpvt(ipvtr2, bpt2, self.sim.rslope[ipvtr2],
-                                                self.sim.pot, self.sim.rsot,
-                                                self.sim.mpot[ipvtr2], p2)
-                        muo2 = interp_obj.intpvt(ipvtr2, bpt2, self.sim.vslope[ipvtr2],
-                                                self.sim.pot, self.sim.muot,
-                                                self.sim.mpot[ipvtr2], p2)
-                        rsw2 = interp_obj.interp(ipvtr2, self.sim.pwt, self.sim.rswt,
-                                                self.sim.mpwt[ipvtr2], p2)
-                        muw2 = interp_obj.interp(ipvtr2, self.sim.pwt, self.sim.muwt,
-                                                self.sim.mpwt[ipvtr2], p2)
-                        mug2 = interp_obj.interp(ipvtr2, self.sim.pgt, self.sim.mugt,
-                                                self.sim.mpgt[ipvtr2], p2)
+                        rso2 = interp_obj.intpvt(self.sim.pot, self.sim.rsot, ipvtr2_0,
+                                                self.sim.mpot[ipvtr2_0], p2, bpt2,
+                                                self.sim.rslope[ipvtr2_0])
+                        muo2 = interp_obj.intpvt(self.sim.pot, self.sim.muot, ipvtr2_0,
+                                                self.sim.mpot[ipvtr2_0], p2, bpt2,
+                                                self.sim.vslope[ipvtr2_0])
+                        rsw2 = interp_obj.interp(self.sim.pwt, self.sim.rswt, ipvtr2_0,
+                                                self.sim.mpwt[ipvtr2_0], p2)
+                        muw2 = interp_obj.interp(self.sim.pwt, self.sim.muwt, ipvtr2_0,
+                                                self.sim.mpwt[ipvtr2_0], p2)
+                        mug2 = interp_obj.interp(self.sim.pgt, self.sim.mugt, ipvtr2_0,
+                                                self.sim.mpgt[ipvtr2_0], p2)
                         
                         pcow2 = capow[i+1, j, k]
                         pcgo2 = capgo[i+1, j, k]
                         
-                        ipvtr2_0 = ipvtr2 - 1
                         ro2 = (self.sim.rhosco[ipvtr2_0] + rso2 * self.sim.rhoscg[ipvtr2_0]) / self.sim.bo[i+1, j, k]
                         rw2 = (self.sim.rhoscw[ipvtr2_0] + rsw2 * self.sim.rhoscg[ipvtr2_0]) / self.sim.bw[i+1, j, k]
                         rg2 = self.sim.rhoscg[ipvtr2_0] / self.sim.bg[i+1, j, k]
@@ -295,7 +297,7 @@ class FlowEquationTwoPoint:
                         ipp = min(ii - 1, i + 2)
                         im = max(0, i - 1)
                         
-                        if self.sim.ithree[irockb] == 1:
+                        if self.sim.ithree[irockb_0] == 1:
                             kro2 = rpo3[i, j, k] + 0.5 * (rpo3[i, j, k] - rpo3[im, j, k])
                             kro2 = min(kro2, rpo3[i, j, k])
                             if ho2 >= 0.0:
@@ -340,12 +342,15 @@ class FlowEquationTwoPoint:
                         p3 = self.sim.p[i, j-1, k]
                         bpt = self.sim.pbot[i, j-1, k]
                         ipvtr = self.sim.ipvt[i, j-1, k]
-                        rso3 = interp_obj.intpvt(ipvtr, bpt, p3, 'rs')
-                        rsw3 = interp_obj.interp(ipvtr, p3, 'rsw')
+                        ipvtr_0 = ipvtr - 1
+                        rso3 = interp_obj.intpvt(self.sim.pot, self.sim.rsot, ipvtr_0,
+                                                self.sim.mpot[ipvtr_0], p3, bpt,
+                                                self.sim.rslope[ipvtr_0])
+                        rsw3 = interp_obj.interp(self.sim.pwt, self.sim.rswt, ipvtr_0,
+                                                self.sim.mpwt[ipvtr_0], p3)
                         
                         pcow3 = self.sim.capow[i, j-1, k]
                         pcgo3 = self.sim.capgo[i, j-1, k]
-                        ipvtr_0 = ipvtr - 1
                         ro3 = (self.sim.rhosco[ipvtr_0] + rso3 * self.sim.rhoscg[ipvtr_0]) / self.sim.bo[i, j-1, k]
                         rw3 = (self.sim.rhoscw[ipvtr_0] + rsw3 * self.sim.rhoscg[ipvtr_0]) / self.sim.bw[i, j-1, k]
                         rg3 = self.sim.rhoscg[ipvtr_0] / self.sim.bg[i, j-1, k]
@@ -372,12 +377,15 @@ class FlowEquationTwoPoint:
                         p4 = self.sim.p[i, j+1, k]
                         bpt = self.sim.pbot[i, j+1, k]
                         ipvtr = self.sim.ipvt[i, j+1, k]
-                        rso4 = interp_obj.intpvt(ipvtr, bpt, p4, 'rs')
-                        rsw4 = interp_obj.interp(ipvtr, p4, 'rsw')
+                        ipvtr_0 = ipvtr - 1
+                        rso4 = interp_obj.intpvt(self.sim.pot, self.sim.rsot, ipvtr_0,
+                                                self.sim.mpot[ipvtr_0], p4, bpt,
+                                                self.sim.rslope[ipvtr_0])
+                        rsw4 = interp_obj.interp(self.sim.pwt, self.sim.rswt, ipvtr_0,
+                                                self.sim.mpwt[ipvtr_0], p4)
                         
                         pcow4 = self.sim.capow[i, j+1, k]
                         pcgo4 = self.sim.capgo[i, j+1, k]
-                        ipvtr_0 = ipvtr - 1
                         ro4 = (self.sim.rhosco[ipvtr_0] + rso4 * self.sim.rhoscg[ipvtr_0]) / self.sim.bo[i, j+1, k]
                         rw4 = (self.sim.rhoscw[ipvtr_0] + rsw4 * self.sim.rhoscg[ipvtr_0]) / self.sim.bw[i, j+1, k]
                         rg4 = self.sim.rhoscg[ipvtr_0] / self.sim.bg[i, j+1, k]
@@ -404,12 +412,15 @@ class FlowEquationTwoPoint:
                         p5 = self.sim.p[i, j, k-1]
                         bpt = self.sim.pbot[i, j, k-1]
                         ipvtr = self.sim.ipvt[i, j, k-1]
-                        rso5 = interp_obj.intpvt(ipvtr, bpt, p5, 'rs')
-                        rsw5 = interp_obj.interp(ipvtr, p5, 'rsw')
+                        ipvtr_0 = ipvtr - 1
+                        rso5 = interp_obj.intpvt(self.sim.pot, self.sim.rsot, ipvtr_0,
+                                                self.sim.mpot[ipvtr_0], p5, bpt,
+                                                self.sim.rslope[ipvtr_0])
+                        rsw5 = interp_obj.interp(self.sim.pwt, self.sim.rswt, ipvtr_0,
+                                                self.sim.mpwt[ipvtr_0], p5)
                         
                         pcow5 = self.sim.capow[i, j, k-1]
                         pcgo5 = self.sim.capgo[i, j, k-1]
-                        ipvtr_0 = ipvtr - 1
                         ro5 = (self.sim.rhosco[ipvtr_0] + rso5 * self.sim.rhoscg[ipvtr_0]) / self.sim.bo[i, j, k-1]
                         rw5 = (self.sim.rhoscw[ipvtr_0] + rsw5 * self.sim.rhoscg[ipvtr_0]) / self.sim.bw[i, j, k-1]
                         rg5 = self.sim.rhoscg[ipvtr_0] / self.sim.bg[i, j, k-1]
@@ -436,12 +447,15 @@ class FlowEquationTwoPoint:
                         p6 = self.sim.p[i, j, k+1]
                         bpt = self.sim.pbot[i, j, k+1]
                         ipvtr = self.sim.ipvt[i, j, k+1]
-                        rso6 = interp_obj.intpvt(ipvtr, bpt, p6, 'rs')
-                        rsw6 = interp_obj.interp(ipvtr, p6, 'rsw')
+                        ipvtr_0 = ipvtr - 1
+                        rso6 = interp_obj.intpvt(self.sim.pot, self.sim.rsot, ipvtr_0,
+                                                self.sim.mpot[ipvtr_0], p6, bpt,
+                                                self.sim.rslope[ipvtr_0])
+                        rsw6 = interp_obj.interp(self.sim.pwt, self.sim.rswt, ipvtr_0,
+                                                self.sim.mpwt[ipvtr_0], p6)
                         
                         pcow6 = self.sim.capow[i, j, k+1]
                         pcgo6 = self.sim.capgo[i, j, k+1]
-                        ipvtr_0 = ipvtr - 1
                         ro6 = (self.sim.rhosco[ipvtr_0] + rso6 * self.sim.rhoscg[ipvtr_0]) / self.sim.bo[i, j, k+1]
                         rw6 = (self.sim.rhoscw[ipvtr_0] + rsw6 * self.sim.rhoscg[ipvtr_0]) / self.sim.bw[i, j, k+1]
                         rg6 = self.sim.rhoscg[ipvtr_0] / self.sim.bg[i, j, k+1]

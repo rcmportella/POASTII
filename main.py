@@ -1091,6 +1091,18 @@ class BOASTSimulator:
                     ewaq_backup = self.ewaq.copy()
                 else:
                     ewaq_backup = None
+                # Preserve scalar fluid-volume/material-balance state so rejected
+                # attempts do not contaminate the next retry.
+                scfo_backup = self.scfo
+                scfw_backup = self.scfw
+                scfg_backup = self.scfg
+                scfg1_backup = self.scfg1
+                stbo_backup = self.stbo
+                stboi_backup = self.stboi
+                stbw_backup = self.stbw
+                stbwi_backup = self.stbwi
+                mcfgt_backup = self.mcfgt
+                mcfgi_backup = self.mcfgi
 
                 eti += delt
                 
@@ -1132,6 +1144,16 @@ class BOASTSimulator:
                     self.pid[:, :] = pid_backup
                     if ewaq_backup is not None:
                         self.ewaq[:, :, :] = ewaq_backup
+                    self.scfo = scfo_backup
+                    self.scfw = scfw_backup
+                    self.scfg = scfg_backup
+                    self.scfg1 = scfg1_backup
+                    self.stbo = stbo_backup
+                    self.stboi = stboi_backup
+                    self.stbw = stbw_backup
+                    self.stbwi = stbwi_backup
+                    self.mcfgt = mcfgt_backup
+                    self.mcfgi = mcfgi_backup
                     eti -= delt
                     delt = max(dtmin, delt * fact2)
                     retry_count += 1
@@ -1140,6 +1162,11 @@ class BOASTSimulator:
                             "Exceeded maximum timestep retries while enforcing GOR/WOR limits"
                         )
                     continue
+                elif gor_wor_retry_required:
+                    self.outfile.write(
+                        f"\nWARNING: GOR/WOR limit requires timestep reduction at ETI={eti:10.4f} d, "
+                        f"but DELT={delt:10.4f} is already at DTMIN={dtmin:10.4f}. Continuing without reduction.\n"
+                    )
                 
                 # Build 7-diagonal matrix for pressure equation
                 try:
@@ -1244,6 +1271,16 @@ class BOASTSimulator:
                     self.pid[:, :] = pid_backup
                     if ewaq_backup is not None:
                         self.ewaq[:, :, :] = ewaq_backup
+                    self.scfo = scfo_backup
+                    self.scfw = scfw_backup
+                    self.scfg = scfg_backup
+                    self.scfg1 = scfg1_backup
+                    self.stbo = stbo_backup
+                    self.stboi = stboi_backup
+                    self.stbw = stbw_backup
+                    self.stbwi = stbwi_backup
+                    self.mcfgt = mcfgt_backup
+                    self.mcfgi = mcfgi_backup
                     eti -= delt
                     retry_count += 1
                     if retry_count > 50:
@@ -1518,12 +1555,30 @@ class BOASTSimulator:
                     self.pid[:, :] = pid_backup
                     if ewaq_backup is not None:
                         self.ewaq[:, :, :] = ewaq_backup
+                    self.scfo = scfo_backup
+                    self.scfw = scfw_backup
+                    self.scfg = scfg_backup
+                    self.scfg1 = scfg1_backup
+                    self.stbo = stbo_backup
+                    self.stboi = stboi_backup
+                    self.stbw = stbw_backup
+                    self.stbwi = stbwi_backup
+                    self.mcfgt = mcfgt_backup
+                    self.mcfgi = mcfgi_backup
                     eti -= delt
                     delt = max(dtmin, delt * fact2)
                     retry_count += 1
                     if retry_count > 50:
                         raise RuntimeError("Exceeded maximum timestep retries while enforcing DSMAX/DPMAX")
                     continue
+                elif dsmc > dsmax or dpmc > dpmax:
+                    self.outfile.write(
+                        f"\nWARNING: DSMAX/DPMAX violation at ETI={eti:10.4f} d "
+                        f"(DSMC={dsmc:10.5f}, DSMAX={dsmax:10.5f}, "
+                        f"DPMC={dpmc:10.5f}, DPMAX={dpmax:10.5f}), "
+                        f"but DELT={delt:10.4f} is already at DTMIN={dtmin:10.4f}. "
+                        "Continuing without reduction.\n"
+                    )
 
                 prev_dsmc = dsmc
                 prev_dpmc = dpmc

@@ -118,8 +118,8 @@ class FlowEquation:
                                             self.sim.msat[irockb_0], ssg)
                     rpg[i, j, k] = krg1
                     
-                    # Three-phase oil relative permeability (still uses 1-based irockb)
-                    kro3 = trikro(self.sim, irockb, sso, ssw)
+                    # Three-phase oil relative permeability (0-based rock region)
+                    kro3 = trikro(self.sim, irockb_0, sso, ssw)
                     rpo3[i, j, k] = kro3
                     
                     # Capillary pressures
@@ -176,6 +176,7 @@ class FlowEquation:
                     ssw = self.sim.swn[i, j, k]
                     ssg = self.sim.sgn[i, j, k]
                     irockb = self.sim.irock[i, j, k]
+                    irockb_0 = irockb - 1
                     
                     pcow = capow[i, j, k]
                     pcgo = capgo[i, j, k]
@@ -225,7 +226,7 @@ class FlowEquation:
                         hg1 = p11 + ggw1
                         
                         # Upstream weighting for relative permeabilities
-                        if self.sim.ithree[irockb] == 1:
+                        if self.sim.ithree[irockb_0] == 1:
                             kro1 = rpo3[i, j, k] if ho1 < 0.0 else rpo3[i-1, j, k]
                         else:
                             kro1 = rpow[i, j, k] if ho1 < 0.0 else rpow[i-1, j, k]
@@ -279,7 +280,7 @@ class FlowEquation:
                         hw2 = p22 + gww2
                         hg2 = p22 + ggw2
                         
-                        if self.sim.ithree[irockb] == 1:
+                        if self.sim.ithree[irockb_0] == 1:
                             kro2 = rpo3[i, j, k] if ho2 < 0.0 else rpo3[i+1, j, k]
                         else:
                             kro2 = rpow[i, j, k] if ho2 < 0.0 else rpow[i+1, j, k]
@@ -332,7 +333,7 @@ class FlowEquation:
                         hw3 = p33 + gww3
                         hg3 = p33 + ggw3
                         
-                        if self.sim.ithree[irockb] == 1:
+                        if self.sim.ithree[irockb_0] == 1:
                             kro3 = rpo3[i, j, k] if ho3 < 0.0 else rpo3[i, j-1, k]
                         else:
                             kro3 = rpow[i, j, k] if ho3 < 0.0 else rpow[i, j-1, k]
@@ -385,7 +386,7 @@ class FlowEquation:
                         hw4 = p44 + gww4
                         hg4 = p44 + ggw4
                         
-                        if self.sim.ithree[irockb] == 1:
+                        if self.sim.ithree[irockb_0] == 1:
                             kro4 = rpo3[i, j, k] if ho4 < 0.0 else rpo3[i, j+1, k]
                         else:
                             kro4 = rpow[i, j, k] if ho4 < 0.0 else rpow[i, j+1, k]
@@ -438,7 +439,7 @@ class FlowEquation:
                         hw5 = p55 + gww5
                         hg5 = p55 + ggw5
                         
-                        if self.sim.ithree[irockb] == 1:
+                        if self.sim.ithree[irockb_0] == 1:
                             kro5 = rpo3[i, j, k] if ho5 < 0.0 else rpo3[i, j, k-1]
                         else:
                             kro5 = rpow[i, j, k] if ho5 < 0.0 else rpow[i, j, k-1]
@@ -491,7 +492,7 @@ class FlowEquation:
                         hw6 = p66 + gww6
                         hg6 = p66 + ggw6
                         
-                        if self.sim.ithree[irockb] == 1:
+                        if self.sim.ithree[irockb_0] == 1:
                             kro6 = rpo3[i, j, k] if ho6 < 0.0 else rpo3[i, j, k+1]
                         else:
                             kro6 = rpow[i, j, k] if ho6 < 0.0 else rpow[i, j, k+1]
@@ -679,23 +680,23 @@ def trikro(simulator, irockb: int, sso: float, ssw: float) -> float:
     
     # Handle case with no free gas
     if ssg <= 0.0:
-        kro1 = interp_obj.interp(irockb, simulator.sat, simulator.krot,
+        kro1 = interp_obj.interp(simulator.sat, simulator.krot, irockb,
                                 simulator.msat[irockb], sso)
         return kro1
     
     # Get endpoint relative permeability (KROW at SWR)
-    krowr = interp_obj.interp(irockb, simulator.sat, simulator.krot,
+    krowr = interp_obj.interp(simulator.sat, simulator.krot, irockb,
                              simulator.msat[irockb], simulator.swr[irockb])
     
     # Interpolate two-phase relative permeabilities
-    krow = interp_obj.interp(irockb, simulator.sat, simulator.krot,
+    krow = interp_obj.interp(simulator.sat, simulator.krot, irockb,
                             simulator.msat[irockb], sso)
-    krw = interp_obj.interp(irockb, simulator.sat, simulator.krwt,
+    krw = interp_obj.interp(simulator.sat, simulator.krwt, irockb,
                            simulator.msat[irockb], ssw)
     
-    krog = interp_obj.interp(irockb, simulator.sat, simulator.krogt,
+    krog = interp_obj.interp(simulator.sat, simulator.krogt, irockb,
                             simulator.msat[irockb], sso)
-    krg = interp_obj.interp(irockb, simulator.sat, simulator.krgt,
+    krg = interp_obj.interp(simulator.sat, simulator.krgt, irockb,
                            simulator.msat[irockb], ssg)
     
     # Stone's Model I formula

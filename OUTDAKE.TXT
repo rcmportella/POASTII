@@ -1,0 +1,864 @@
+
+        *********************************************************************
+        *                                                                   *
+        *                       POAST II:                                   *
+        *              PYTHON OIL APPLIED SIMULATION TOOL                    *
+        *                      (RELEASE 0.0)                                *
+        *                                                                   *
+        *                                                                   *
+        *********************************************************************
+        
+                     REDIMENSIONING INFORMATION:
+        MAX X-DIRECTION GRID BLOCKS                                   13
+        MAX Y-DIRECTION GRID BLOCKS                                   10
+        MAX Z-DIRECTION GRID BLOCKS                                    4
+        MAX ROCK REGIONS                                               3
+        MAX ROCK REGION TABLE ENTRIES                                 25
+        MAX PVT REGIONS                                                3
+        MAX PVT REGION TABLE ENTRIES                                  25
+        MAX WELLS                                                     50
+        MAX TIME STEPS                                              1000
+        MAX RESTART RECORDS                                            5
+        TOTAL BLOCKS USING 1D DIRECT SOLN METHODS                     13
+        TOTAL BLOCKS USING 2D OR 3D DIRECT SOLN METHODS                1
+        TOTAL BLOCKS USING ITERATIVE SOLN METHOD                     520
+        MAX NO OF BLOCKS IN 1D FOR LSOR                               13
+        MAX NO OF BLOCKS IN 2D FOR L2SOR                               1
+        
+                       ********************************************************************************
+                       *                                                                              *
+                       *        LINEAR BUCKLEY-LEVERETT WATERFLOOD DISPLACEMENT FROM DAKE BOOK        *
+                       *                                                                              *
+                       ********************************************************************************
+
+
+***** RESTART OPTION *****
+RESTART OPTION HAS NOT BEEN ACTIVATED.
+
+
+
+                     ***** INITIALIZATION DATA *****
+
+
+               GRID BLOCK LENGTH (DX) IS INITIALLY SET AT   200.0000 FOR ALL NODES
+
+
+               GRID BLOCK WIDTH (DY) IS INITIALLY SET AT   625.0000 FOR ALL NODES
+
+
+               GRID BLOCK GROSS THICKNESS (DZ) IS INITIALLY SET AT    40.0000 FOR ALL NODES
+
+
+               GRID BLOCK NET THICKNESS (DZNET) IS INITIALLY SET AT    40.0000 FOR ALL NODES
+
+
+
+               ********** DEPTHS TO GRID BLOCK TOPS **********
+
+
+K =  1
+
+     8325     8325     8325     8325     8325     8325     8325     8325     8325     8325
+
+   READING POROSITY DISTRIBUTION...
+   CONSTANT POROSITY = 0.1800
+
+   READING X-DIRECTION PERMEABILITY...
+   CONSTANT KX = 200.00 md
+
+   READING Y-DIRECTION PERMEABILITY...
+   CONSTANT KY = 200.00 md
+
+   READING Z-DIRECTION PERMEABILITY...
+   CONSTANT KZ = 200.00 md
+
+   ROCK PROPERTIES SUCCESSFULLY READ AND VALIDATED
+
+              ***** EMPIRICAL DATA TABLES *****
+
+
+              *** NUMBER OF REGIONS ***
+                   ROCK              1
+                   PVT              1
+
+
+              ROCK REGION #     1
+
+  SATURATION    KROT      KRW       KRG        KROG     PCOW      PCGO
+                                                        (PSI)      (PSI)
+
+    -0.1000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+     0.1000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+     0.2000    0.0000    0.0000    0.0750    0.0000    0.0000    0.0000
+     0.2500    0.0100    0.0020    0.0750    0.0000    0.0000    0.0000
+     0.3000    0.0270    0.0090    0.1900    0.0000    0.0000    0.0000
+     0.3500    0.0500    0.0200    0.1900    0.0000    0.0000    0.0000
+     0.4000    0.0810    0.0330    0.4100    0.0000    0.0000    0.0000
+     0.4500    0.1200    0.0510    0.4100    0.0000    0.0000    0.0000
+     0.5000    0.1630    0.0750    0.7200    0.0000    0.0000    0.0000
+     0.5500    0.2200    0.1000    0.7200    0.0000    0.0000    0.0000
+     0.6000    0.2850    0.1320    0.8700    0.0000    0.0000    0.0000
+     0.6500    0.3700    0.1700    0.8700    0.0000    0.0000    0.0000
+     0.7000    0.4700    0.2080    0.9400    0.0000    0.0000    0.0000
+     0.7500    0.6100    0.2510    0.9400    0.0000    0.0000    0.0000
+     0.8000    0.8000    0.3000    0.9667    0.0000    0.0000    0.0000
+     0.9000    0.8000    0.3000    0.9933    0.0000    0.0000    0.0000
+     1.1000    0.8000    0.3000    1.0000    0.0000    0.0000    0.0000
+
+
+         THE THREE-PHASE REL. PERM. CALC. IS NOT USED.
+         IRREDUCIBLE WATER SATURATION IS 0.2000
+
+              PVT REGION #     1
+
+
+
+         BUBBLE POINT PARAMETERS:
+    BUBBLE POINT PRESSURE (PSI)                4014.700
+    BUBBLE POINT DEPTH (FT)                    8300.000
+    BUBBLE POINT GRADIENT (PSI/FT)               0.000
+
+
+   VSLOPE     BSLOPE       RSLOPE     PMAX  REPRS
+  (CP/PSI) (RB/STB/PSI)    (1/PSI)   (PSI)
+
+  0.000e+00 -0.000e+00    0.00000    9014.70     0
+
+
+     **** SATURATED OIL PVT PROPERTIES ****
+     PRESSURE  VISCOSITY    FVF    SOLN. GAS
+      (PSI)       (CP)    (RB/STB)  (SCF/STB)
+
+         14.7   5.0000    1.5000      1.00
+       4014.7   5.0000    1.5000      1.00
+       9014.7   5.0000    1.5000      1.00
+
+
+         **** WATER PVT PROPERTIES ***
+     PRESSURE  VISCOSITY    FVF    SOLN. GAS
+      (PSI)       (CP)    (RB/STB)  (SCF/STB)
+
+         14.7   0.5000    1.0000      0.00
+       4014.7   0.5000    1.0000      0.00
+       9014.7   0.5000    1.0000      0.00
+
+
+       ****  GAS  PVT AND ROCK COMP. ****
+     PRESSURE  VISCOSITY    FVF     PSEUDO-PRS  ROCK COMP.
+      (PSI)       (CP)   (RCF/SCF) (PSIA**2/CP)  (1/PSI)
+
+         14.7   0.0080  9.3580e-01  0.0000e+00   3.000e-06
+       2014.7   0.0189  9.0630e-03  0.0000e+00   3.000e-06
+       3014.7   0.0228  4.5540e-03  0.0000e+00   3.000e-06
+       4014.7   0.0268  4.5540e-03  0.0000e+00   3.000e-06
+       5014.7   0.0309  3.6440e-03  0.0000e+00   3.000e-06
+       9014.7   0.0470  2.1670e-03  0.0000e+00   3.000e-06
+
+
+       *** DENSITIES AT STD. CONDITIONS ***
+             OIL      WATER      GAS
+          (LBM/SCF) (LBM/SCF) (LBM/SCF)
+
+           46.2440   62.2380    0.0647
+
+
+              ***** SLOPES FOR COMPRESSIBILITY CALCULATIONS ****
+
+
+           PRESSURE             BO         DBO/DP             RSO        DRSO/DP
+            (PSI)         (RB/STB)         (RB/STB/PSI)         (CF/CF)          (1/PSI)
+
+            4014.7    1.5000   0.0000e+00      0.2   0.0000e+00
+            9014.7    1.5000   0.0000e+00      0.2   0.0000e+00
+
+
+           PRESSURE             BW         DBW/DP             RSW        DRSW/DP
+            (PSI)         (RB/STB)         (RB/STB/PSI)         (CF/CF)          (1/PSI)
+
+            4014.7    1.0000   0.0000e+00      0.0   0.0000e+00
+            9014.7    1.0000   0.0000e+00      0.0   0.0000e+00
+
+
+           PRESSURE         BG            DBG/DP
+             (PSI)             (RCF/SCF)        (RCF/SCF/PSI)
+
+            2014.7      9.0630e-03    -4.6337e-04
+            3014.7      4.5540e-03    -4.5090e-06
+            4014.7      4.5540e-03     0.0000e+00
+            5014.7      3.6440e-03    -9.1000e-07
+            9014.7      2.1670e-03    -3.6925e-07
+
+   INITIALIZATION SUCCESSFULLY COMPLETED
+
+              TOTAL INITIAL FLUID VOLUMES IN RESERVOIR:
+                   OIL IN PLACE (MILLION STB)                                            0.8549
+                   WATER IN PLACE (MILLION STB)                                            0.3206
+                   SOLUTION GAS IN PLACE (BILLION SCF)                                            0.0009
+                   FREE GAS IN PLACE (BILLION SCF)                                            0.0000
+
+
+               RUN CONTROL PARAMETERS:
+                    MAXIMUM NUMBER OF TIME-STEPS = 500
+                    FACTOR FOR INCREASING DELT =      1.200   WHEN DSMAX AND DPMAX NOT EXCEEDED.
+                    FACTOR FOR DECREASING DELT =      0.500   WHEN DSMAX OR DPMAX IS EXCEEDED.
+                    MAXIMUM SIMULATION TIME =     720.000
+                    MAXIMUM RESERVOIR WOR/TIME-STEP =       20 STB/STB
+                    MAXIMUM RESERVOIR GOR/TIME-STEP =   500000 SCF/STB
+                    MINIMUM AVERAGE RESERVOIR PRESSURE/TIME-STEP =      150
+                    MAXIMUM AVERAGE RESERVOIR PRESSURE/TIME-STEP =    10000
+
+
+               SOLUTION METHOD IS BAND.
+
+               AUTOMATIC TIME STEP CRITERIA:
+                    MAXIMUM ALLOWED SATURATION CHANGE (DSMAX) =     0.0500
+                    MAXIMUM ALLOWED PRESSURE CHANGE   (DPMAX) =   100.0000
+
+
+
+               IMPES FORMULATION SELECTED;  SINGLE-POINT UPSTREAM WEIGHTING.
+
+*********************
+*   WELL   UPDATE   *
+*********************
+
+                    RESERVOIR CONTAINS THE FOLLOWING RATE NODES:
+
+ WELL  NO.     NODE      OIL(STBD)   WATER(RBD)   GAS(MCFD)   TOTAL(RBD)   BHFP(PSIA)      PID      ALIT      BLIT
+ PROD      1  10  1  1        600.00         0.00         0.00         0.00      2500.00   10.0000 0.000e+00 0.000e+00
+ INJ       2   1  1  1          0.00      -900.00         0.00         0.00      7500.00   10.0000 0.000e+00 0.000e+00
+
+               BLOCK  10  1  1 CONTAINS THE OIL RATE SPECIFIED PRODUCING WELL NUMBER     1
+               BLOCK   1  1  1 CONTAINS THE RATE SPECIFIED WATER INJECTION WELL NUMBER     2
+                              *********************************************************************
+                              *                                                                   *
+                              *                                                                   *
+                              *             SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                              *                                                                   *
+                              *                                                                   *
+                              *********************************************************************
+
+
+
+ ELAPSED TIME (DAYS)         =      0.00   TIME STEP NUMBER             =     1      TIME STEP SIZE (DAYS)         =      6.00
+
+ CURRENT AVG RES PRESSURE    =       0.0   PREVIOUS AVG RES PRESSURE    =       0.0  PRESSURE DPMAX(  1,  1,  1)   =       0.0
+ OIL DSMAX(  1,  1,  1)      =   0.00000   GAS DSMAX(  1,  1,  1)       =   0.00000  WATER DSMAX(  1,  1,  1)      =   0.00000
+ OIL MATERIAL BALANCE (%)    =  0.000000   GAS MATERIAL BALANCE (%)     =  0.000000  WATER MATERIAL BALANCE (%)    =  0.000000
+ CUM. OIL MATERIAL BALANCE(%)=  0.000000   CUM. GAS MATERIAL BALANCE(%) =  0.000000  CUM. WATER MATERIAL BALANCE(%)=  0.000000
+
+ OIL PRODUCTION RATE (STB/D) =       0.0   CUM. OIL PRODUCTION (STB)    = 0.0000e+00
+ GAS PRODUCTION RATE (MSCF/D)=       0.0   CUM. GAS PRODUCTION (MSCF)   = 0.0000e+00
+ WATER PRODUCTION RATE(STB/D)=       0.0
+                                          CUM. WATER PRODUCTION (STB)  = 0.0000e+00
+
+ GAS INJECTION RATE (MSCF/D) =       0.0   CUM. GAS INJECTION (MSCF)    = 0.0000e+00
+ WATER INJECTION RATE (STB/D)=       0.0   CUM. WATER INJECTION (STB)   = 0.0000e+00
+
+ PRODUCING WOR (STB/STB)     =     0.000   CUM. WOR (STB/STB)           =     0.000
+ PRODUCING GOR (SCF/STB)     =       0.0   CUM. GOR (SCF/STB)           =       0.0
+
+
+              ******* INITIAL ARRAYS *******
+
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1     4789    4789    4789    4789    4789    4789    4789    4789    4789    4789
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.800   0.800   0.800   0.800   0.800   0.800   0.800   0.800   0.800   0.800
+
+
+
+              *********  WATER SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.200   0.200   0.200   0.200   0.200   0.200   0.200   0.200   0.200   0.200
+
+
+
+              *********  GAS SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+
+
+
+              ***** BUBBLE POINT PRESSURE DISTRIBUTION *****
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1     4015    4015    4015    4015    4015    4015    4015    4015    4015    4015
+
+
+
+   *************************************************  END OF INITIALIZATION  *************************************************
+
+
+
+
+
+
+WARNING: DSMAX/DPMAX violation at ETI=    1.0000 d (DSMC=   0.00532, DSMAX=   0.05000, DPMC= 473.39758, DPMAX= 100.00000), but DELT=    1.0000 is already at DTMIN=    1.0000. Continuing without reduction.
+
+                                                      *****************************
+                                                      *   TIME   STEP   SUMMARY   *
+                                                      *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ ---------  ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+   1     1.     600.0      0.6      0.0    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.005 10  1  1 473.40 1   0
+
+WARNING: DSMAX/DPMAX violation at ETI=    2.0000 d (DSMC=   0.00546, DSMAX=   0.05000, DPMC= 210.35149, DPMAX= 100.00000), but DELT=    1.0000 is already at DTMIN=    1.0000. Continuing without reduction.
+   2     2.     600.0      0.6      0.1    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.005  1  1  1 210.35 1   0
+
+WARNING: DSMAX/DPMAX violation at ETI=    3.0000 d (DSMC=   0.00550, DSMAX=   0.05000, DPMC= 108.45255, DPMAX= 100.00000), but DELT=    1.0000 is already at DTMIN=    1.0000. Continuing without reduction.
+   3     3.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.006  1  1  1 108.45 1   0
+   4     4.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.006  1  1  1  58.63 1   0
+   5     5.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.007  1  1  1  35.92 1   0
+   6     6.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.004  1  1  1  17.49 1   0
+                              *********************************************************************
+                              *                                                                   *
+                              *                                                                   *
+                              *             SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                              *                                                                   *
+                              *                                                                   *
+                              *********************************************************************
+
+
+
+ ELAPSED TIME (DAYS)         =      6.00   TIME STEP NUMBER             =     6      TIME STEP SIZE (DAYS)         =      0.80
+
+ CURRENT AVG RES PRESSURE    =    4789.9   PREVIOUS AVG RES PRESSURE    =    4789.9  PRESSURE DPMAX(  1,  1,  1)   =       0.0
+ OIL DSMAX(  1,  1,  1)      =   0.00000   GAS DSMAX(  1,  1,  1)       =   0.00000  WATER DSMAX(  1,  1,  1)      =   0.00000
+ OIL MATERIAL BALANCE (%)    =  0.000000   GAS MATERIAL BALANCE (%)     =  0.000000  WATER MATERIAL BALANCE (%)    =  0.000000
+ CUM. OIL MATERIAL BALANCE(%)=  0.000000   CUM. GAS MATERIAL BALANCE(%) =  0.000000  CUM. WATER MATERIAL BALANCE(%)=  0.000000
+
+ OIL PRODUCTION RATE (STB/D) =     600.0   CUM. OIL PRODUCTION (STB)    = 3.6000e+03
+ GAS PRODUCTION RATE (MSCF/D)=       0.6   CUM. GAS PRODUCTION (MSCF)   = 3.5999e+00
+ WATER PRODUCTION RATE(STB/D)=       0.2
+                                          CUM. WATER PRODUCTION (STB)  = 9.8754e-01
+
+ GAS INJECTION RATE (MSCF/D) =       0.0   CUM. GAS INJECTION (MSCF)    = 0.0000e+00
+ WATER INJECTION RATE (STB/D)=    -900.0   CUM. WATER INJECTION (STB)   = -5.4000e+03
+
+ PRODUCING WOR (STB/STB)     =     0.000   CUM. WOR (STB/STB)           =     0.000
+ PRODUCING GOR (SCF/STB)     =       1.0   CUM. GOR (SCF/STB)           =       0.0
+
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1     5694    5469    5273    5078    4884    4690    4495    4299    4103    3904
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.767   0.800   0.800   0.800   0.800   0.800   0.800   0.800   0.800   0.799
+
+
+
+              *********  WATER SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.233   0.200   0.200   0.200   0.200   0.200   0.200   0.200   0.200   0.201
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+                                                      *****************************
+                                                      *   TIME   STEP   SUMMARY   *
+                                                      *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ ---------  ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+   7     7.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.005  1  1  1  12.59 1   0
+   8     8.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.007  1  1  1  10.25 1   0
+   9    10.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.008  1  1  1   9.62 1   0
+  10    11.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.009  1  1  1   8.82 1   0
+  11    13.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4790.   0.000  0.000  0.000   1  1  1  0.011  1  1  1   6.03 1   0
+  12    16.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4789.   0.000  0.000  0.000   1  1  1  0.013  1  1  1   6.59 1   0
+  13    19.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4789.   0.000  0.000  0.000   1  1  1  0.015  1  1  1   8.06 1   0
+  14    22.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4789.   0.000  0.000  0.000   1  1  1  0.017  1  1  1  10.02 1   0
+  15    27.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4789.   0.000  0.000  0.000   1  1  1  0.019  2  1  1   2.68 1   0
+  16    32.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4789.   0.000  0.000  0.000   1  1  1  0.020  2  1  1   3.89 1   0
+  17    38.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4788.   0.000  0.000  0.000   1  1  1  0.021  2  1  1   6.68 1   0
+  18    44.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4788.   0.000  0.000  0.000   1  1  1  0.018  2  1  1  11.23 1   0
+  19    50.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4788.   0.000  0.000  0.000   2  1  1  0.016  2  1  1  14.95 1   0
+  20    56.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4787.   0.000  0.000  0.000   2  1  1  0.017  2  1  1  10.80 1   0
+  21    62.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4787.   0.000  0.000  0.000   2  1  1  0.017  2  1  1  10.85 1   0
+  22    68.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4787.   0.000  0.000  0.000   2  1  1  0.017  2  1  1  12.12 1   0
+  23    74.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4787.   0.000  0.000  0.000   2  1  1  0.016  3  1  1   4.46 1   0
+  24    80.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4786.   0.000  0.000  0.000   2  1  1  0.015  3  1  1   6.17 1   0
+  25    86.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4786.   0.000  0.000  0.000   2  1  1  0.014  3  1  1   7.70 1   0
+  26    92.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4786.   0.000  0.000  0.000   2  1  1  0.013  3  1  1  10.52 1   0
+  27    98.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4785.   0.000  0.000  0.000   3  1  1  0.014  3  1  1  11.48 1   0
+  28   104.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4785.   0.000  0.000  0.000   3  1  1  0.014  3  1  1   7.73 1   0
+  29   110.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4785.   0.000  0.000  0.000   3  1  1  0.014  3  1  1   8.27 1   0
+  30   116.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4784.   0.000  0.000  0.000   3  1  1  0.014  3  1  1  10.07 1   0
+  31   120.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4784.   0.000  0.000  0.000   3  1  1  0.009  3  1  1   6.98 1   0
+                              *********************************************************************
+                              *                                                                   *
+                              *                                                                   *
+                              *             SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                              *                                                                   *
+                              *                                                                   *
+                              *********************************************************************
+
+
+
+ ELAPSED TIME (DAYS)         =    120.00   TIME STEP NUMBER             =    31      TIME STEP SIZE (DAYS)         =      4.04
+
+ CURRENT AVG RES PRESSURE    =    4784.3   PREVIOUS AVG RES PRESSURE    =    4784.5  PRESSURE DPMAX(  1,  1,  1)   =       0.0
+ OIL DSMAX(  1,  1,  1)      =   0.00000   GAS DSMAX(  1,  1,  1)       =   0.00000  WATER DSMAX(  1,  1,  1)      =   0.00000
+ OIL MATERIAL BALANCE (%)    =  0.000000   GAS MATERIAL BALANCE (%)     =  0.000000  WATER MATERIAL BALANCE (%)    =  0.000000
+ CUM. OIL MATERIAL BALANCE(%)=  0.000000   CUM. GAS MATERIAL BALANCE(%) =  0.000000  CUM. WATER MATERIAL BALANCE(%)=  0.000000
+
+ OIL PRODUCTION RATE (STB/D) =     600.0   CUM. OIL PRODUCTION (STB)    = 7.2000e+04
+ GAS PRODUCTION RATE (MSCF/D)=       0.6   CUM. GAS PRODUCTION (MSCF)   = 7.1998e+01
+ WATER PRODUCTION RATE(STB/D)=       0.2
+                                          CUM. WATER PRODUCTION (STB)  = 2.8413e+01
+
+ GAS INJECTION RATE (MSCF/D) =       0.0   CUM. GAS INJECTION (MSCF)    = 0.0000e+00
+ WATER INJECTION RATE (STB/D)=    -900.0   CUM. WATER INJECTION (STB)   = -1.0800e+05
+
+ PRODUCING WOR (STB/STB)     =     0.000   CUM. WOR (STB/STB)           =     0.000
+ PRODUCING GOR (SCF/STB)     =       1.0   CUM. GOR (SCF/STB)           =       0.0
+
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1     5756    5589    5343    5059    4847    4647    4447    4248    4048    3848
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.486   0.579   0.683   0.782   0.799   0.800   0.800   0.800   0.800   0.799
+
+
+
+              *********  WATER SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.514   0.421   0.317   0.218   0.201   0.200   0.200   0.200   0.200   0.201
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+                                                      *****************************
+                                                      *   TIME   STEP   SUMMARY   *
+                                                      *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ ---------  ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+  32   125.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4784.   0.000  0.000  0.000   3  1  1  0.010  1  1  1   4.33 1   0
+  33   131.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4784.   0.000  0.000  0.000   3  1  1  0.012  4  1  1   5.07 1   0
+  34   137.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4783.   0.000  0.000  0.000   3  1  1  0.011  4  1  1   7.01 1   0
+  35   143.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4783.   0.000  0.000  0.000   4  1  1  0.011  4  1  1   8.71 1   0
+  36   149.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4783.   0.000  0.000  0.000   4  1  1  0.012  4  1  1   9.95 1   0
+  37   155.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4783.   0.000  0.000  0.000   4  1  1  0.012  4  1  1   7.35 1   0
+  38   161.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4782.   0.000  0.000  0.000   4  1  1  0.012  4  1  1   7.80 1   0
+  39   167.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4782.   0.000  0.000  0.000   4  1  1  0.012  4  1  1   8.30 1   0
+  40   173.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4782.   0.000  0.000  0.000   4  1  1  0.012  4  1  1   7.79 1   0
+  41   179.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4781.   0.000  0.000  0.000   4  1  1  0.011  1  1  1   6.83 1   0
+  42   185.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4781.   0.000  0.000  0.000   4  1  1  0.011  1  1  1   6.95 1   0
+  43   191.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4781.   0.000  0.000  0.000   4  1  1  0.010  5  1  1   7.52 1   0
+  44   197.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4781.   0.000  0.000  0.000   5  1  1  0.011  5  1  1   8.44 1   0
+  45   203.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4780.   0.000  0.000  0.000   5  1  1  0.011  5  1  1   8.76 1   0
+  46   209.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4780.   0.000  0.000  0.000   5  1  1  0.012  5  1  1   7.09 1   0
+  47   215.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4780.   0.000  0.000  0.000   5  1  1  0.012  5  1  1   7.29 1   0
+  48   221.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4779.   0.000  0.000  0.000   5  1  1  0.012  5  1  1   7.62 1   0
+  49   227.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4779.   0.000  0.000  0.000   5  1  1  0.011  5  1  1   7.96 1   0
+  50   233.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4779.   0.000  0.000  0.000   5  1  1  0.011  1  1  1   5.93 1   0
+  51   239.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4779.   0.000  0.000  0.000   5  1  1  0.010  6  1  1   6.35 1   0
+  52   240.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4778.   0.000  0.000  0.000   5  1  1  0.002  6  1  1   7.10 1   0
+                              *********************************************************************
+                              *                                                                   *
+                              *                                                                   *
+                              *             SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                              *                                                                   *
+                              *                                                                   *
+                              *********************************************************************
+
+
+
+ ELAPSED TIME (DAYS)         =    240.00   TIME STEP NUMBER             =    52      TIME STEP SIZE (DAYS)         =      1.33
+
+ CURRENT AVG RES PRESSURE    =    4778.5   PREVIOUS AVG RES PRESSURE    =    4778.5  PRESSURE DPMAX(  1,  1,  1)   =       0.0
+ OIL DSMAX(  1,  1,  1)      =   0.00000   GAS DSMAX(  1,  1,  1)       =   0.00000  WATER DSMAX(  1,  1,  1)      =   0.00000
+ OIL MATERIAL BALANCE (%)    =  0.000000   GAS MATERIAL BALANCE (%)     =  0.000000  WATER MATERIAL BALANCE (%)    =  0.000000
+ CUM. OIL MATERIAL BALANCE(%)=  0.000000   CUM. GAS MATERIAL BALANCE(%) =  0.000000  CUM. WATER MATERIAL BALANCE(%)=  0.000000
+
+ OIL PRODUCTION RATE (STB/D) =     600.0   CUM. OIL PRODUCTION (STB)    = 1.4400e+05
+ GAS PRODUCTION RATE (MSCF/D)=       0.6   CUM. GAS PRODUCTION (MSCF)   = 1.4400e+02
+ WATER PRODUCTION RATE(STB/D)=       0.2
+                                          CUM. WATER PRODUCTION (STB)  = 5.6434e+01
+
+ GAS INJECTION RATE (MSCF/D) =       0.0   CUM. GAS INJECTION (MSCF)    = 0.0000e+00
+ WATER INJECTION RATE (STB/D)=    -900.0   CUM. WATER INJECTION (STB)   = -2.1600e+05
+
+ PRODUCING WOR (STB/STB)     =     0.000   CUM. WOR (STB/STB)           =     0.000
+ PRODUCING GOR (SCF/STB)     =       1.0   CUM. GOR (SCF/STB)           =       0.0
+
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1     5670    5548    5383    5176    4923    4641    4408    4207    4008    3808
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.415   0.486   0.537   0.591   0.666   0.764   0.798   0.800   0.800   0.799
+
+
+
+              *********  WATER SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.585   0.514   0.463   0.409   0.334   0.236   0.202   0.200   0.200   0.201
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+                                                      *****************************
+                                                      *   TIME   STEP   SUMMARY   *
+                                                      *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ ---------  ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+  53   242.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4778.   0.000  0.000  0.000   5  1  1  0.003  6  1  1   2.58 1   0
+  54   244.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4778.   0.000  0.000  0.000   6  1  1  0.003  6  1  1   2.34 1   0
+  55   246.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4778.   0.000  0.000  0.000   6  1  1  0.004  6  1  1   2.73 1   0
+  56   249.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4778.   0.000  0.000  0.000   6  1  1  0.005  6  1  1   3.33 1   0
+  57   252.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4778.   0.000  0.000  0.000   6  1  1  0.006  6  1  1   4.13 1   0
+  58   256.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4778.   0.000  0.000  0.000   6  1  1  0.007  6  1  1   3.78 1   0
+  59   261.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4777.   0.000  0.000  0.000   6  1  1  0.009  6  1  1   4.84 1   0
+  60   266.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4777.   0.000  0.000  0.000   6  1  1  0.010  6  1  1   5.88 1   0
+  61   272.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4777.   0.000  0.000  0.000   6  1  1  0.011  6  1  1   7.12 1   0
+  62   278.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4777.   0.000  0.000  0.000   6  1  1  0.011  6  1  1   7.61 1   0
+  63   284.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4776.   0.000  0.000  0.000   6  1  1  0.011  6  1  1   6.77 1   0
+  64   290.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4776.   0.000  0.000  0.000   6  1  1  0.010  7  1  1   5.24 1   0
+  65   296.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4776.   0.000  0.000  0.000   6  1  1  0.009  7  1  1   5.81 1   0
+  66   302.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4776.   0.000  0.000  0.000   7  1  1  0.009  7  1  1   7.10 1   0
+  67   308.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4775.   0.000  0.000  0.000   7  1  1  0.010  7  1  1   8.49 1   0
+  68   314.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4775.   0.000  0.000  0.000   7  1  1  0.010  7  1  1   7.47 1   0
+  69   320.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4775.   0.000  0.000  0.000   7  1  1  0.011  7  1  1   7.79 1   0
+  70   326.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4774.   0.000  0.000  0.000   7  1  1  0.011  7  1  1   7.86 1   0
+  71   332.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4774.   0.000  0.000  0.000   7  1  1  0.011  7  1  1   7.78 1   0
+  72   338.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4774.   0.000  0.000  0.000   7  1  1  0.010  7  1  1   7.71 1   0
+  73   344.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4773.   0.000  0.000  0.000   7  1  1  0.010  7  1  1   5.59 1   0
+  74   350.     600.0      0.6      0.2    1.0    0.0      0.0    -900    4773.   0.000  0.000  0.000   7  1  1  0.009  8  1  1   6.02 1   0
+  75   356.     600.0      0.6      0.3    1.0    0.0      0.0    -900    4773.   0.000  0.000  0.000   7  1  1  0.009  8  1  1   6.23 1   0
+  76   360.     600.0      0.6      0.3    1.0    0.0      0.0    -900    4773.   0.000  0.000  0.000   8  1  1  0.006  8  1  1   6.56 1   0
+                              *********************************************************************
+                              *                                                                   *
+                              *                                                                   *
+                              *             SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                              *                                                                   *
+                              *                                                                   *
+                              *********************************************************************
+
+
+
+ ELAPSED TIME (DAYS)         =    360.00   TIME STEP NUMBER             =    76      TIME STEP SIZE (DAYS)         =      3.65
+
+ CURRENT AVG RES PRESSURE    =    4772.7   PREVIOUS AVG RES PRESSURE    =    4772.9  PRESSURE DPMAX(  1,  1,  1)   =       0.0
+ OIL DSMAX(  1,  1,  1)      =   0.00000   GAS DSMAX(  1,  1,  1)       =   0.00000  WATER DSMAX(  1,  1,  1)      =   0.00000
+ OIL MATERIAL BALANCE (%)    =  0.000000   GAS MATERIAL BALANCE (%)     =  0.000000  WATER MATERIAL BALANCE (%)    =  0.000000
+ CUM. OIL MATERIAL BALANCE(%)=  0.000000   CUM. GAS MATERIAL BALANCE(%) =  0.000000  CUM. WATER MATERIAL BALANCE(%)=  0.000000
+
+ OIL PRODUCTION RATE (STB/D) =     600.0   CUM. OIL PRODUCTION (STB)    = 2.1600e+05
+ GAS PRODUCTION RATE (MSCF/D)=       0.6   CUM. GAS PRODUCTION (MSCF)   = 2.1599e+02
+ WATER PRODUCTION RATE(STB/D)=       0.3
+                                          CUM. WATER PRODUCTION (STB)  = 8.4287e+01
+
+ GAS INJECTION RATE (MSCF/D) =       0.0   CUM. GAS INJECTION (MSCF)    = 0.0000e+00
+ WATER INJECTION RATE (STB/D)=    -900.0   CUM. WATER INJECTION (STB)   = -3.2400e+05
+
+ PRODUCING WOR (STB/STB)     =     0.000   CUM. WOR (STB/STB)           =     0.000
+ PRODUCING GOR (SCF/STB)     =       1.0   CUM. GOR (SCF/STB)           =       0.0
+
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1     5572    5469    5332    5167    4976    4753    4494    4212    3971    3769
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.378   0.441   0.485   0.519   0.554   0.596   0.659   0.753   0.797   0.799
+
+
+
+              *********  WATER SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.622   0.559   0.515   0.481   0.446   0.404   0.341   0.247   0.203   0.201
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+                                                      *****************************
+                                                      *   TIME   STEP   SUMMARY   *
+                                                      *****************************
+
+ TIME STEP               PRODUCTION                     INJECTION     PV WT   MATERIAL  BALANCES  MAX SATN CHANGE MAX PRES CHANGE  ITN 
+ ---------  ---------------------------------------- ----------------   AVG   -------------------- --------------- --------------- -----
+               OIL     GAS     WATER    GOR   WATER    GAS     WATER   RES     OIL    GAS   WATER  I  J  K  DSMAX  I  J  K  DPMAX O   I
+                                        SCF/   /OIL                    PRES     %      %      %
+  NO. DAYS    STB/D  MSCF/D    STB/D    STB   RATIO  MSCF/D    STB/D   PSIA
+ ---- ---- --------  -------  ------- ------  ----- -------- ------- ------  ------ ------ ------ -- -- -- ------ -- -- -- ------ -----
+  77   364.     600.0      0.6      0.3    1.0    0.0      0.0    -900    4772.   0.000  0.000  0.000   8  1  1  0.007  8  1  1   5.02 1   0
+  78   370.     600.0      0.6      0.3    1.0    0.0      0.0    -900    4772.   0.000  0.000  0.000   8  1  1  0.009  8  1  1   5.17 1   0
+  79   376.     600.0      0.6      0.3    1.0    0.0      0.0    -900    4772.   0.000  0.000  0.000   8  1  1  0.010  8  1  1   6.22 1   0
+  80   382.     600.0      0.6      0.3    1.0    0.0      0.0    -900    4771.   0.000  0.000  0.000   8  1  1  0.010  8  1  1   8.13 1   0
+  81   388.     600.0      0.6      0.4    1.0    0.0      0.0    -900    4771.   0.000  0.000  0.000   8  1  1  0.010  8  1  1   7.94 1   0
+  82   394.     600.0      0.6      0.5    1.0    0.0      0.0    -900    4770.   0.000  0.000  0.000   8  1  1  0.010  8  1  1   7.56 1   0
+  83   400.     600.0      0.6      0.6    1.0    0.0      0.0    -900    4769.   0.000  0.000  0.000   8  1  1  0.010  8  1  1   6.49 1   0
+  84   406.     600.0      0.6      0.7    1.0    0.0      0.0    -900    4769.   0.000  0.000  0.000   8  1  1  0.009  1  1  1   6.11 1   0
+  85   412.     600.0      0.6      0.9    1.0    0.0      0.0    -900    4767.   0.000  0.000  0.000   8  1  1  0.009  1  1  1   6.10 1   0
+  86   418.     600.0      0.6      1.1    1.0    0.0      0.0    -900    4766.   0.000  0.000  0.000   9  1  1  0.009  1  1  1   5.99 1   0
+  87   424.     600.0      0.6      1.5    1.0    0.0      0.0    -900    4764.   0.000  0.000  0.000   9  1  1  0.010 10  1  1   6.42 1   0
+  88   430.     600.0      0.6      1.9    1.0    0.0      0.0    -900    4762.   0.000  0.000  0.000   9  1  1  0.010  1  1  1   7.06 1   0
+  89   436.     600.0      0.6      2.6    1.0    0.0      0.0    -900    4758.   0.000  0.000  0.000   9  1  1  0.010  1  1  1   8.17 1   0
+  90   442.     600.0      0.6      3.7    1.0    0.0      0.0    -900    4754.   0.000  0.000  0.000   9  1  1  0.010  1  1  1   9.36 1   0
+  91   448.     600.0      0.6      5.2    1.0    0.0      0.0    -900    4747.   0.000  0.000  0.000   9  1  1  0.010  1  1  1  11.01 1   0
+  92   454.     600.0      0.6      7.3    1.0    0.0      0.0    -900    4738.   0.000  0.000  0.000   9  1  1  0.010  1  1  1  13.29 1   0
+  93   460.     600.0      0.6      9.9    1.0    0.0      0.0    -900    4726.   0.000  0.000  0.000   9  1  1  0.009  1  1  1  16.48 1   0
+  94   466.     600.0      0.6     13.2    1.0    0.0      0.0    -900    4709.   0.000  0.000  0.000   9  1  1  0.009  1  1  1  20.51 1   0
+  95   472.     600.0      0.6     17.5    1.0    0.0      0.0    -900    4688.   0.000  0.000  0.000   9  1  1  0.008  1  1  1  25.43 1   0
+  96   478.     600.0      0.6     22.9    1.0    0.0      0.0    -900    4659.   0.000  0.000  0.000  10  1  1  0.009  1  1  1  31.60 1   0
+  97   484.     600.0      0.6     29.7    1.0    0.0      0.0    -900    4622.   0.000  0.000  0.000  10  1  1  0.010  1  1  1  39.45 1   0
+  98   490.     600.0      0.6     52.7    1.0    0.1      0.0    -900    4556.   0.000  0.000  0.000  10  1  1  0.010 10  1  1  73.85 1   0
+  99   493.     600.0      0.6     79.0    1.0    0.1      0.0    -900    4507.   0.000  0.000  0.000  10  1  1  0.005 10  1  1  57.80 1   0
+ 100   496.     600.0      0.6     93.8    1.0    0.2      0.0    -900    4436.   0.000  0.000  0.000  10  1  1  0.007 10  1  1  76.78 1   0
+
+WELL MODE SWITCH: t=500.55 d, well #1, loc=(10,1), KIP 1->-11, PWFC=   2437.75 below producer limit PWF=   2500.00
+ 101   501.     584.6      0.6    110.1    1.0    0.2      0.0    -900    4359.   0.000  0.455  0.000  10  1  1  0.008  1  1  1  81.30 1   0
+ 102   506.     547.8      0.5    125.5    1.0    0.2      0.0    -900    4308.   0.000  0.512  0.000  10  1  1  0.009  1  1  1  64.82 1   0
+ 103   512.     518.6      0.5    145.4    1.0    0.3      0.0    -900    4279.   0.000  0.562  0.000  10  1  1  0.010  1  1  1  41.20 1   0
+ 104   518.     492.5      0.5    178.0    1.0    0.4      0.0    -900    4259.   0.000  0.533  0.000  10  1  1  0.009  1  1  1  27.84 1   0
+ 105   524.     469.3      0.5    209.4    1.0    0.4      0.0    -900    4243.   0.000  0.508  0.000  10  1  1  0.009  1  1  1  21.97 1   0
+ 106   530.     448.3      0.4    238.6    1.0    0.5      0.0    -900    4229.   0.000  0.485  0.000  10  1  1  0.008  1  1  1  18.56 1   0
+ 107   536.     429.2      0.4    265.9    1.0    0.6      0.0    -900    4218.   0.000  0.464  0.000  10  1  1  0.008  1  1  1  16.35 1   0
+ 108   542.     411.6      0.4    291.3    1.0    0.7      0.0    -900    4207.   0.000  0.445  0.000  10  1  1  0.007  1  1  1  14.79 1   0
+ 109   548.     395.3      0.4    315.2    1.0    0.8      0.0    -900    4198.   0.000  0.428  0.000  10  1  1  0.007  1  1  1  13.98 1   0
+ 110   554.     380.3      0.4    339.7    1.0    0.9      0.0    -900    4185.   0.000  0.411  0.000  10  1  1  0.006  1  1  1  15.89 1   0
+ 111   560.     365.9      0.4    362.4    1.0    1.0      0.0    -900    4171.   0.000  0.396  0.000  10  1  1  0.006  1  1  1  17.23 1   0
+ 112   566.     352.3      0.4    383.0    1.0    1.1      0.0    -900    4158.   0.000  0.381  0.000  10  1  1  0.006  1  1  1  17.59 1   0
+ 113   572.     339.5      0.3    401.9    1.0    1.2      0.0    -900    4144.   0.000  0.367  0.000  10  1  1  0.005  1  1  1  17.35 1   0
+ 114   578.     327.7      0.3    419.3    1.0    1.3      0.0    -900    4131.   0.000  0.354  0.000  10  1  1  0.005  1  1  1  16.78 1   0
+ 115   584.     316.6      0.3    435.3    1.0    1.4      0.0    -900    4118.   0.000  0.342  0.000  10  1  1  0.005  1  1  1  16.08 1   0
+ 116   590.     306.4      0.3    450.3    1.0    1.5      0.0    -900    4106.   0.000  0.331  0.000  10  1  1  0.004  1  1  1  15.56 1   0
+ 117   596.     296.9      0.3    464.2    1.0    1.6      0.0    -900    4094.   0.000  0.321  0.000  10  1  1  0.004  1  1  1  15.08 1   0
+ 118   602.     288.0      0.3    477.2    1.0    1.7      0.0    -900    4083.   0.000  0.311  0.000  10  1  1  0.004  1  1  1  14.50 1   0
+ 119   608.     279.7      0.3    489.5    1.0    1.8      0.0    -900    4072.   0.000  0.302  0.000  10  1  1  0.004  1  1  1  14.21 1   0
+ 120   614.     271.7      0.3    503.3    1.0    1.9      0.0    -900    4059.   0.000  0.293  0.000  10  1  1  0.004  1  1  1  15.85 1   0
+ 121   620.     264.0      0.3    515.3    1.0    2.0      0.0    -900    4045.   0.000  0.285  0.000  10  1  1  0.003  1  1  1  16.62 1   0
+ 122   626.     256.7      0.3    526.1    1.0    2.0      0.0    -900    4032.   0.000  0.277  0.000  10  1  1  0.003  1  1  1  16.61 1   0
+ 123   632.     250.0      0.2    535.9    1.0    2.1      0.0    -900    4018.   0.000  0.270  0.000  10  1  1  0.003  1  1  1  16.23 1   0
+ 124   638.     243.6      0.2    544.9    1.0    2.2      0.0    -900    4006.   0.000  0.263  0.000  10  1  1  0.003  1  1  1  15.64 1   0
+ 125   644.     237.7      0.2    553.3    1.0    2.3      0.0    -900    3993.   0.000  0.257  0.000  10  1  1  0.003  1  1  1  14.98 1   0
+ 126   650.     232.2      0.2    561.1    1.0    2.4      0.0    -900    3982.   0.000  0.251  0.000  10  1  1  0.003  1  1  1  14.32 1   0
+ 127   656.     227.0      0.2    568.5    1.0    2.5      0.0    -900    3971.   0.000  0.245  0.000  10  1  1  0.002  1  1  1  13.81 1   0
+ 128   662.     222.1      0.2    575.6    1.0    2.6      0.0    -900    3960.   0.000  0.240  0.000  10  1  1  0.002  1  1  1  13.55 1   0
+ 129   668.     217.5      0.2    582.4    1.0    2.7      0.0    -900    3950.   0.000  0.235  0.000  10  1  1  0.002  1  1  1  13.21 1   0
+ 130   674.     213.0      0.2    588.7    1.0    2.8      0.0    -900    3940.   0.000  0.230  0.000  10  1  1  0.002  1  1  1  12.80 1   0
+ 131   680.     208.8      0.2    594.8    1.0    2.8      0.0    -900    3930.   0.000  0.225  0.000  10  1  1  0.002  1  1  1  12.36 1   0
+ 132   686.     204.7      0.2    600.6    1.0    2.9      0.0    -900    3920.   0.000  0.221  0.000  10  1  1  0.002  1  1  1  11.92 1   0
+ 133   692.     200.8      0.2    606.1    1.0    3.0      0.0    -900    3911.   0.000  0.217  0.000  10  1  1  0.002  1  1  1  11.50 1   0
+ 134   698.     197.1      0.2    611.4    1.0    3.1      0.0    -900    3903.   0.000  0.213  0.000  10  1  1  0.002  1  1  1  11.09 1   0
+ 135   704.     193.6      0.2    616.5    1.0    3.2      0.0    -900    3894.   0.000  0.209  0.000  10  1  1  0.002  1  1  1  10.70 1   0
+ 136   710.     190.2      0.2    621.3    1.0    3.3      0.0    -900    3886.   0.000  0.205  0.000  10  1  1  0.002  1  1  1  10.34 1   0
+ 137   716.     186.9      0.2    625.9    1.0    3.3      0.0    -900    3879.   0.000  0.202  0.000  10  1  1  0.002  1  1  1  10.00 1   0
+ 138   720.     184.0      0.2    631.1    1.0    3.4      0.0    -900    3873.   0.000  0.141  0.000  10  1  1  0.001  1  1  1   8.07 1   0
+                              *********************************************************************
+                              *                                                                   *
+                              *                                                                   *
+                              *             SUMMARY REPORT: BOAST II (RELEASE 1.1)               *
+                              *                                                                   *
+                              *                                                                   *
+                              *********************************************************************
+
+
+
+ ELAPSED TIME (DAYS)         =    720.00   TIME STEP NUMBER             =   138      TIME STEP SIZE (DAYS)         =      4.26
+
+ CURRENT AVG RES PRESSURE    =    3872.6   PREVIOUS AVG RES PRESSURE    =    3878.8  PRESSURE DPMAX(  1,  1,  1)   =       0.0
+ OIL DSMAX(  1,  1,  1)      =   0.00000   GAS DSMAX(  1,  1,  1)       =   0.00000  WATER DSMAX(  1,  1,  1)      =   0.00000
+ OIL MATERIAL BALANCE (%)    =  0.000000   GAS MATERIAL BALANCE (%)     =  0.140957  WATER MATERIAL BALANCE (%)    =  0.000000
+ CUM. OIL MATERIAL BALANCE(%)=  0.000000   CUM. GAS MATERIAL BALANCE(%) = 14.080632  CUM. WATER MATERIAL BALANCE(%)=  0.000000
+
+ OIL PRODUCTION RATE (STB/D) =     184.0   CUM. OIL PRODUCTION (STB)    = 3.6650e+05
+ GAS PRODUCTION RATE (MSCF/D)=       0.2   CUM. GAS PRODUCTION (MSCF)   = 3.6649e+02
+ WATER PRODUCTION RATE(STB/D)=     631.1
+                                          CUM. WATER PRODUCTION (STB)  = 1.0271e+05
+
+ GAS INJECTION RATE (MSCF/D) =       0.0   CUM. GAS INJECTION (MSCF)    = 0.0000e+00
+ WATER INJECTION RATE (STB/D)=    -900.0   CUM. WATER INJECTION (STB)   = -6.4800e+05
+
+ PRODUCING WOR (STB/STB)     =     3.430   CUM. WOR (STB/STB)           =     0.280
+ PRODUCING GOR (SCF/STB)     =       1.0   CUM. GOR (SCF/STB)           =       0.0
+
+
+
+
+              ***** RESERVOIR PRESSURE DISTRIBUTION *****
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1     4443    4361    4259    4140    4005    3855    3691    3515    3327    3124
+
+
+
+              *********  OIL SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.322   0.374   0.409   0.437   0.462   0.483   0.500   0.515   0.531   0.550
+
+
+
+              *********  WATER SATURATION  *********
+
+
+ K =  1
+          1       2       3       4       5       6       7       8       9      10  
+
+   1    0.678   0.626   0.591   0.563   0.538   0.517   0.500   0.485   0.469   0.450
+
+
+
+   *************************************************  END OF SUMMARY REPORT  *************************************************
+
+
+
+
+
+
+
+
+   **************************************** BOAST II (RELEASE 1.1) SIMULATION TERMINATED ****************************************
+
+
