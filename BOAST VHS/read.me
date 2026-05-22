@@ -1,0 +1,41 @@
+	The BOAST-VHS program on this disk includes 2 source code files,
+      4 example data input files, 1 compiled data editor file, and 1 compiled 
+      executable main program file. Their names are:
+
+	  BOASTVHS.FOR     VHSPARM.FOR     BOASTVHS.EXE    BOASTED.EXE
+	  TSTPBM1.DAT      TSTPBM2.DAT     TSTPBM3.DAT     TSTEDIT.DAT
+
+	The source files for BOASTVHS were compiled on an IBM compatible
+      486DX using FORTRAN 77, Version 4.10 by Lahey Computer Systems, Inc.
+      Targeting the 80286/287 instruction set.  The main source file
+      "BOASTVHS.FOR" requires one INCLUDE file named, "VHSPARMS.FOR."
+
+	In order to compile these files properly, they must reside in the 
+      following path:  "D:\F77L\BOASTVHS\."  This path  may be changed by 
+      modifying the INCLUDE statements in the main source code file 
+      "BOASTVHS.FOR."  Also, the grid dimensions, number of wells, number 
+      of PVT table entries, and other parmeters of the simulator may changed 
+      by modifying the file "VHSPARM.FOR."  
+	
+	The interactive input data editor, BOASTED, can only edit files which 
+      it creates.  BOASTED needs the special numbers found on the RECURRENT 
+      DATA record line, such as found in TSTEDIT.DAT.  This file can be 
+      re-edited.  The other three test case files tstpbm1, 2, & 3.dat were 
+      not created by BOASTED and therefore cannot be edited by BOASTED!
+
+	Two items not mentioned in the manual:  
+	
+	1) When building a grid system with non-constant values for permeability 
+	   and porosity, one must enter a real non-zero value for these 
+	   parameters in each cell.  If you want to exclude certain cells on 
+	   the edge or any other location, set the transmissibility to zero 
+	   for those cells. Assigning a value of zero for permeability and/or 
+	   porosity will result in a fatal error!
+
+	2) The maximum number of grid cells that can be run within the 640 K
+	   memory limitation is 700.  If you have additional memory, larger 
+	   grid systems can be run.  To do so, the file VHSPARMS.FOR must be
+	   changed to reflect the number of cells one wishes.  Also, there is a
+	   flag in the source code that checks the x, y, z product.  This must
+	   also be changed to be consistent with or larger than the value specified
+	   in the VHSPARMS.FOR file.  The source code must then be re-compiled.   

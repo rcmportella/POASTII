@@ -10,6 +10,7 @@ ENV/
 env/
 
 # Output files
+OUT*
 OUT*.DAT
 OUT.*.PYTHON
 OUT*.PYTHON
