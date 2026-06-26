@@ -1,33 +1,15 @@
-        SPE1 CASE - GAS INJECTION
-RESTART DATA
--1 -1
-GRID DATA
-10 10 3
-GRID BLOCK LENGTHS
--1 -1 0 0
-1000.
-1000.
-20. 30. 50.
-20. 30. 50.
-GRID BLOCK LENGTH MODIFICATIONS
-5*0
-CAPROCK BASE DEPTHS
-0
-8325.
-POROSITY AND PERMEABILITY
--1 0 0 0
-.30
-500. 50. 200.
-500. 50. 200.
-500. 50. 200.
-POROSITY AND PERMEABILITY MODIFICATIONS
-0 0 0 0 0
-TRANSMISSIBILITY MODIFICATIONS
-4*0
-ROCK PVT
-1 1
-SAT  KRO      KRW    KRG      KROG PCOW PCOG
--.1  6*0.
+Input file: SPE1CASE1.DATA
+Interval 1 (requested): 144..158
+Interval 1 (processed): 144..158
+Interval 1 valid rows: 15
+Interval 1 skipped rows: 0
+Interval 2 (requested): 169..183
+Interval 2 (processed): 169..183
+Interval 2 valid rows: 15
+Interval 2 skipped rows: 0
+
+DATA (global merged saturation with interpolated kro, krw, krg, krog, cp, cpog)
+    saturation            kro            krw            krg           krog             cp           cpog
              0              0              0              0              0              0              0
          0.001              0              0              0              0              0              0
           0.02              0              0              0              0              0              0
@@ -73,72 +55,18 @@ SAT  KRO      KRW    KRG      KROG PCOW PCOG
           0.98              1  9.5686983e-06          0.984          0.997              0              0
          0.999              1  9.9784349e-06          0.984              1              0              0
              1              1          1e-05          0.984              1              0              0
-         1.1              1.0     0.00001             0.984              1.       2*0.
-ITHREE SWR(IRR)
-0 0.22
- PBO   PBODAT PBGRAD
-4014.7  8300.   0.
-VSLOPE   BSLOPE  RSLOPE   PMAX  REPRS
-.000046 -.0000232   0.    9014.7   0
-   P     MUO    BO   RSO
-  14.7  1.04  1.062  1.0
-1014.7  .83   1.295  371.
-2014.7  .695  1.435  636.
-3014.7  .594  1.565  930.
-4014.7  .51   1.695  1270.
-5014.7  .449  1.827  1618.
-9014.7  .203  2.35   2984.
-   P     MUW    BW   RSW
-  14.7  .5    1.019  0.
-1014.7  .501  1.016  0.
-2014.7  .502  1.013  0.
-4014.7  .505  1.007  0.
-6014.7  .51   1.001  0.
-9014.7  .52   .992   0.
-GAS AND ROCK PROP
-0
-   P     MUG     BG     PSI     CR
-  14.7  .008   .9358    0.0  .000003
- 264.7  .0096  .067902  0.0  .000003
- 514.7  .0112  .035228  0.0  .000003
-1014.7  .014   .017951  0.0  .000003
-2014.7  .0189  .009063  0.0  .000003
-2514.7  .0208  .007266  0.0  .000003
-3014.7  .0228  .006064  0.0  .000003
-4014.7  .0268  .004554  0.0  .000003
-5014.7  .0309  .003644  0.0  .000003
-9014.7  .047   .002167  0.0  .000003
-RHOSCO RHOSCW RHOSCG
-46.244 62.238 .0647
-EQUILIBRIUM PRESSURE INITIALIZATION/CONSTANT SATURATIONS
-0 0 8300. 0.
-4806.6 8425. 0. 8300.
-.8 .2 0.
-KSN1 KSM1 KCO1 KCOF
-4*0
-NMAX FACT1 FACT2 TMAX WORMAX GORMAX PAMIN PAMAX
-500   1.2   .5   300.   20.  500000. 150. 10000.
-KSOL MITR OMEGA TOL TOL1 DSMAX DPMAX
-4    250   1.7  .1   0.   .05   100.
-NUMDIS IRK THRUIN
-0       0    .5
-AQUIFER DATA
-0
-RECURRENT DATA
-DATA SET 1
-300 1 5
-10. 90. 180. 270. 300.
-1 1 1 0 0 0
-0.1 0.1 10.
-RATES
-2 0
----NEW WELLS---
-PROD   1 10  10  3  1
-11.45 .75 0. .25
-4*1000.
-PROD   1 1       20000.        0.        0.        0.
-INJ1   2  1  1  1  1
-11.45 .50
-2*9014.
-INJ1   2  3       0.     0.        -100.        0.
-
+
+SUMMARY (original columns only)
+sw: count=15 sum=8.15 mean=0.54333333 min=0.12 max=1
+krw: count=15 sum=4.8276134e-05 mean=3.218409e-06 min=0 max=1e-05
+kro: count=15 sum=5.3491 mean=0.35660667 min=0 max=1
+cp: count=15 sum=0 mean=0 min=0 max=0
+
+SUMMARY (merged/interpolated columns)
+saturation: count=45 sum=22.5 mean=0.5 min=0 max=1
+kro: count=45 sum=18.54215 mean=0.41204778 min=0 max=1
+krw: count=45 sum=0.00013624021 mean=3.0275603e-06 min=0 max=1e-05
+krg: count=45 sum=25.479679 mean=0.56621508 min=0 max=0.984
+krog: count=45 sum=8.49714 mean=0.18882533 min=0 max=1
+cp: count=45 sum=0 mean=0 min=0 max=0
+cpog: count=45 sum=0 mean=0 min=0 max=0

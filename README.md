@@ -93,6 +93,8 @@ Flow equation assembly (two-point weighting).
   - Relative permeability curves
   - Well locations and rates
   - Time stepping parameters
+- `SPE1.DAT`: SPE1 test case input deck used for current validation runs
+- `SPE1CASE1.DATA`: Text data source used by `relperm_conversion.py` interval extraction workflow
 
 ### Output Files
 - `OUT1_*.DAT`: Simulation results including:
@@ -101,6 +103,9 @@ Flow equation assembly (two-point weighting).
   - Detailed reports at specified times
   - Pressure and saturation distributions
   - Production/injection summaries
+- `SPE1.OUT`: SPE1 run output generated from `SPE1.DAT`
+- `SPE1_maps.csv` and `SPE1_wells.csv`: SPE1 map/well CSV exports for GUI viewers
+- `interval_results_case1.txt`: Generated interval conversion report from `SPE1CASE1.DATA`
 
 ## Running the Simulator
 
@@ -132,6 +137,78 @@ Then enter:
 python run_test.py
 ```
 Uses predefined input/output filenames.
+
+#### SPE1 Case Execution
+```bash
+echo -e "SPE1.DAT\nSPE1.OUT" | python main.py
+```
+Generates SPE1 output text plus CSV artifacts for map and well viewers.
+
+## Text Interval Calculator Utility
+
+Use `relperm_conversion.py` to:
+- Read a text file
+- Select two line intervals (`start-line`/`end-line` and `start-line-2`/`end-line-2`)
+- Extract the first 4 numeric values from each line in each interval
+- Run fixed calculations
+- Write a formatted output text report
+
+### Example
+
+```bash
+python3 relperm_conversion.py \
+  --input SPE1CASE1.DATA \
+  --start-line 144 --end-line 158 \
+  --start-line-2 175 --end-line-2 189 \
+  --output interval_results_case1.txt
+```
+
+Then answer both interval prompts (defaults are `144..158` and `175..189`):
+
+```text
+Interval 1 start line [144]:
+Interval 1 end line [158]:
+Interval 2 start line [175]:
+Interval 2 end line [189]:
+```
+
+### Arguments
+
+- `--input`: input text file path (required)
+- `--output`: output text file path
+- `--start-line`: default for prompt start value (1-based, inclusive)
+- `--end-line`: default for prompt end value (1-based, inclusive)
+- `--start-line-2`: default for second prompt start value (1-based, inclusive)
+- `--end-line-2`: default for second prompt end value (1-based, inclusive)
+- `--strict`: fail if any line in the interval does not contain 4 numbers
+
+Output data set 1 columns are:
+
+For each merged saturation value, `krw`, `kro`, and `cp` are obtained by linear interpolation from their original curves (`krw/cp` vs `sw`, and `kro` vs `so`).
+Output data columns are:
+ - `saturation`
+ - `kro`
+ - `krw`
+ - `krg`
+ - `krog`
+ - `cp`
+ - `cpog`
+
+The `saturation` grid is the union of all saturation sets from both intervals:
+ - interval 1: `sw` and `so = 1 - sw`
+ - interval 2: `sg` and `sog = 1 - sg`
+
+Each variable is linearly interpolated on that unified saturation grid using its correlated curve:
+ - `kro` vs `so`
+ - `krw` and `cp` vs `sw`
+ - `krg` and `cpog` vs `sg`
+ - `krog` vs `sog`
+
+Output data set 2 columns are:
+- `sg`
+- `krg`
+- `krog`
+- `cpog`
 
 #### Map Viewer (CSV)
 ```bash

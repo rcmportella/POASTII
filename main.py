@@ -25,8 +25,10 @@ from block7 import FlowEquation
 from block8 import FlowEquationTwoPoint
 
 # Grid dimension parameters (corresponding to Fortran PARAMETER statements)
-LP1, LP2, LP3 = 13, 10, 4
-LP7, LP8, LP9 = 3, 3, 25
+# These are used to define the maximum sizes of arrays and grids in the simulation.
+# Modified to adapt to modern machine capabilities and Python's dynamic array handling, but kept for compatibility with original Fortran code.
+LP1, LP2, LP3 = 100, 100, 20
+LP7, LP8, LP9 = 3, 3, 100
 LP10, LP11, LP12 = 3, 50, 1000
 LP14, LP15, LP17 = 1, 13, 5
 LP4, LP5, LP6 = LP1 + 1, LP2 + 1, LP3 + 1

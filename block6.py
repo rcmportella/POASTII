@@ -180,7 +180,10 @@ class PVTTables:
             iocode.write(f"  SATURATION    KROT      KRW       KRG        KROG     PCOW      PCGO\n")
             iocode.write(f"{'':>56}(PSI){'':>6}(PSI)\n\n")
             
-            for i in range(25):
+            max_sat_entries = self.sim.sat.shape[1]
+            found_table_end = False
+
+            for i in range(max_sat_entries):
                 line = iread.readline()
                 values = parse_fortran_line(line)
                 
@@ -200,7 +203,14 @@ class PVTTables:
                            f"{values[4]:10.4f}{values[5]:10.4f}{values[6]:10.4f}\n")
                 
                 if values[0] >= 1.0001:
+                    found_table_end = True
                     break
+
+            if not found_table_end:
+                raise ValueError(
+                    f"Relative permeability table for rock region {nr+1} exceeded "
+                    f"maximum entries ({max_sat_entries}). Increase LP9 in main.py."
+                )
             
             self.sim.msat[nr] = i + 1
             
